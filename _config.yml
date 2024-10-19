@@ -1,6 +1,0 @@
-title: Verlis
-description: Un jeu en ligne.
-repository: PhilJbt/Verlis
-encoding: UTF-8
-plugins:
-  - jekyll-github-metadata
