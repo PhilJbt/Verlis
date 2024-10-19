@@ -1,2 +1,4 @@
 title: Verlis
 description: Un jeu en ligne.
+plugins:
+  - jekyll-github-metadata
