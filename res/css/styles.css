@@ -1,0 +1,129 @@
+/**
+* Built-in override
+*/
+body {
+	width: 100vw;
+	height: 100vh;
+	
+	display: flex;
+	align-content: center;
+	justify-content: center;
+	align-items: center;
+	flex-wrap: nowrap;
+	flex-direction: row;
+	
+	overflow: hidden;
+}
+
+/**
+* Inputs
+*/
+#ag-input {
+	display: none;
+}
+
+/**
+* Hero
+*/
+.hero {
+	width: 100%;
+}
+
+.hero-body {
+	display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  justify-content: space-between;
+  align-items: flex-end;
+}
+
+/**
+* Words lists
+*/
+word, .word {
+	text-transform: capitalize;
+}
+
+#ag-words-before .word:last-of-type,
+#ag-words-after .word:first-of-type {
+  font-size: 50px;
+}
+
+#ag-words-before, #ag-words-after {
+	height: calc(50vh - 30px);
+	overflow: hidden;
+}
+
+#ag-words-after::before, #ag-words-before::before {
+	content: '';
+	position: absolute;
+	width: 100%;
+	height: calc(50vh - 30px);
+	pointer-events: none;
+	z-index: 1;
+}
+
+#ag-words-before {
+	display: flex;
+  flex-direction: column;
+  flex-wrap: nowrap;
+  justify-content: flex-end;
+  align-items: flex-start;
+}
+#ag-words-before::before {
+	background: linear-gradient(rgba(20, 22, 26, 255), rgba(20, 22, 26, 0));
+}
+
+#ag-words-after {
+	display: flex;
+  flex-direction: column;
+  flex-wrap: nowrap;
+  justify-content: flex-start;
+  align-items: flex-start;
+}
+#ag-words-after::before {
+	background: linear-gradient(rgba(20, 22, 26, 0), rgba(20, 22, 26, 255));
+}
+
+/**
+* Words
+*/
+.highlight {
+	border-radius: 3px;
+	animation: highlight_anm 3s ease-out;
+}
+@keyframes highlight_anm {
+	0% {
+		background-color: #4258ffff;
+	}
+	100% {
+		background-color: #4258ff00;
+	}
+}
+
+/**
+* Navbar
+*/
+nav {
+	display: flex;
+  width: 50vw;
+  top: 20px;
+  position: fixed;
+  z-index: 2;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+a.dropdown-item, *.dropdown-item {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  justify-content: flex-start;
+  align-items: flex-start;
+}
+
+.item-next {
+	cursor: default;
+}

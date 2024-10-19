@@ -1,0 +1,164 @@
+<!doctype html>
+<html>
+  <head>
+		<meta charset="UTF-8">
+    <title>Verlis</title>
+		<meta name="robots" content="noindex,nofollow">
+		<link rel="stylesheet" href="res/dep/fontawesome-f6.6.0w/css/all.min.css" />
+		<link rel="stylesheet" href="res/dep/bulma/css/bulma.min.css">
+		<link rel="stylesheet" href="res/css/styles.css">
+  </head>
+  <body>
+		<!-- Modal Infos -->
+		<div id="mdl-infos" class="modal">
+			<div class="modal-background"></div>
+			<div class="modal-card">
+				<!-- Modal Infos Header -->
+				<header class="modal-card-head has-background-info">
+					<p class="modal-card-title">Modal infos title</p>
+					<button class="delete" aria-label="close"></button>
+				</header>
+				<!-- Modal Infos Content -->
+				<section class="modal-card-body">
+				</section>
+				<!-- Modal Infos Footer -->
+				<footer class="modal-card-foot">
+					<!-- Modal Infos Footer Buttons -->
+					<div class="buttons">
+						<button class="button is-success">Save changes</button>
+						<button class="button">Cancel</button>
+					</div>
+				</footer>
+			</div>
+		</div>
+		<!-- Modal Abandon -->
+		<div id="mdl-abandon" class="modal">
+			<div class="modal-background"></div>
+			<div class="modal-card">
+				<!-- Modal Abandon Header -->
+				<header class="modal-card-head has-background-danger">
+					<p class="modal-card-title">Abandon</p>
+					<button class="delete" aria-label="close"></button>
+				</header>
+				<!-- Modal Abandon Content -->
+				<section class="modal-card-body">
+				Êtes-vous certain de vouloir avandonner ?
+				</section>
+				<!-- Modal Abandon Footer -->
+				<footer class="modal-card-foot">
+					<!-- Modal Abandon Footer Buttons -->
+					<div class="buttons">
+						<button class="button is-danger" id="btn-abandon">Abandonner</button>
+						<button class="button">Annuler</button>
+					</div>
+				</footer>
+			</div>
+		</div>
+		<!-- Infobar -->
+		<nav class="level">
+			<!-- Infobar Tries -->
+			<div class="level-item has-text-centered">
+				<div>
+					<p class="heading">Tentatives</p>
+					<p class="title" id="nav-try">0</p>
+				</div>
+			</div>
+			<!-- Infobar Time -->
+			<div class="level-item has-text-centered">
+				<div>
+					<p class="heading">Temps</p>
+					<p class="title" id="nav-tim">--:--:--</p>
+				</div>
+			</div>
+			<div class="level-item has-text-centered">
+				<div class="dropdown" id="menu">
+					<!-- Menu Icon -->
+					<div class="dropdown-trigger">
+						<button class="button" aria-haspopup="true" aria-controls="dropdown-menu">
+							<span class="icon is-small">
+								<i class="fas fa-solid fa-bars" aria-hidden="true"></i>
+							</span>
+						</button>
+					</div>
+					<div class="dropdown-menu" id="dropdown-menu" role="menu">
+						<!-- Menu Dropdown -->
+						<div class="dropdown-content">
+							<!-- Menu Dropdown Next -->
+							<div class="dropdown-item item-next">
+								<span class="icon-text has-text-grey">
+									<span class="icon">
+										<i class="fas fa-hourglass"></i>
+									</span>
+									<span id="timer-next">Prochain : --:--:--</span>
+								</span>
+							</div>
+							<!-- Menu Dropdown Divider -->
+							<hr class="dropdown-divider" />
+							<!-- Menu Dropdown Modal -->
+							<button class="dropdown-item has-text-info js-modal-trigger" data-target="mdl-infos">
+								<span class="icon-text">
+									<span class="icon">
+										<i class="fas fa-info"></i>
+									</span>
+									<span>Infos</span>
+								</span>
+							</button>
+							<!-- Menu Dropdown Stop -->
+							<button class="dropdown-item has-text-danger" id="plzstahp">
+								<span class="icon-text">
+									<span class="icon">
+										<i class="fas fa-hand"></i>
+									</span>
+									<span>Abandonner</span>
+								</span>
+							</button>
+							<!-- Menu Dropdown Divider -->
+							<hr class="dropdown-divider" />
+							<!-- Menu Dropdown Contact -->
+							<a href="mailto:philjbt@ik.me" class="dropdown-item">
+								<span class="icon-text">
+									<span class="icon">
+										<i class="fas fa-envelope"></i>
+									</span>
+									<span>Contact</span>
+								</span>
+							</a>
+						</div>
+					</div>
+				</div>
+			</div>
+		</nav>
+		<!-- Game Container -->
+		<div class="container">
+			<div class="fixed-grid has-1-cols">
+				<div class="grid">
+					<!-- Words before -->
+					<div class="cell" id="ag-words-before"></div>
+					<section class="hero is-small is-info" id="loading">
+						<div class="hero-body">
+							<div>
+								<p class="title">Chargement...</p>
+								<p class="subtitle">Veuillez patienter.</p>
+							</div>
+						</div>
+					</section>
+					<!-- User inputs -->
+					<div id="ag-input" class="cell">
+						<input id="inp-usr" class="input" type="text" placeholder="Votre mot..." disabled/> 
+						<button id="btn-try" class="button" disabled>
+							<span>Essayer</span>
+							<span class="icon is-small">
+								<i class="fa-solid fa-paper-plane"></i>
+							</span>
+						</button>
+					</div>
+					<!-- Words after -->
+					<div class="cell" id="ag-words-after"></div>
+				</div>
+			</div>
+		</div>
+  </body>
+	<script src="res/js/wordlist.js"></script>
+	<script src="res/dep/randomizer.js"></script>
+	<script src="res/js/scripts.js"></script>
+</html>
