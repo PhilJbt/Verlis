@@ -127,3 +127,16 @@ a.dropdown-item, *.dropdown-item {
 .item-next {
 	cursor: default;
 }
+
+
+/**
+* Modal
+*/
+.mdl-infos-content {
+  width: 50vw;
+  max-width: 900px;	
+}
+
+.force-inline {
+	display: inline;
+}

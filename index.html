@@ -12,23 +12,44 @@
 		<!-- Modal Infos -->
 		<div id="mdl-infos" class="modal">
 			<div class="modal-background"></div>
-			<div class="modal-card">
+			<div class="modal-card mdl-infos-content">
 				<!-- Modal Infos Header -->
 				<header class="modal-card-head has-background-info">
-					<p class="modal-card-title">Modal infos title</p>
+					<p class="modal-card-title">Aide</p>
 					<button class="delete" aria-label="close"></button>
 				</header>
 				<!-- Modal Infos Content -->
 				<section class="modal-card-body">
-				</section>
-				<!-- Modal Infos Footer -->
-				<footer class="modal-card-foot">
-					<!-- Modal Infos Footer Buttons -->
-					<div class="buttons">
-						<button class="button is-success">Save changes</button>
-						<button class="button">Cancel</button>
+					<div class="content">
+					<blockquote>
+						<h1>Bienvenue !</h1>
+						<p>
+							Voici ce qu'il vous faut savoir sur Verlis !
+						</p>
+					</blockquote>
+						<h4>Qu'est-ce que Verlis ?</h4>
+						<p>
+							Verlis est un jeu dont l'objectif est de deviner un verbe en fonction de l'ordre alphabétique des propositions faites.
+						</p>
+						<h4>Les règles</h4>
+						<ul>
+							<li>Une fois par jour (le décompte est visible dans le menu), un nouveau verbe à deviner est choisi au hasard ;</li>
+							<li>Les mots proposés doivent être des verbes en <strong>français</strong>, à <strong>l'infinitif</strong> ;</li>
+							<li>L'accentuation des lettres <strong>doit être</strong> respectée ;</li>
+							<li>Les diacritiques <strong>n'affectent pas</strong> l'ordre alphabétique des mots (ex : la lettre &laquo; <em>é</em> &raquo; est considérée comme un &laquo; <em>e</em> &raquo;) ;</li>
+							<li>Il n'y a <strong>aucune limite</strong> de temps, ni de nombre de tentatives ;</li>
+							<li>Un verbe affiché en <div class="has-text-warning force-inline">orange</div> signifie qu'il a <strong>trois à quatre</strong> lettres de différence avec le verbe à deviner ;</li>
+							<li>Un verbe affiché en <div class="has-text-danger force-inline">rouge</div> signifie qu'il a <strong>une à deux</strong> lettres de différence avec le verbe à deviner.</li>
+						</ul>
+						<h4>Les touches</h4>
+						<ul>
+							<li>La touche <em>&laquo; Entrée &raquo;</em> valide la proposition d'un verbe ;</li>
+							<li>La touche <em>&laquo; Flèche haut &raquo;</em> écrit le dernier mot essayé (valide ou non) dans la zone de texte ;</li>
+							<li>La touche <em>&laquo; Flèche bas &raquo;</em> supprime le contenu de la zone de texte.</li>
+						</ul>
+						<h1>Bonne chance !</h1>
 					</div>
-				</footer>
+				</section>
 			</div>
 		</div>
 		<!-- Modal Abandon -->

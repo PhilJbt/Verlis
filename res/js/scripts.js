@@ -13,6 +13,7 @@ window.addEventListener('load', function () {
 	window.vl_worker = null;
 	window.vl_trying = false;
 	window.vl_timeInit = null;
+	window.vl_lastTry = null;
 	
 	// Choose a word from the list
 	pickWord();
@@ -45,13 +46,27 @@ window.addEventListener('load', function () {
 
 	// Bind the keyboard key pressing to its callback,
 	// only the Enter key will be used
-	document.addEventListener('keypress', function(e) {
-		// Get the key code
-		const keynum = e.keyCode||e.which;
-		// The key code is the one for the enter key
-		if (keynum == 13)
-			// Start the word processing
-			checkWord();
+	document.addEventListener('keydown', function(e) {
+		// If the user text input has focus
+		if (document.getElementById('inp-usr') === document.activeElement) {
+			// Get the key code
+			const keynum = e.keyCode||e.which;
+			
+			// Enter key is pressed
+			if (keynum == 13)
+				// Start the word processing
+				checkWord();
+			// Up arrow is pressed
+			else if (keynum == 38
+			// A word has already been tried
+			&& window.vl_lastTry !== null)
+				// Set the last tried (successfully or not) word in the user text input
+				document.getElementById('inp-usr').value = window.vl_lastTry;
+			// Down arrow is pressed
+			else if (keynum == 40)
+				// Erase the value of the user text input
+				document.getElementById('inp-usr').value = '';
+		}
 	});
 
 	// Add function to convert any diacritical character to its equivalent without diacritical mark
@@ -78,7 +93,20 @@ window.addEventListener('load', function () {
 	
 	// Check if this word has already been done
 	checkLastFinish();
+	
+	// Show a welcome message if first visit
+	welcomeMessage();
 });
+
+/**
+* Help modal opened as a welcome message
+*/
+function welcomeMessage() {
+	if (localStorage.getItem('wm') !== 'true') {
+		localStorage.setItem('wm', 'true');
+		document.getElementById('mdl-infos').classList.add('is-active');
+	}
+}
 
 /**
 * Pick a seeded random word from a list. The seed is the time, independently of the current time zone.
@@ -134,6 +162,8 @@ function checkWord() {
 	const inputUser = document.getElementById('inp-usr');
 	// Get the user given word
 	const wordUserRaw = inputUser.value;
+	// Store the tried word
+	window.vl_lastTry = wordUserRaw;
 	
 	// If the word string is empty
 	if (wordUserRaw.length === 0
@@ -533,7 +563,7 @@ function getDailyIntWithTimezone() {
 	// Convert time zone offset to milliseconds
 	const timezoneOffset = currentDate.getTimezoneOffset() * 60 * 1000;
 	// Local days since epoch, independently of the time zone
-	const localMidnight = Math.floor((localTime + timezoneOffset) / msPerDay);
+	const localMidnight = Math.floor((localTime - timezoneOffset) / msPerDay);
 
 	return localMidnight;
 }
