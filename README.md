@@ -17,9 +17,9 @@ Enfin, <strong>4 &#9670; 2</strong> signifierait que quatre lettres au début et
 
 ## Les touches
 
-- La touche <em>&laquo; Entrée &raquo;</em> valide la proposition d'un verbe ;
-- La touche <em>&laquo; Flèche haut &raquo;</em> écrit le dernier mot essayé (valide ou non) dans la zone de texte ;
-- La touche <em>&laquo; Flèche bas &raquo;</em> supprime le contenu de la zone de texte.
+- La touche <em>Entrée</em> &#11176; valide la proposition d'un verbe ;
+- La touche <em>Flèche haut</em> &#11205; écrit le dernier mot essayé (valide ou non) dans la zone de texte ;
+- La touche <em>Flèche bas</em> &#11206; supprime le contenu de la zone de texte.
 
 # Bonne chance !
 
