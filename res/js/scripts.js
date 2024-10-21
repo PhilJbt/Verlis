@@ -69,6 +69,14 @@ window.addEventListener('load', function () {
 		}
 	});
 
+	// Add function to reverse a string
+	String.prototype.reverse = function (char) {
+		var arrSlitted = this.split("");
+		var arrReversed = arrSlitted.reverse();
+		var arrJoined = arrReversed.join("");
+		return arrJoined;
+	};
+
 	// Add function to convert any diacritical character to its equivalent without diacritical mark
 	String.prototype.rmvDiacr = function (char) {
 		return this.toString().toLowerCase().normalize("NFD").replace(/\p{Diacritic}/gu, "");
@@ -91,12 +99,22 @@ window.addEventListener('load', function () {
 	// Start the time worker (i.e. the game elapsed timer and the "next word" timer)
 	initTime();
 	
+	// Determine word (day) ID
+	displayWordID();
+	
 	// Check if this word has already been done
 	checkLastFinish();
 	
 	// Show a welcome message if first visit
 	welcomeMessage();
 });
+
+/**
+* Display the word ID (based on the day ID) in the menu
+*/
+function displayWordID() {
+	document.getElementById('day-id').innerHTML = `Mot n°${getDailyIntWithTimezone() - 20015}`;
+}
 
 /**
 * Help modal opened as a welcome message
@@ -271,11 +289,37 @@ function checkWord() {
 			frag.classList.add('word');
 			frag.innerHTML = wordUserLca;
 			// Color the given word depending on how many characters differ from the picked one
-			const countDiffChar = countDifference(wordUserLoc, ag_nswrLoc);
-			if (countDiffChar <= 2)
-				frag.classList.add('has-text-danger');
-			else if (countDiffChar <= 4)
-				frag.classList.add('has-text-warning');
+			/*
+			const countDiffChar = wordUserLoc.length - ag_nswrLoc.length;
+			if (countDiffChar == 0)
+				frag.setAttribute('data-size', '\u229c');
+			else if (countDiffChar < 0)
+				frag.setAttribute('data-size', '\u229d');
+			else
+				frag.setAttribute('data-size', '\u2295');
+			*/
+			/*
+			const countSameBeg = countDifference(wordUserLoc, ag_nswrLoc);
+			if (countSameBeg !== 0) {
+				const specialCharString = `\\u${(9311 + countDiffChar).toString(16)}`;
+				const numericValue = parseInt(specialCharString.replace(/\\u|\\/g, ''), 16);
+				const specialChar = String.fromCharCode(numericValue);
+				frag.setAttribute('data-size', specialChar);
+			}
+			*/
+			const countSameBeg = countEquality(wordUserLoc, ag_nswrLoc, false);
+			const countSameEnd = countEquality(wordUserLoc, ag_nswrLoc, true);
+			
+			if (countSameBeg === 0 && countSameEnd === 0)
+				frag.setAttribute('data-nfo', '\u25c7');
+			else if (countSameBeg !== 0 && countSameEnd !== 0)
+				frag.setAttribute('data-nfo', `${countSameBeg} \u25c6 ${countSameEnd}`);
+			else if (countSameBeg !== 0)
+				frag.setAttribute('data-nfo', `${countSameBeg} \u2b16`);
+			else if (countSameEnd !== 0)
+				frag.setAttribute('data-nfo', `\u2b17 ${countSameEnd}`);
+			
+			
 
 			// Try to insert the given word alphabetically into its place in the list
 			let insertDone = false;
@@ -381,25 +425,39 @@ function checkWord_End() {
 }
 
 /**
-* Determine the number of character from the position of the first different character between two strings
+* Determine the position of the first different character from the start or the end
 * @param {string} _user - The user given word
 * @param {string} _picked - The picked word
+* @param {bool} _reverse - Does words has to be reversed, used to count same characters from end
 * @return {number} the number of characters
 */
-function countDifference(_user, _picked) {
-	// Determine the number of character to check, taking the smallest between the two strings
-	let minLength = Math.min(_user.length, _picked.length);
+function countEquality(_user, _picked, _reverse) {
+	// Determine the number of character to check
+	let user = _user.rmvDiacr();
+	let pick = _picked.rmvDiacr();
+	let len = Math.max(user.length, pick.length);
 	
-	// Find the position of the first difference
-	for (let i = 0; i < minLength; i++) {
-		if (_user[i] !== _picked[i]) {
-			// Return the number of characters since the first difference
-			return Math.max(_user.length, _picked.length) - i;
-		}
+	// Reverse strings in case the first difference to found is from the end
+	if (_reverse) {
+		user = user.reverse();
+		pick = pick.reverse();
 	}
 	
-	// If no difference found in the common length, return the difference in length
-	return Math.abs(_user.length - _picked.length);
+	pick = pick.padEnd(len, '\ufffd');
+	user = user.padEnd(len, '\ufffd');
+	
+	// Return the number of characters when the first difference occurs
+	let iSame = 0;
+	for (let i = 0; i < len; ++i) {
+		if (user[i] === pick[i])
+			++iSame;
+		else
+			return iSame;
+	}
+	
+	// Both strings are the same
+	// Note: the equality between the user and the picked word is handled before, so this case should never be encountered
+	return iSame;
 }
 
 /**
@@ -481,10 +539,8 @@ function initTime() {
 		function workerFunction() {
 			// Each second
 			setInterval(() => {
-				// Get the current epoch
-				let currentEpoch = Math.floor(Date.now() / 1000);
 				// Send it to the content script
-				self.postMessage(currentEpoch);
+				self.postMessage('trigger');
 			}, 1000);
 		}
 
@@ -496,23 +552,35 @@ function initTime() {
 
 		// When receiving the Worker message
 		window.vl_worker.onmessage = function(e) {
-			// The game timer has started
-			if (window.vl_timeInit !== null
-			// The game is running
-			&& !window.vl_finished)
-				// Display the game timer
-				document.getElementById('nav-tim').innerHTML = formatTime(Math.max(0, e.data - window.vl_timeInit));
-			
-			// If the dopdown menu is opened
-			if (document.getElementById('menu').classList.contains('is-active') === true)
-				// Update the "Next verb" timer
-				document.getElementById('timer-next').innerHTML = `Prochain : ${formatTime(Math.floor(getNextVerbTime() / 1000))}`;
+			displayTime();
 		};
 	}
 	// WebWorkers are not implemented
 	else
 		// Display the current time
 		document.getElementById('nav-tim').innerHTML = (new Date().toLocaleTimeString());
+}
+
+/**
+* Display timers
+*/
+function displayTime() {
+	// Get the current epoch
+	let currentEpoch = Math.floor(Date.now() / 1000);
+	
+	// The game timer has started
+	if (window.vl_timeInit !== null
+	// The game is running
+	&& !window.vl_finished) {
+		// Display the game timer
+		document.getElementById('nav-tim').innerHTML = formatTime(Math.max(0, currentEpoch - window.vl_timeInit));
+	}
+	
+	// If the dopdown menu is opened
+	if (document.getElementById('menu').classList.contains('is-active') === true) {
+		// Update the "Next verb" timer
+		document.getElementById('timer-next').innerHTML = `Prochain : ${formatTime(Math.floor(getNextVerbTime() / 1000))}`;
+	}
 }
 
 /**
@@ -563,7 +631,7 @@ function getDailyIntWithTimezone() {
 	// Convert time zone offset to milliseconds
 	const timezoneOffset = currentDate.getTimezoneOffset() * 60 * 1000;
 	// Local days since epoch, independently of the time zone
-	const localMidnight = Math.floor((localTime - timezoneOffset) / msPerDay);
+	const localMidnight = parseInt((localTime - timezoneOffset) / msPerDay);
 
 	return localMidnight;
 }
@@ -644,6 +712,7 @@ function initDropdown() {
 			el.addEventListener('click', function(e) {
 				e.stopPropagation();
 				el.classList.toggle('is-active');
+				displayTime();
 			});
 		});
 

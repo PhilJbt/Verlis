@@ -8,7 +8,11 @@
 		<link rel="stylesheet" href="res/dep/bulma/css/bulma.min.css">
 		<link rel="stylesheet" href="res/css/styles.css">
   </head>
-  <body>
+  <body class="theme-dark">
+		<!-- Alphabet -->
+		<div class="alphabet">
+			<div>A</div><div>B</div><div>C</div><div>D</div><div>E</div><div>F</div><div>G</div><div>H</div><div>I</div><div>J</div><div>K</div><div>L</div><div>M</div><div>N</div><div>O</div><div>Q</div><div>P</div><div>R</div><div>S</div><div>T</div><div>U</div><div>V</div><div>W</div><div>X</div><div>Y</div><div>Z</div>
+		</div>
 		<!-- Modal Infos -->
 		<div id="mdl-infos" class="modal">
 			<div class="modal-background"></div>
@@ -38,8 +42,11 @@
 							<li>L'accentuation des lettres <strong>doit être</strong> respectée ;</li>
 							<li>Les diacritiques <strong>n'affectent pas</strong> l'ordre alphabétique des mots (ex : la lettre &laquo; <em>é</em> &raquo; est considérée comme un &laquo; <em>e</em> &raquo;) ;</li>
 							<li>Il n'y a <strong>aucune limite</strong> de temps, ni de nombre de tentatives ;</li>
-							<li>Un verbe affiché en <div class="has-text-warning force-inline">orange</div> signifie qu'il a <strong>trois à quatre</strong> lettres de différence avec le verbe à deviner ;</li>
-							<li>Un verbe affiché en <div class="has-text-danger force-inline">rouge</div> signifie qu'il a <strong>une à deux</strong> lettres de différence avec le verbe à deviner.</li>
+							<li>Le diamant après un verbe est divisé en deux verticalement. Chacune des deux parties pleines signifient combien de lettre sont similaires au début ou à la fin du verbe à deviner.
+							Ainsi, <strong>&#9671;</strong> signifie qu'aucune lettre en début, ni en fin de mot, n'est similaire.
+							En revanche, <strong>5 &#11030;</strong> signifierait que cinq lettres au début du mot sont similaires.
+							De la même façon, <strong>&#11031; 3</strong> signifierait que trois lettres en fin de mot sont similaires.
+							Enfin, <strong>4 &#9670; 2</strong> signifierait que quatre lettres au début et deux à la fin du mot sont similaires.</li>
 						</ul>
 						<h4>Les touches</h4>
 						<ul>
@@ -63,7 +70,7 @@
 				</header>
 				<!-- Modal Abandon Content -->
 				<section class="modal-card-body">
-				Êtes-vous certain de vouloir avandonner ?
+				Êtes-vous certain de vouloir révéler le mot ?
 				</section>
 				<!-- Modal Abandon Footer -->
 				<footer class="modal-card-foot">
@@ -91,6 +98,7 @@
 					<p class="title" id="nav-tim">--:--:--</p>
 				</div>
 			</div>
+			<!-- Menu -->
 			<div class="level-item has-text-centered">
 				<div class="dropdown" id="menu">
 					<!-- Menu Icon -->
@@ -104,6 +112,15 @@
 					<div class="dropdown-menu" id="dropdown-menu" role="menu">
 						<!-- Menu Dropdown -->
 						<div class="dropdown-content">
+							<!-- Menu Dropdown ID -->
+							<div class="dropdown-item item-next">
+								<span class="icon-text has-text-grey">
+									<span class="icon">
+										<i class="fas fa-hashtag"></i>
+									</span>
+									<span id="day-id">Mot n°----</span>
+								</span>
+							</div>
 							<!-- Menu Dropdown Next -->
 							<div class="dropdown-item item-next">
 								<span class="icon-text has-text-grey">
@@ -130,7 +147,7 @@
 									<span class="icon">
 										<i class="fas fa-hand"></i>
 									</span>
-									<span>Abandonner</span>
+									<span>Révéler</span>
 								</span>
 							</button>
 							<!-- Menu Dropdown Divider -->
@@ -139,9 +156,9 @@
 							<div class="dropdown-item item-next">
 								<span class="icon-text has-text-grey">
 									<span class="icon">
-										<i class="fas fa-hashtag"></i>
+										<i class="fas fa-code-commit"></i>
 									</span>
-									<span>Version: 24.1020</span>
+									<span>Version: 24.1021</span>
 								</span>
 							</div>
 							<!-- Menu Dropdown Contact -->
