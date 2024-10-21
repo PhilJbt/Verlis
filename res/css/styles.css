@@ -30,6 +30,7 @@ body {
   padding: 3px;
   border-radius: 100px;
   row-gap: 2px;
+	font-size: 1.8vmin;
   opacity: 0.5;
   cursor: default;
 	transition: opacity .125s;
