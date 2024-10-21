@@ -9,7 +9,7 @@ Verlis est un jeu dont l'objectif est de deviner un verbe en fonction de l'ordre
 - L'accentuation des lettres <strong>doit être</strong> respectée ;
 - Les diacritiques <strong>n'affectent pas</strong> l'ordre alphabétique des mots (ex : la lettre &laquo; <em>é</em> &raquo; est considérée comme un &laquo; <em>e</em> &raquo;) ;
 - Il n'y a <strong>aucune limite</strong> de temps, ni de nombre de tentatives ;
-- Le diamant après un verbe est divisé en deux verticalement. Chacune des deux parties pleines signifient combien de lettre sont similaires au début ou à la fin du verbe à deviner. 
+- Le diamant après un verbe est divisé en deux verticalement. Chacune des deux parties pleines signifie combien de lettre sont similaires au début ou à la fin du verbe à deviner. 
 Ainsi, <strong>&#9671;</strong> signifie qu'aucune lettre en début, ni en fin de mot, n'est similaire. 
 En revanche, <strong>5 &#11030;</strong> signifierait que cinq lettres au début du mot sont similaires. 
 De la même façon, <strong>&#11031; 3</strong> signifierait que trois lettres en fin de mot sont similaires. 
