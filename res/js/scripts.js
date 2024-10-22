@@ -100,7 +100,7 @@ window.addEventListener('load', function () {
 	initTime();
 	
 	// Determine word (day) ID
-	displayWordID();
+	document.getElementById('day-id').innerHTML = `Mot n°${getWordID()}`;
 	
 	// Check if this word has already been done
 	checkLastFinish();
@@ -112,8 +112,8 @@ window.addEventListener('load', function () {
 /**
 * Display the word ID (based on the day ID) in the menu
 */
-function displayWordID() {
-	document.getElementById('day-id').innerHTML = `Mot n°${getDailyIntWithTimezone() - 20015}`;
+function getWordID() {
+	return getDailyIntWithTimezone() - 20015;
 }
 
 /**
@@ -495,10 +495,10 @@ function gameEnd(_success, _save = true) {
 		<div class="hero-body">
 			<div>
 				<p class="title">${_success ? 'Félicitation !' : 'Dommage...'}</p>
-				<p class="subtitle">Le mot était : &#171; <word><b>${strDeobf}</b></word> &#187;</p>
+				<p class="subtitle">Le mot n°${getWordID()} était : &#171; <word><b>${strDeobf}</b></word> &#187;</p>
 			</div>
 			<p>
-				<a href="https://fr.wiktionary.org/wiki/Conjugaison:français/${encodeURIComponent(strDeobf)}" target="_blank" class="button is-${clr} is-inverted">
+				<a href="https://fr.wiktionary.org/wiki/${encodeURIComponent(strDeobf)}" target="_blank" class="button is-${clr} is-inverted">
 					<span>Définition</span>
 					<span class="icon is-small">
 						<i class="fa-solid fa-up-right-from-square"></i>
@@ -622,17 +622,26 @@ function formatTime(_sec) {
 * Determine which day it is, independently of the timezone
 * @return {integer} The current ID of the day
 */
-function getDailyIntWithTimezone() {
+function getCurrDate() {
 	// Milliseconds in a day
 	const msPerDay = 86400000; //24 * 60 * 60 * 1000;
 	const currentDate = new Date();
 	// Current time in milliseconds
 	const localTime = currentDate.getTime();
-	// Convert time zone offset to milliseconds
-	const timezoneOffset = currentDate.getTimezoneOffset() * 60 * 1000;
-	// Local days since epoch, independently of the time zone
-	const localMidnight = parseInt((localTime - timezoneOffset) / msPerDay);
+	
+	return [msPerDay, localTime];
+}
 
+/**
+* Determine which day it is, independently of the timezone
+* @return {integer} The current ID of the day
+*/
+function getDailyIntWithTimezone() {
+	const [msPerDay, localTime] = getCurrDate();
+	
+	// Local days since epoch, independently of the time zone
+	const localMidnight = parseInt(localTime / msPerDay);
+	
 	return localMidnight;
 }
 
@@ -641,13 +650,8 @@ function getDailyIntWithTimezone() {
 * @return {integer} Number of milliseconds remaining
 */
 function getNextVerbTime() {
-	// Milliseconds in a day
-	const msPerDay = 86400000;
-	const currentDate = new Date();
-	// Current time in milliseconds
-	const localTime = currentDate.getTime();
- 
-	return Math.max(0, Math.floor(msPerDay - (localTime % msPerDay)));
+	const [msPerDay, localTime] = getCurrDate();
+	return Math.max(0, parseInt(msPerDay - (localTime % msPerDay)));
 }
 
 /**
