@@ -10,27 +10,60 @@
   </head>
   <body class="theme-dark">
 		<!-- Alphabet -->
-		<div class="alphabet">
+		<div class="alphabet patoush">
 			<div>A</div><div>B</div><div>C</div><div>D</div><div>E</div><div>F</div><div>G</div><div>H</div><div>I</div><div>J</div><div>K</div><div>L</div><div>M</div><div>N</div><div>O</div><div>P</div><div>Q</div><div>R</div><div>S</div><div>T</div><div>U</div><div>V</div><div>W</div><div>X</div><div>Y</div><div>Z</div>
 		</div>
+		<!-- Modal Options -->
+		<div id="mdl-options" class="modal patoush">
+			<div class="modal-background"></div>
+			<div class="modal-card">
+				<!-- Modal Options Header -->
+				<header class="modal-card-head has-background-primary">
+					<p class="modal-card-title"><i class="fas fa-gear"></i> Options</p>
+					<button class="delete" aria-label="close"></button>
+				</header>
+				<!-- Modal Options Content -->
+				<section class="modal-card-body">
+					<div class="field">
+						<label class="label">Indices</label>
+						<div class="radios">
+							<label class="radio">
+								<input type="radio" id="rad-indice-0" name="rad-indice" value="0" />
+								Tous
+							</label>
+							<label class="radio">
+								<input type="radio" id="rad-indice-1" name="rad-indice" value="1" />
+								Principaux
+							</label>
+							<label class="radio">
+								<input type="radio" id="rad-indice-2" name="rad-indice" value="2" />
+								Aucun
+							</label>
+						</div>
+					</div>
+				</section>
+				<!-- Modal Options Footer -->
+				<footer class="modal-card-foot">
+					<!-- Modal Options Footer Buttons -->
+					<div class="buttons">
+						<button class="button is-primary" id="btn-options">Sauvegarder</button>
+						<button class="button">Annuler</button>
+					</div>
+				</footer>
+			</div>
+		</div>
 		<!-- Modal Infos -->
-		<div id="mdl-infos" class="modal">
+		<div id="mdl-infos" class="modal patoush">
 			<div class="modal-background"></div>
 			<div class="modal-card mdl-infos-content">
 				<!-- Modal Infos Header -->
 				<header class="modal-card-head has-background-info">
-					<p class="modal-card-title">Aide</p>
+					<p class="modal-card-title"><i class="fas fa-info"></i> Aide</p>
 					<button class="delete" aria-label="close"></button>
 				</header>
 				<!-- Modal Infos Content -->
 				<section class="modal-card-body">
 					<div class="content">
-					<blockquote>
-						<h1>Bienvenue !</h1>
-						<p>
-							Voici ce qu'il vous faut savoir sur Verlis !
-						</p>
-					</blockquote>
 						<h4>Qu'est-ce que Verlis ?</h4>
 						<p>
 							Verlis est un jeu dont l'objectif est de deviner un verbe en fonction de l'ordre alphabétique des propositions faites.
@@ -42,11 +75,13 @@
 							<li>L'accentuation des lettres <strong>doit être</strong> respectée ;</li>
 							<li>Les diacritiques <strong>n'affectent pas</strong> l'ordre alphabétique des mots (ex : la lettre &laquo; <em>é</em> &raquo; est considérée comme un &laquo; <em>e</em> &raquo;) ;</li>
 							<li>Il n'y a <strong>aucune limite</strong> de temps, ni de nombre de tentatives ;</li>
-							<li>Le diamant après un verbe est divisé en deux verticalement. Chacune des deux parties pleines signifie combien de lettre sont similaires au début ou à la fin du verbe à deviner.
-							Ainsi, <strong>&#9671;</strong> signifie qu'aucune lettre en début, ni en fin de mot, n'est similaire.
-							En revanche, <strong>5 &#11030;</strong> signifierait que cinq lettres au début du mot sont similaires.
-							De la même façon, <strong>&#11031; 3</strong> signifierait que trois lettres en fin de mot sont similaires.
-							Enfin, <strong>4 &#9670; 2</strong> signifierait que quatre lettres au début et deux à la fin du mot sont similaires.</li>
+							<li>Le diamant, après un verbe, est divisé verticalement en deux parties. Chacune représente le nombre de lettres similaires en début ou en fin de mot. Voici des exemples :<br/>
+							<strong class="wrd-ftr-clr">&#9671;</strong> signifie <strong>qu'aucune lettre</strong> en début, ni en fin de mot, n'est similaire.<br/>
+							<strong class="wrd-ftr-clr">5 &#11030;</strong> signifierait que les <strong>cinq premières</strong> lettres du mot sont similaires.<br/>
+							<strong class="wrd-ftr-clr">&#11031; 3</strong> signifierait que les <strong>trois dernières</strong> lettres du mot sont similaires.<br/>
+							<strong class="wrd-ftr-clr">4 &#9670; 2</strong> signifierait que les <strong>quatre premières</strong> et les <strong>deux dernières</strong> lettres du mot sont similaires.<br/>
+							Là encore, les diacritiques n'affectent pas le décompte.<br/>
+							Il vous est possible d'activer ces indices dans le <strong>menu <em>Options</em></strong>.</li>
 						</ul>
 						<h4>Les touches</h4>
 						<ul>
@@ -60,12 +95,12 @@
 			</div>
 		</div>
 		<!-- Modal Abandon -->
-		<div id="mdl-abandon" class="modal">
+		<div id="mdl-abandon" class="modal patoush">
 			<div class="modal-background"></div>
 			<div class="modal-card">
 				<!-- Modal Abandon Header -->
 				<header class="modal-card-head has-background-danger">
-					<p class="modal-card-title">Abandon</p>
+					<p class="modal-card-title"><i class="fas fa-skull-crossbones"></i> Abandon</p>
 					<button class="delete" aria-label="close"></button>
 				</header>
 				<!-- Modal Abandon Content -->
@@ -83,7 +118,7 @@
 			</div>
 		</div>
 		<!-- Infobar -->
-		<nav class="level">
+		<nav class="level patoush">
 			<!-- Infobar Tries -->
 			<div class="level-item has-text-centered">
 				<div>
@@ -132,20 +167,29 @@
 							</div>
 							<!-- Menu Dropdown Divider -->
 							<hr class="dropdown-divider" />
-							<!-- Menu Dropdown Modal -->
+							<!-- Menu Dropdown Modal Help -->
 							<button class="dropdown-item has-text-info js-modal-trigger" data-target="mdl-infos">
 								<span class="icon-text">
 									<span class="icon">
 										<i class="fas fa-info"></i>
 									</span>
-									<span>Infos</span>
+									<span>Aide</span>
+								</span>
+							</button>
+							<!-- Menu Dropdown Modal Options -->
+							<button class="dropdown-item has-text-primary js-modal-trigger" data-target="mdl-options">
+								<span class="icon-text">
+									<span class="icon">
+										<i class="fas fa-gear"></i>
+									</span>
+									<span>Options</span>
 								</span>
 							</button>
 							<!-- Menu Dropdown Stop -->
 							<button class="dropdown-item has-text-danger" id="plzstahp">
 								<span class="icon-text">
 									<span class="icon">
-										<i class="fas fa-hand"></i>
+										<i class="fas fa-skull-crossbones"></i>
 									</span>
 									<span>Révéler</span>
 								</span>
@@ -158,7 +202,7 @@
 									<span class="icon">
 										<i class="fas fa-code-commit"></i>
 									</span>
-									<span>Version: 24.1021</span>
+									<span>Version: 24.1023</span>
 								</span>
 							</div>
 							<!-- Menu Dropdown Contact -->
@@ -191,13 +235,26 @@
 					</section>
 					<!-- User inputs -->
 					<div id="ag-input" class="cell">
-						<input id="inp-usr" class="input" type="text" placeholder="Votre mot..." disabled/> 
-						<button id="btn-try" class="button" disabled>
-							<span>Essayer</span>
-							<span class="icon is-small">
-								<i class="fa-solid fa-paper-plane"></i>
-							</span>
-						</button>
+						<div class="field width-full">
+							<div class="control has-icons-left has-icons-right">
+								<input id="inp-usr" class="input" type="text" placeholder="Votre verbe..." disabled>
+								<span class="icon is-small is-left">
+									<i class="fas fa-pen"></i>
+								</span>
+								<span class="icon is-small is-right">
+									<i id="inp-usr-icn" class="fas fa-warning"></i>
+								</span>
+							</div>
+							<p id="inp-usr-dsc" class="help is-danger patoush">Ce verbe est inconnu.</p>
+						</div>
+						<div class="field">
+							<button id="btn-try" class="button" disabled>
+								<span>Essayer</span>
+								<span class="icon is-small">
+									<i class="fa-solid fa-paper-plane"></i>
+								</span>
+							</button>
+						</div>
 					</div>
 					<!-- Words after -->
 					<div class="cell" id="ag-words-after"></div>

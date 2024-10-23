@@ -16,6 +16,13 @@ body {
 }
 
 /**
+* General
+*/
+.patoush {
+	user-select: none;
+}
+
+/**
 * Alphabet
 */
 .alphabet {
@@ -42,8 +49,20 @@ body {
 /**
 * Inputs
 */
+input::placeholder {
+	user-select: none;
+}
 #ag-input {
 	display: none;
+}
+.width-full {
+	width: 100%;
+}
+#inp-usr-icn , #inp-usr-dsc {
+	visibility: hidden;
+}
+.is-visible {
+	visibility: visible !important;
 }
 
 /**
@@ -51,6 +70,7 @@ body {
 */
 .hero {
 	width: 100%;
+	user-select: none;
 }
 
 .hero-body {
@@ -66,6 +86,8 @@ body {
 */
 word, .word {
 	text-transform: capitalize;
+	user-select: all;
+	cursor: pointer;
 }
 .word::after {
 	display: inline-block;
@@ -75,13 +97,25 @@ word, .word {
 	color: #4a4d53;
 	content: attr(data-nfo);
 }
+#ag-words-before .word:last-of-type,
+#ag-words-after .word:first-of-type {
+  font-size: 50px;
+}
 #ag-words-before .word:last-of-type::after,
 #ag-words-after .word:first-of-type::after { 
 	font-size: 20px;
 }
-#ag-words-before .word:last-of-type,
-#ag-words-after .word:first-of-type {
-  font-size: 50px;
+
+.word::after { 
+	visibility: hidden;
+	color: #9c7230;
+	transition: color .125s
+}
+.word:hover::after, .wrd-ftr-clr { 
+	color: #ff9c00;
+}
+.word.show-after::after { 
+	visibility: visible !important;
 }
 
 #ag-words-before, #ag-words-after {
@@ -167,6 +201,14 @@ a.dropdown-item, *.dropdown-item {
 /**
 * Modal
 */
+#mdl-options {
+	z-index: 5;
+}
+
+#mdl-infos {
+	z-index: 6;
+}
+
 .mdl-infos-content {
   width: 60vw;
   max-width: 900px;	

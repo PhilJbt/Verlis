@@ -14,6 +14,7 @@ window.addEventListener('load', function () {
 	window.vl_trying = false;
 	window.vl_timeInit = null;
 	window.vl_lastTry = null;
+	window.vl_options = [];
 	
 	// Choose a word from the list
 	pickWord();
@@ -28,6 +29,11 @@ window.addEventListener('load', function () {
 	document.getElementById('btn-abandon').addEventListener('click', function(e) {
 		gameEnd(false);
 	});
+	
+	// Bind the "Save" options button from the options modal to its callback
+	document.getElementById('btn-options').addEventListener('click', function(e) {
+		optionsSave();
+	});
 
 	// Bind the "Essayer" button to its callback
 	document.getElementById('btn-try').addEventListener('click', function () {
@@ -39,9 +45,14 @@ window.addEventListener('load', function () {
 	// in order to remove the red style 
 	document.getElementById('inp-usr').addEventListener("input", function(e) {
 		// The text input has the danger class
-		if (e.srcElement.classList.contains('is-danger'))
+		if (e.srcElement.classList.contains('is-danger')) {
 			// Remove the danger class
-			e.srcElement.classList.remove('is-danger');
+			e.srcElement.classList.remove('is-danger');			
+			// Remove the user text input warning icon
+			document.getElementById('inp-usr-icn').classList.remove('is-visible');
+			// Remove the user text input warning text
+			document.getElementById('inp-usr-dsc').classList.remove('is-visible');
+		}
 	});
 
 	// Bind the keyboard key pressing to its callback,
@@ -105,6 +116,9 @@ window.addEventListener('load', function () {
 	// Check if this word has already been done
 	checkLastFinish();
 	
+	// Load stored user's options
+	optionsLoad();
+	
 	// Show a welcome message if first visit
 	welcomeMessage();
 });
@@ -120,10 +134,62 @@ function getWordID() {
 * Help modal opened as a welcome message
 */
 function welcomeMessage() {
-	if (localStorage.getItem('wm') !== 'true') {
-		localStorage.setItem('wm', 'true');
-		document.getElementById('mdl-infos').classList.add('is-active');
+	if (localStorage.getItem('wm') !== 'true')
+		setTimeout(() => {
+			localStorage.setItem('wm', 'true');
+			document.getElementById('menu').classList.add('is-active');
+		}, 750);
+}
+
+/**
+* Load options from stored data
+*/
+function optionsLoad() {
+	if (localStorage.getItem('opt') !== null) {
+		const opt = JSON.parse(localStorage.getItem('opt'));
+		
+		window.vl_options = opt;
+		
+		document.getElementById(`rad-indice-${opt['indice']}`).checked = true;
 	}
+	else {
+		document.getElementById('rad-indice-2').checked = true;
+		optionsSave();
+	}
+}
+
+/**
+* Save options to stored data
+*/
+function optionsSave() {
+		const opt = JSON.parse(localStorage.getItem('opt') || '{}');
+		
+		opt['indice'] = parseInt(document.querySelector('*[name="rad-indice"]:checked').value);
+		
+		window.vl_options = opt;
+		
+		localStorage.setItem('opt', JSON.stringify(opt));
+		
+		applyWordAfterStyle();
+}
+
+/**
+* Apply visibility to words::after corresponding to users options
+*/
+function applyWordAfterStyle() {
+	// Apply the style to the word::after corresponding to the alphabetically closest words
+	document.querySelectorAll('#ag-words-before .word:last-of-type, #ag-words-after .word:first-of-type').forEach(e => {
+		e.classList.remove('show-after');
+		if (window.vl_options['indice'] < 2)
+			e.classList.add('show-after');
+	});
+	
+	// Apply the style to the word::after corresponding to the alphabetically farest words
+	document.querySelectorAll('#ag-words-before .word:not(:last-of-type), #ag-words-after .word:not(:first-of-type)').forEach(e => {
+		e.classList.remove('show-after');
+		if (window.vl_options['indice'] === 0)
+			e.classList.add('show-after');
+	});
 }
 
 /**
@@ -253,9 +319,14 @@ function checkWord() {
 	// The word does not match any known word
 	if (wordNotFound === true
 	// or the user gave an unfinished word
-	|| branchCurr['\x06'] !== true)
+	|| branchCurr['\x06'] !== true) {
 		// Apply the corresponding style to the user text input
 		inputUser.classList.add('is-danger');
+		// Show the user text input warning icon
+		document.getElementById('inp-usr-icn').classList.add('is-visible');
+		// Show the user text input warning text
+		document.getElementById('inp-usr-dsc').classList.add('is-visible');
+	}
 	// The word exists
 	else {
 		// If the game timer has not yet been started
@@ -319,8 +390,6 @@ function checkWord() {
 			else if (countSameEnd !== 0)
 				frag.setAttribute('data-nfo', `\u2b17 ${countSameEnd}`);
 			
-			
-
 			// Try to insert the given word alphabetically into its place in the list
 			let insertDone = false;
 			// The list has children
@@ -380,6 +449,9 @@ function checkWord() {
 						return;
 				});
 			}
+			
+			// Apply the corresponding style to word::after
+			applyWordAfterStyle();
 		}
 	}
 	

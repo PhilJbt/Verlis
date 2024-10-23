@@ -9,11 +9,13 @@ Verlis est un jeu dont l'objectif est de deviner un verbe en fonction de l'ordre
 - L'accentuation des lettres <strong>doit être</strong> respectée ;
 - Les diacritiques <strong>n'affectent pas</strong> l'ordre alphabétique des mots (ex : la lettre &laquo; <em>é</em> &raquo; est considérée comme un &laquo; <em>e</em> &raquo;) ;
 - Il n'y a <strong>aucune limite</strong> de temps, ni de nombre de tentatives ;
-- Le diamant après un verbe est divisé en deux verticalement. Chacune des deux parties pleines signifie combien de lettre sont similaires au début ou à la fin du verbe à deviner. 
-Ainsi, <strong>&#9671;</strong> signifie qu'aucune lettre en début, ni en fin de mot, n'est similaire. 
-En revanche, <strong>5 &#11030;</strong> signifierait que cinq lettres au début du mot sont similaires. 
-De la même façon, <strong>&#11031; 3</strong> signifierait que trois lettres en fin de mot sont similaires. 
-Enfin, <strong>4 &#9670; 2</strong> signifierait que quatre lettres au début et deux à la fin du mot sont similaires.
+- Le diamant, après un verbe, est divisé verticalement en deux parties. Chacune représente le nombre de lettres similaires en début ou en fin de mot. Voici des exemples :<br/>
+<strong>$${\color{#ff9c00}&#9671;}$$</strong> signifie <strong>qu'aucune lettre</strong> en début, ni en fin de mot, n'est similaire.<br/>
+<strong>$${\color{#ff9c00}5 &#11030;}$$</strong> signifierait que les <strong>cinq premières</strong> lettres du mot sont similaires.<br/>
+<strong>$${\color{#ff9c00}&#11031; 3}$$</strong> signifierait que les <strong>trois dernières</strong> lettres du mot sont similaires.<br/>
+<strong>$${\color{#ff9c00}4 &#9670; 2}$$</strong> signifierait que les <strong>quatre premières</strong> et les <strong>deux dernières</strong> lettres du mot sont similaires.<br/>
+Là encore, les diacritiques n'affectent pas le décompte.<br/>
+Il vous est possible d'activer ces indices dans le <strong>menu <em>Options</em></strong>.
 
 ## Les touches
 
