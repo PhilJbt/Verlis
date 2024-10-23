@@ -1,10 +1,22 @@
 /**
-* Initialize the DOM and game systems once the main document is loaded.
+* Run the Verlis initialization when the DOM loading is done
 */
 window.addEventListener('load', function () {
-	// Remove any text from the user input text (some browser cache it)
-	document.getElementById('inp-usr').value = '';
-	
+	init();
+});
+
+/**
+*
+* @param {number} _val - The percentage of the progress bar in percentage
+*/
+function progressLoading(_val) {
+	document.getElementById('loading').value = _val;
+}
+
+/**
+* Initialize the DOM and game systems once the main document is loaded
+*/
+async function init() {
 	// Declare and initialize global vars
 	window.vl_nswr = '';
 	window.vl_finished = false;
@@ -15,9 +27,28 @@ window.addEventListener('load', function () {
 	window.vl_timeInit = null;
 	window.vl_lastTry = null;
 	window.vl_options = [];
+	window.vl_verblist = {};
+	window.vl_i18n = {};
+
+	// Remove any text from the user input text (some browser cache it)
+	document.getElementById('inp-usr').value = '';
+	
+	progressLoading(10);
+	
+	// Load stored user's options
+	optionsLoad();
+	
+	progressLoading(20);
+	
+	// Retrieve the list of verbs and the ui localization
+	await i18n_init();
+	
+	progressLoading(40);
 	
 	// Choose a word from the list
 	pickWord();
+	
+	progressLoading(50);
 	
 	// Bind the "Abandon" button from the menu to its callback
 	document.getElementById('plzstahp').addEventListener('click', function(e) {
@@ -30,6 +61,8 @@ window.addEventListener('load', function () {
 		gameEnd(false);
 	});
 	
+	progressLoading(60);
+	
 	// Bind the "Save" options button from the options modal to its callback
 	document.getElementById('btn-options').addEventListener('click', function(e) {
 		optionsSave();
@@ -39,6 +72,8 @@ window.addEventListener('load', function () {
 	document.getElementById('btn-try').addEventListener('click', function () {
 		checkWord();
 	});
+	
+	progressLoading(70);
 	
 	// Bind text input to its callback to remove the red style assigned to it
 	// when the user tries a verb that doesn't exist, as soon as a letter is added or removed from it.
@@ -79,7 +114,7 @@ window.addEventListener('load', function () {
 				document.getElementById('inp-usr').value = '';
 		}
 	});
-
+	
 	// Add function to reverse a string
 	String.prototype.reverse = function (char) {
 		var arrSlitted = this.split("");
@@ -92,36 +127,128 @@ window.addEventListener('load', function () {
 	String.prototype.rmvDiacr = function (char) {
 		return this.toString().toLowerCase().normalize("NFD").replace(/\p{Diacritic}/gu, "");
 	};
-
-	// Erase the "Please wait loading" hero
-	document.getElementById('loading').remove();
-	// Set the inputs visibile
-	document.getElementById('ag-input').style.display = 'flex';
-	// Enable the button back
-	document.getElementById('btn-try').removeAttribute('disabled');
-	// Enable the text input back
-	document.getElementById('inp-usr').removeAttribute('disabled');
-	// Automatically focus the text input
-	document.getElementById('inp-usr').focus();
 	
 	// Init css framework
 	initBulma();
 	
+	progressLoading(80);
+	
 	// Start the time worker (i.e. the game elapsed timer and the "next word" timer)
 	initTime();
 	
+	progressLoading(90);
+	
 	// Determine word (day) ID
-	document.getElementById('day-id').innerHTML = `Mot n°${getWordID()}`;
+	document.getElementById('day-id').innerHTML = `${window.vl_i18n['js_dayid']}${getWordID()}`;
 	
 	// Check if this word has already been done
 	checkLastFinish();
 	
-	// Load stored user's options
-	optionsLoad();
+	progressLoading(100);
 	
 	// Show a welcome message if first visit
 	welcomeMessage();
-});
+
+	// Erase the "Please wait loading" hero
+	document.getElementById('loading').remove();
+	// Set the inputs visibile
+	if (document.getElementById('ag-input'))
+		document.getElementById('ag-input').style.display = 'flex';
+	// Enable the button back
+	if (document.getElementById('btn-try'))
+		document.getElementById('btn-try').removeAttribute('disabled');
+	if (document.getElementById('inp-usr')) {
+		// Enable the text input back
+		document.getElementById('inp-usr').removeAttribute('disabled');
+		// Automatically focus the text input
+		document.getElementById('inp-usr').focus();
+	}
+}
+
+/**
+* Get the browser language
+* @return {} - The language of the browser if implemented, else "en-US"
+*/
+function getLang() {
+	const arrLangImpl = [
+		'da-DK',
+		'de-DE',
+		'es-ES',
+		'fi-FI',
+		'fr-FR',
+		'it-IT',
+		'nb-NO',
+		'nl-NL',
+		'pt-BR',
+		'pt-PT',
+		'sv-SE'
+	];
+
+	let strBrowserLang = navigator.language || navigator.userLanguage;
+
+	if (!arrLangImpl.includes(strBrowserLang))
+		strBrowserLang = 'en-US';
+	
+	return strBrowserLang;
+}
+
+/**
+* Run data retrieving and apply the localization
+*/
+async function i18n_init() {
+	const lang = window.vl_options['langue'];
+	await i18n_ui(lang);
+	progressLoading(30);
+	await i18n_vb(lang);
+}
+
+/**
+* Apply localization on UI
+* @param {string} _lang - The language to retrieve
+*/
+async function i18n_ui(_lang) {
+	const nsr = await fetch(`res/json/loca/${_lang}.json`);
+	window.vl_i18n = await nsr.json();
+	
+	// Append to child
+	document.querySelectorAll('*[i18n^="ac_"]').forEach(e => {
+		const attName = e.getAttribute('i18n').substr(3);
+		window.vl_i18n[attName].split(';').forEach(c => {
+			var newNode = document.createElement('div');
+			newNode.innerHTML = c;
+			e.appendChild(newNode);
+		});
+	});
+	
+	// Append to (inner)HTML
+	document.querySelectorAll('*[i18n^="ah_"]').forEach(e => {
+		const attName = e.getAttribute('i18n').substr(3);
+		e.innerHTML += window.vl_i18n[attName];
+	});
+	
+	// Replace innerHTML
+	document.querySelectorAll('*[i18n^="ih_"]').forEach(e => {
+		const attName = e.getAttribute('i18n').substr(3);
+		let cont = attName.substr(0, 4) === 'a2b_' ? atob(window.vl_i18n[attName]) : window.vl_i18n[attName];
+		e.innerHTML = cont;
+	});
+	
+	// Placeholder
+	document.querySelectorAll('*[i18n^="ph_"]').forEach(e => {
+		const attName = e.getAttribute('i18n').substr(3);
+		e.placeholder = window.vl_i18n[attName];
+	});
+}
+
+/**
+* Retrieve word list depending on the current language
+* @param {string} _lang - The language to retrieve
+*/
+async function i18n_vb(_lang) {
+	const nsr = await fetch(`res/json/verb/${_lang}.json`);
+	const jsn = await nsr.json();
+	window.vl_verblist = jsn;
+}
 
 /**
 * Display the word ID (based on the day ID) in the menu
@@ -134,11 +261,10 @@ function getWordID() {
 * Help modal opened as a welcome message
 */
 function welcomeMessage() {
-	if (localStorage.getItem('wm') !== 'true')
-		setTimeout(() => {
-			localStorage.setItem('wm', 'true');
-			document.getElementById('menu').classList.add('is-active');
-		}, 750);
+	if (localStorage.getItem('wm') !== 'true') {
+		document.getElementById('mdl-infos').classList.add('is-active');
+		localStorage.setItem('wm', 'true');
+	}
 }
 
 /**
@@ -150,10 +276,21 @@ function optionsLoad() {
 		
 		window.vl_options = opt;
 		
+		// clues
 		document.getElementById(`rad-indice-${opt['indice']}`).checked = true;
+		
+		// Language
+		document.querySelector(`.rad-lng input[type="radio"][value="${opt['langue']}"]`).checked = true;
 	}
 	else {
+		// Clues
 		document.getElementById('rad-indice-2').checked = true;
+		
+		// Language
+		const strBrowserLang = getLang();
+		document.querySelector(`.rad-lng input[type="radio"][value="${strBrowserLang}"]`).checked = true;
+		
+		// Save default options
 		optionsSave();
 	}
 }
@@ -164,13 +301,21 @@ function optionsLoad() {
 function optionsSave() {
 		const opt = JSON.parse(localStorage.getItem('opt') || '{}');
 		
+		// Clues
 		opt['indice'] = parseInt(document.querySelector('*[name="rad-indice"]:checked').value);
+		
+		// Language
+		const oldLang = opt['langue'];
+		opt['langue'] = document.querySelector(`.rad-lng input[type="radio"]:checked`).value;
 		
 		window.vl_options = opt;
 		
 		localStorage.setItem('opt', JSON.stringify(opt));
 		
 		applyWordAfterStyle();
+		
+		if (oldLang !== opt['langue'])
+			window.location.reload();
 }
 
 /**
@@ -203,7 +348,7 @@ function pickWord() {
 	// Final word when every characters have been picked
 	let strWord = '';
 	// Set the current branch of the n-ary tree to its root
-	let currBranch = wordList;
+	let currBranch = window.vl_verblist;
 	
 	// Move deeper into the tree until the bottom has been reach
 	do {
@@ -298,7 +443,7 @@ function checkWord() {
 	** DOES THE WORD EXIST?
 	*/
 	// Set the current branch of the tree to its root
-	let branchCurr = wordList;
+	let branchCurr = window.vl_verblist;
 	let wordNotFound = false;
 	
 	// For each character of the given word
@@ -359,25 +504,7 @@ function checkWord() {
 			let frag = document.createElement('div');
 			frag.classList.add('word');
 			frag.innerHTML = wordUserLca;
-			// Color the given word depending on how many characters differ from the picked one
-			/*
-			const countDiffChar = wordUserLoc.length - ag_nswrLoc.length;
-			if (countDiffChar == 0)
-				frag.setAttribute('data-size', '\u229c');
-			else if (countDiffChar < 0)
-				frag.setAttribute('data-size', '\u229d');
-			else
-				frag.setAttribute('data-size', '\u2295');
-			*/
-			/*
-			const countSameBeg = countDifference(wordUserLoc, ag_nswrLoc);
-			if (countSameBeg !== 0) {
-				const specialCharString = `\\u${(9311 + countDiffChar).toString(16)}`;
-				const numericValue = parseInt(specialCharString.replace(/\\u|\\/g, ''), 16);
-				const specialChar = String.fromCharCode(numericValue);
-				frag.setAttribute('data-size', specialChar);
-			}
-			*/
+			// Add the clue according to the number of identical letters at the beginning and end
 			const countSameBeg = countEquality(wordUserLoc, ag_nswrLoc, false);
 			const countSameEnd = countEquality(wordUserLoc, ag_nswrLoc, true);
 			
@@ -541,7 +668,7 @@ function gameEnd(_success, _save = true) {
 	// Save the result
 	if (_save === true)
 		localStorage.setItem(
-			"lastFinished",
+			`lf_${window.vl_options['langue']}`,
 			JSON.stringify({
 				day: getDailyIntWithTimezone(),
 				type: _success,
@@ -566,12 +693,12 @@ function gameEnd(_success, _save = true) {
 	`<section class="hero is-small is-${clr}">
 		<div class="hero-body">
 			<div>
-				<p class="title">${_success ? 'Félicitation !' : 'Dommage...'}</p>
-				<p class="subtitle">Le mot n°${getWordID()} était : &#171; <word><b>${strDeobf}</b></word> &#187;</p>
+				<p class="title">${_success ? window.vl_i18n['js_win'] : window.vl_i18n['js_abandon']}</p>
+				<p class="subtitle">${window.vl_i18n['js_verbwas'].replace('#', getWordID())} : &#171; <word><b>${strDeobf}</b></word> &#187;</p>
 			</div>
 			<p>
-				<a href="https://fr.wiktionary.org/wiki/${encodeURIComponent(strDeobf)}" target="_blank" class="button is-${clr} is-inverted">
-					<span>Définition</span>
+				<a href="${window.vl_i18n['js_urldef']}${encodeURIComponent(strDeobf)}" target="_blank" class="button is-${clr} is-inverted">
+					<span>${window.vl_i18n['js_verbdef']}</span>
 					<span class="icon is-small">
 						<i class="fa-solid fa-up-right-from-square"></i>
 					</span>
@@ -586,7 +713,7 @@ function gameEnd(_success, _save = true) {
 */
 function checkLastFinish() {
 	// Retrieve the latest potentially stored game information
-	const lastFinished = JSON.parse(localStorage.getItem("lastFinished") || '{"day": -1, "type": "none"}');
+	const lastFinished = JSON.parse(localStorage.getItem(`lf_${window.vl_options['langue']}`) || '{"day": -1, "type": "none"}');
 	
 	// If the infos are valid,
 	if (lastFinished.type !== 'none'
@@ -651,7 +778,7 @@ function displayTime() {
 	// If the dopdown menu is opened
 	if (document.getElementById('menu').classList.contains('is-active') === true) {
 		// Update the "Next verb" timer
-		document.getElementById('timer-next').innerHTML = `Prochain : ${formatTime(Math.floor(getNextVerbTime() / 1000))}`;
+		document.getElementById('timer-next').innerHTML = `${window.vl_i18n['js_next']} : ${formatTime(Math.floor(getNextVerbTime() / 1000))}`;
 	}
 }
 
@@ -733,6 +860,8 @@ function getNextVerbTime() {
 function initBulma() {
   // Functions to open and close a modal
   function openModal($el) {
+		if ($el.id === 'mdl-options')
+			optionsLoad();
     $el.classList.add('is-active');
   }
 

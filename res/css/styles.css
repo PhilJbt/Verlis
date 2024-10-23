@@ -14,6 +14,10 @@ body {
 	
 	overflow: hidden;
 }
+::selection {
+  color: #14161a;
+  background: #9ea3b1;
+}
 
 /**
 * General
@@ -215,5 +219,31 @@ a.dropdown-item, *.dropdown-item {
 }
 
 .force-inline {
+	display: inline;
+}
+
+.rad-lng input[type="radio"] {
+	display: none;
+}
+.rad-lng input[type="radio"] ~ img {
+	opacity: .125;
+	cursor: pointer;
+	width: 32px;
+	height: 32px;
+}
+.rad-lng input[type="radio"]:hover ~ img {
+	opacity: 1;
+}
+.rad-lng input[type="radio"]:disabled ~ img {
+	cursor: not-allowed;
+}
+.rad-lng input[type="radio"]:checked ~ img {
+	opacity: 1;
+}
+.rad-lng label {
+	width: fit-content;
+}
+
+.radio p {
 	display: inline;
 }
