@@ -35,21 +35,71 @@ async function init() {
 	
 	progressLoading(10);
 	
-	// Load stored user's options
-	optionsLoad();
+	// Bind listeners to their callbacks
+	bindFuncs();
 	
 	progressLoading(20);
 	
-	// Retrieve the list of verbs and the ui localization
-	await i18n_init();
+	// Load stored user's options
+	optionsLoad();
 	
+	progressLoading(30);
+	
+	// Retrieve the list of verbs and the ui localization
+	await i18n_ui();
 	progressLoading(40);
+	await i18n_vb();
+	
+	progressLoading(50);
 	
 	// Choose a word from the list
 	pickWord();
 	
-	progressLoading(50);
+	progressLoading(60);
 	
+	// Init css framework
+	initBulma();
+	
+	progressLoading(70);
+	
+	// Start the time worker (i.e. the game elapsed timer and the "next word" timer)
+	initTime();
+	
+	progressLoading(80);
+	
+	// Determine word (day) ID
+	document.getElementById('day-id').innerHTML = `${window.vl_i18n['js_dayid']}${getWordID()}`;
+	
+	// Check if this word has already been done
+	checkLastFinish();
+	
+	progressLoading(90);
+	
+	// Show a welcome message if first visit
+	welcomeMessage();
+	
+	progressLoading(100);
+
+	// Erase the "Please wait loading" hero
+	document.getElementById('loading').remove();
+	// Set the inputs visibile
+	if (document.getElementById('ag-input'))
+		document.getElementById('ag-input').style.display = 'flex';
+	// Enable the button back
+	if (document.getElementById('btn-try'))
+		document.getElementById('btn-try').removeAttribute('disabled');
+	if (document.getElementById('inp-usr')) {
+		// Enable the text input back
+		document.getElementById('inp-usr').removeAttribute('disabled');
+		// Automatically focus the text input
+		document.getElementById('inp-usr').focus();
+	}
+}
+
+/**
+* Bind listeners to their callbacks
+*/
+function bindFuncs() {
 	// Bind the "Abandon" button from the menu to its callback
 	document.getElementById('plzstahp').addEventListener('click', function(e) {
 		if (window.vl_finished !== true)
@@ -61,8 +111,6 @@ async function init() {
 		gameEnd(false);
 	});
 	
-	progressLoading(60);
-	
 	// Bind the "Save" options button from the options modal to its callback
 	document.getElementById('btn-options').addEventListener('click', function(e) {
 		optionsSave();
@@ -72,8 +120,6 @@ async function init() {
 	document.getElementById('btn-try').addEventListener('click', function () {
 		checkWord();
 	});
-	
-	progressLoading(70);
 	
 	// Bind text input to its callback to remove the red style assigned to it
 	// when the user tries a verb that doesn't exist, as soon as a letter is added or removed from it.
@@ -124,45 +170,51 @@ async function init() {
 	};
 
 	// Add function to convert any diacritical character to its equivalent without diacritical mark
+	// Note : !! DEPRECATED !!
 	String.prototype.rmvDiacr = function (char) {
-		return this.toString().toLowerCase().normalize("NFD").replace(/\p{Diacritic}/gu, "");
+		const arrLangDiacriticOsef = [
+			'fr-FR'
+		];
+		if (arrLangDiacriticOsef.includes(window.vl_options['langue']))
+			return this.toLowerCase().normalize("NFKC").replace(/\p{Diacritic}/gu, "");
+		else
+			return this.toLowerCase().normalize("NFKC");
 	};
 	
-	// Init css framework
-	initBulma();
+	// Encode string
+	String.prototype.vl_encode = function (char) {
+		const bytes = new TextEncoder().encode(this);
+		const bin = String.fromCodePoint(...bytes);
+		return btoa(bin);
+	};
 	
-	progressLoading(80);
+	// Decode string
+	String.prototype.vl_decode = function (char) {
+		const bin = atob(this);
+		const bytes = Uint8Array.from(bin, (m) => m.codePointAt(0));
+		return new TextDecoder().decode(bytes);
+	};
 	
-	// Start the time worker (i.e. the game elapsed timer and the "next word" timer)
-	initTime();
+	// Normalize special characters encoding
+	String.prototype.vl_normalize = function (char) {
+		return this.toLowerCase().normalize("NFKC");
+	};
 	
-	progressLoading(90);
-	
-	// Determine word (day) ID
-	document.getElementById('day-id').innerHTML = `${window.vl_i18n['js_dayid']}${getWordID()}`;
-	
-	// Check if this word has already been done
-	checkLastFinish();
-	
-	progressLoading(100);
-	
-	// Show a welcome message if first visit
-	welcomeMessage();
-
-	// Erase the "Please wait loading" hero
-	document.getElementById('loading').remove();
-	// Set the inputs visibile
-	if (document.getElementById('ag-input'))
-		document.getElementById('ag-input').style.display = 'flex';
-	// Enable the button back
-	if (document.getElementById('btn-try'))
-		document.getElementById('btn-try').removeAttribute('disabled');
-	if (document.getElementById('inp-usr')) {
-		// Enable the text input back
-		document.getElementById('inp-usr').removeAttribute('disabled');
-		// Automatically focus the text input
-		document.getElementById('inp-usr').focus();
-	}
+	// Compare strings, take into account language specificities
+	String.prototype.vl_compare = function (_str) {
+		const arrLangDiacriticOsef = [
+			'fr-FR'
+		];
+		
+		return (
+			this.localeCompare(
+				_str,
+				window.vl_options['langue'].substr(-2).toLowerCase(), {
+					sensitivity: arrLangDiacriticOsef.includes(window.vl_options['langue']) ? 'base' : 'accent'
+				}
+			)
+		);
+	};
 }
 
 /**
@@ -171,17 +223,8 @@ async function init() {
 */
 function getLang() {
 	const arrLangImpl = [
-		'da-DK',
-		'de-DE',
-		'es-ES',
-		'fi-FI',
-		'fr-FR',
-		'it-IT',
-		'nb-NO',
-		'nl-NL',
-		'pt-BR',
-		'pt-PT',
-		'sv-SE'
+		'da-DK', 'de-DE', 'en-US', 'es-ES', 'fi-FI', 'fr-FR', 'it-IT',
+		'nb-NO', 'nl-NL', 'pt-BR', 'pt-PT', 'sv-SE', 'uk-UA', 'ru-RU'
 	];
 
 	let strBrowserLang = navigator.language || navigator.userLanguage;
@@ -193,21 +236,10 @@ function getLang() {
 }
 
 /**
-* Run data retrieving and apply the localization
-*/
-async function i18n_init() {
-	const lang = window.vl_options['langue'];
-	await i18n_ui(lang);
-	progressLoading(30);
-	await i18n_vb(lang);
-}
-
-/**
 * Apply localization on UI
-* @param {string} _lang - The language to retrieve
 */
-async function i18n_ui(_lang) {
-	const nsr = await fetch(`res/json/loca/${_lang}.json`);
+async function i18n_ui() {
+	const nsr = await fetch(`res/json/loca/${window.vl_options['langue']}.json`);
 	window.vl_i18n = await nsr.json();
 	
 	// Append to child
@@ -229,7 +261,9 @@ async function i18n_ui(_lang) {
 	// Replace innerHTML
 	document.querySelectorAll('*[i18n^="ih_"]').forEach(e => {
 		const attName = e.getAttribute('i18n').substr(3);
-		let cont = attName.substr(0, 4) === 'a2b_' ? atob(window.vl_i18n[attName]) : window.vl_i18n[attName];
+		let cont = attName.substr(0, 4) === 'a2b_' ? window.vl_i18n[attName].vl_decode() : window.vl_i18n[attName];
+		if (attName.substr(4) === 'help_dsc')
+			cont = cont.replace('%VERBCOUNT%', `<strong>${window.vl_i18n['js_verbcount']}</strong>`);
 		e.innerHTML = cont;
 	});
 	
@@ -242,10 +276,9 @@ async function i18n_ui(_lang) {
 
 /**
 * Retrieve word list depending on the current language
-* @param {string} _lang - The language to retrieve
 */
-async function i18n_vb(_lang) {
-	const nsr = await fetch(`res/json/verb/${_lang}.json`);
+async function i18n_vb() {
+	const nsr = await fetch(`res/json/verb/${window.vl_options['langue']}.json`);
 	const jsn = await nsr.json();
 	window.vl_verblist = jsn;
 }
@@ -343,18 +376,19 @@ function applyWordAfterStyle() {
 * The dictionary has an n-ary tree shape, so the function randomly chooses a character and navigates under that branch.
 */
 function pickWord() {
-	// Added offset to seed, increased when going throw a new branch
-	let iAdd = 0;
 	// Final word when every characters have been picked
 	let strWord = '';
 	// Set the current branch of the n-ary tree to its root
 	let currBranch = window.vl_verblist;
+	// Added offset to seed, increased when going throw a new branch
+	let iAdd = Object.keys(currBranch).length * 5;
 	
 	// Move deeper into the tree until the bottom has been reach
 	do {
 		// Pick a random number with the current day (independently of the time zone) as seed.
 		// Pay attention, the rand lib uses included min and max.
-		const iRand = getRandom(iAdd++).randomInteger(1, Object.keys(currBranch).length) - 1;
+		const iRand = getRandom(iAdd).randomInteger(1, Object.keys(currBranch).length) - 1;
+		iAdd += Object.keys(currBranch).length * 3;
 		
 		// Get the character associated with the random picked number
 		const cChar = Object.keys(currBranch)[iRand];
@@ -379,7 +413,7 @@ function pickWord() {
 * @return {number} Who knows
 */
 function getRandom(_add) {
-	return (new Randomizer({ rng : 'MersenneTwister', seed : (getDailyIntWithTimezone() + _add)}));
+	return (new Randomizer({ rng : 'MersenneTwister', seed : ((getDailyIntWithTimezone() + 7891235) + _add)}));
 }
 
 /**
@@ -390,44 +424,42 @@ function checkWord() {
 	// Get the HTML user text input
 	const inputUser = document.getElementById('inp-usr');
 	// Get the user given word
-	const wordUserRaw = inputUser.value;
+	// Convert the user word to lowercase (but keep diacritic, used to check if the word exists, and if it is equal to the the picked word)
+	// Convert the user word to non-diacritic string (used to determine if the picked word is alphabetically placed before or after)
+	//const wordUser = inputUser.value.rmvDiacr();
+	const wordUser = inputUser.value.vl_normalize();
 	// Store the tried word
-	window.vl_lastTry = wordUserRaw;
+	window.vl_lastTry = wordUser;
 	
 	// If the word string is empty
-	if (wordUserRaw.length === 0
+	if (wordUser.length === 0
 	// or if the processing is already running
 	|| !checkWord_Beg())
 		// Stop the process
 		return;
-
-	// Convert the user word to lowercase (but keep diacritic, used to check if the word exists, and if it is equal to the the picked word)
-	const wordUserLca = wordUserRaw.toLowerCase();
-	// Convert the user word to non-diacritic string (used to determine if the picked word is alphabetically placed before or after)
-	const wordUserLoc = wordUserRaw.rmvDiacr();
 	
 	/*
 	** WORD ALREADY TRIED
 	*/
 	// The user already tried this word
-	if (window.vl_tried[wordUserLca] !== undefined) {
+	if (window.vl_tried[wordUser] !== undefined) {
 		// If the "already tried" animation is not running
-		if (window.vl_tried[wordUserLca].hnd === null
+		if (window.vl_tried[wordUser].hnd === null
 		// ... and the word is still exists in either the "before" or the "after" list...
 		// Note: words overflowing the window are deleted.
-		&& document.body.contains(window.vl_tried[wordUserLca].node)) {
+		&& document.body.contains(window.vl_tried[wordUser].node)) {
 			// Assign the "already tried" animation to this word in the DOM
-			window.vl_tried[wordUserLca].node.classList.add('highlight');
+			window.vl_tried[wordUser].node.classList.add('highlight');
 			
 			// Remove the "already tried" animation in 3 seconds
-			window.vl_tried[wordUserLca].hnd = setTimeout(() => {
+			window.vl_tried[wordUser].hnd = setTimeout(() => {
 				// If the word is still exists in either the "before" or the "after" list
-				if (document.body.contains(window.vl_tried[wordUserLca].node))
+				if (document.body.contains(window.vl_tried[wordUser].node))
 					// Remove the "already tried" animation
-					window.vl_tried[wordUserLca].node.classList.remove('highlight');
+					window.vl_tried[wordUser].node.classList.remove('highlight');
 					
 				// Release the timeout handle
-				window.vl_tried[wordUserLca].hnd = null;
+				window.vl_tried[wordUser].hnd = null;
 			}, 3000);
 		}
 		
@@ -447,7 +479,7 @@ function checkWord() {
 	let wordNotFound = false;
 	
 	// For each character of the given word
-	[...wordUserLca].forEach(e => {
+	[...wordUser].forEach(e => {
 		// From the current character, a word exists with the next given character
 		if (branchCurr[e] !== undefined)
 			// Enter the branch corresponding to the given character
@@ -488,25 +520,26 @@ function checkWord() {
 		// Deobfuscate the picked word
 		const strDeobf = deobf(window.vl_nswr);
 		// The word given matches the picked one
-		if (strDeobf === wordUserLca)
+		if (strDeobf === wordUser)
 			// End the game
 			gameEnd(true);
 		// The given word does not match the picked one
 		else {
 			// Remove any diacritic from the given word (necessary to compare words alphabetically)
-			const ag_nswrLoc = strDeobf.rmvDiacr();
+			//const ag_nswrLoc = strDeobf.rmvDiacr();
+			const ag_nswrLoc = strDeobf.vl_normalize();
 			// Does the given word is alphabetically placed before or after the picked one
-			const givenIsBeforePicked = (wordUserLoc.localeCompare(ag_nswrLoc) < 0);
+			const givenIsBeforePicked = (wordUser.vl_compare(ag_nswrLoc) < 0);
 			// Get the corresponding tried words list in the DOM
 			let wordListNode = document.getElementById((givenIsBeforePicked ? 'ag-words-before' : 'ag-words-after'));
 			
 			// Create a Html fragment for the given word
 			let frag = document.createElement('div');
 			frag.classList.add('word');
-			frag.innerHTML = wordUserLca;
+			frag.innerHTML = wordUser;
 			// Add the clue according to the number of identical letters at the beginning and end
-			const countSameBeg = countEquality(wordUserLoc, ag_nswrLoc, false);
-			const countSameEnd = countEquality(wordUserLoc, ag_nswrLoc, true);
+			const countSameBeg = countEquality(wordUser, ag_nswrLoc, false);
+			const countSameEnd = countEquality(wordUser, ag_nswrLoc, true);
 			
 			if (countSameBeg === 0 && countSameEnd === 0)
 				frag.setAttribute('data-nfo', '\u25c7');
@@ -527,7 +560,8 @@ function checkWord() {
 					const div = wordListNode.childNodes[i];
 				
 					// If the given word is placed before the current one
-					if (wordUserLoc.localeCompare(div.innerText.rmvDiacr()) <= 0) {
+					//if (wordUser.localeCompare(div.innerText.rmvDiacr()) <= 0) {
+					if (wordUser.vl_compare(div.innerText.vl_normalize()) <= 0) {
 						// Insert the Html fragment of the given word before the current word
 						wordListNode.insertBefore(frag, div);
 						// Store the information that the given word already has been added to the list
@@ -545,7 +579,7 @@ function checkWord() {
 				wordListNode.appendChild(frag);
 			
 			// Store information that this given word has been tried
-			window.vl_tried[wordUserLca] = {node: frag, hnd: null};
+			window.vl_tried[wordUser] = {node: frag, hnd: null};
 			
 			/*
 			** REMOVE OVERFLOWING WORDS
@@ -632,8 +666,10 @@ function checkWord_End() {
 */
 function countEquality(_user, _picked, _reverse) {
 	// Determine the number of character to check
-	let user = _user.rmvDiacr();
-	let pick = _picked.rmvDiacr();
+	//let user = _user.rmvDiacr();
+	let user = _user.vl_normalize();
+	//let pick = _picked.rmvDiacr();
+	let pick = _picked.vl_normalize();
 	let len = Math.max(user.length, pick.length);
 	
 	// Reverse strings in case the first difference to found is from the end
@@ -694,10 +730,10 @@ function gameEnd(_success, _save = true) {
 		<div class="hero-body">
 			<div>
 				<p class="title">${_success ? window.vl_i18n['js_win'] : window.vl_i18n['js_abandon']}</p>
-				<p class="subtitle">${window.vl_i18n['js_verbwas'].replace('#', getWordID())} : &#171; <word><b>${strDeobf}</b></word> &#187;</p>
+				<p class="subtitle">${window.vl_i18n['js_verbwas'].replace('%VERBID%', getWordID())} : &#171; <word><b>${strDeobf}</b></word> &#187;</p>
 			</div>
 			<p>
-				<a href="${window.vl_i18n['js_urldef']}${encodeURIComponent(strDeobf)}" target="_blank" class="button is-${clr} is-inverted">
+				<a href="${window.vl_i18n['js_urldef'].replace('%', encodeURIComponent(strDeobf))}" target="_blank" class="button is-${clr} is-inverted">
 					<span>${window.vl_i18n['js_verbdef']}</span>
 					<span class="icon is-small">
 						<i class="fa-solid fa-up-right-from-square"></i>
