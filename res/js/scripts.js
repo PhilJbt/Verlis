@@ -209,9 +209,8 @@ function bindFuncs() {
 		return (
 			this.localeCompare(
 				_str,
-				window.vl_options['langue'].substr(-2).toLowerCase(), {
-					sensitivity: arrLangDiacriticOsef.includes(window.vl_options['langue']) ? 'base' : 'accent'
-				}
+				window.vl_options['langue'],
+				{ sensitivity: arrLangDiacriticOsef.includes(window.vl_options['langue']) ? 'base' : 'accent' }
 			)
 		);
 	};
