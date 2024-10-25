@@ -221,15 +221,45 @@ function bindFuncs() {
 * @return {} - The language of the browser if implemented, else "en-US"
 */
 function getLang() {
+	// Language ISO Code 2 and their 5 translation
+	const dctConvertIso2to5 = {
+		cs: 'cs-CZ',
+		da: 'da-DK',
+		de: 'de-DE',
+		en: 'en-US',
+		el: 'el-GR',
+		es: 'es-ES',
+		fi: 'fi-FI',
+		fr: 'fr-FR',
+		hu: 'hu-HU',
+		it: 'it-IT',
+		nb: 'nb-NO',
+		nl: 'nl-NL',
+		pt: 'pt-BR',
+		pt: 'pt-PT',
+		ro: 'ro-RO',
+		ru: 'ru-RU',
+		sv: 'sv-SE',
+		th: 'th-TH',
+		uk: 'uk-UA',
+		vi: 'vi-VN'
+  };
+	
+	// If the length of the language ISO Code is 2, convert it to a length of 5
+	let strBrowserLang = navigator.language || navigator.userLanguage;
+	if (dctConvertIso2to5.includes(strBrowserLang))
+		strBrowserLang = dctConvertIso2to5[strBrowserLang];
+
+	// Array of languages supported
 	const arrLangImpl = [
 		'cs-CZ', 'da-DK', 'de-DE', 'en-US', 'el-GR', 'es-ES', 'fi-FI', 'fr-FR', 'hu-HU', 'it-IT',
 		'nb-NO', 'nl-NL', 'pt-BR', 'pt-PT', 'ro-RO', 'ru-RU', 'sv-SE', 'th-TH', 'uk-UA', 'vi-VN'
 		/* 'ar-A', 'ps-AF' */
 	];
 
-	let strBrowserLang = navigator.language || navigator.userLanguage;
-
+	// If the current language is not supported
 	if (!arrLangImpl.includes(strBrowserLang))
+		// Force to american english
 		strBrowserLang = 'en-US';
 	
 	return strBrowserLang;
@@ -317,7 +347,7 @@ function optionsLoad() {
 	}
 	else {
 		// Clues
-		document.getElementById('rad-indice-2').checked = true;
+		document.getElementById('rad-indice-0').checked = true;
 		
 		// Language
 		const strBrowserLang = getLang();
