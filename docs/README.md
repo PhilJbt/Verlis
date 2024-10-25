@@ -57,5 +57,5 @@ Il vous est possible d'activer ces indices dans le <strong>menu <em>Options</em>
 > |	Russe				|	ru-RU													| [&#10102; Badestrand](https://github.com/Badestrand/russian-dictionary) |
 > |	Suédois  		|	sv-SE													| [&#10102; Jan Simon](https://github.com/janhsimon/DanishVerbs) |
 > |	Thaï				|	th-TH													| [&#10102; TravelWithLanguages](https://travelwithlanguages.com/blog/most-common-thai-words.html) |
-> |	Ukrainien		|	uk-UA													| [&#10102; Fiszkoteka](https://fiszkoteka.pl/zestaw/309215-500-most-important-ukrainian-verbs-100-125) [https://www.pinhok.com/kb/ukrainian/319/ukrainian-verbs/](&#10103; Pinhok) [&#10104; App2Brain](https://app2brain.com/learn-languages/ukrainian/basic-verbs/) [&#10105; MyLanguages](https://mylanguages.org/ukrainian_verbs.php) |
+> |	Ukrainien		|	uk-UA													| [&#10102; Fiszkoteka](https://fiszkoteka.pl/zestaw/309215-500-most-important-ukrainian-verbs-100-125) [&#10103; Pinhok](https://www.pinhok.com/kb/ukrainian/319/ukrainian-verbs/) [&#10104; App2Brain](https://app2brain.com/learn-languages/ukrainian/basic-verbs/) [&#10105; MyLanguages](https://mylanguages.org/ukrainian_verbs.php) |
 > |	Vietnamien	|	vi-VN													| [&#10102; MyLittleWordLand](https://mylittlewordland.com/course/452073/vietnamese-verb-list) |
