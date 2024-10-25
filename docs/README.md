@@ -19,7 +19,7 @@ You can enable these hints in the <strong><em>Options</em></strong> menu.
 
 ## Supported languages
 
-<img alt="Czech" src="../res/img/flags/cs-CZ.svg" width="48"> <img alt="Danish" src="../res/img/flags/da-DK.svg" width="48"> <img alt="German" src="../res/img/flags/de-DE.svg" width="48"> <img alt="Greek" src="../res/img/flags/el-GR.svg" width="48"> <img alt="English" src="../res/img/flags/en-US.svg" width="48"> <img alt="Spanish" src="../res/img/flags/es-ES.svg" width="48"> <img alt="Finnish" src="../res/img/flags/fi-FI.svg" width="48"> <img alt="French" src="../res/img/flags/fr-FR.svg" width="48"> <img alt="Hungarian" src="../res/img/flags/hu-HU.svg" width="48"> <img alt="Italian" src="../res/img/flags/it-IT.svg" width="48"> <img alt="Norwegian" src="../res/img/flags/nb-NO.svg" width="48"> <img alt="Dutch" src="../res/img/flags/nl-NL.svg" width="48"> <img alt="Portuguese (Brazil)" src="../res/img/flags/pt-BR.svg" width="48"> <img alt="Portuguese (Portugal)" src="../res/img/flags/pt-PT.svg" width="48"> <img alt="Romanian" src="../res/img/flags/ro-RO.svg" width="48"> <img alt="Russian" src="../res/img/flags/ru-RU.svg" width="48"> <img alt="Swedish" src="../res/img/flags/sv-SE.svg" width="48"> <img alt="Thai" src="../res/img/flags/th-TH.svg" width="48"> <img alt="Ukrainian" src="../res/img/flags/uk-UA.svg" width="48"> <img alt="Vietnamese" src="../res/img/flags/vi-VN.svg" width="48">
+<img alt="Czech" src="../res/img/flags/cs-CZ.svg" width="48"> <img alt="Danish" src="../res/img/flags/da-DK.svg" width="48"> <img alt="German" src="../res/img/flags/de-DE.svg" width="48"> <img alt="Greek" src="../res/img/flags/el-GR.svg" width="48"> <img alt="English" src="../res/img/flags/en-US.svg" width="48"> <img alt="Spanish" src="../res/img/flags/es-ES.svg" width="48"> <img alt="Finnish" src="../res/img/flags/fi-FI.svg" width="48"> <img alt="French (Québec)" src="../res/img/flags/fr-CA.svg" width="48"> <img alt="French (France)" src="../res/img/flags/fr-FR.svg" width="48"> <img alt="Hungarian" src="../res/img/flags/hu-HU.svg" width="48"> <img alt="Italian" src="../res/img/flags/it-IT.svg" width="48"> <img alt="Norwegian" src="../res/img/flags/nb-NO.svg" width="48"> <img alt="Dutch" src="../res/img/flags/nl-NL.svg" width="48"> <img alt="Portuguese (Brazil)" src="../res/img/flags/pt-BR.svg" width="48"> <img alt="Portuguese (Portugal)" src="../res/img/flags/pt-PT.svg" width="48"> <img alt="Romanian" src="../res/img/flags/ro-RO.svg" width="48"> <img alt="Russian" src="../res/img/flags/ru-RU.svg" width="48"> <img alt="Swedish" src="../res/img/flags/sv-SE.svg" width="48"> <img alt="Thai" src="../res/img/flags/th-TH.svg" width="48"> <img alt="Ukrainian" src="../res/img/flags/uk-UA.svg" width="48"> <img alt="Vietnamese" src="../res/img/flags/vi-VN.svg" width="48">
 
 ## Keyboard keys
 
@@ -39,7 +39,7 @@ You can enable these hints in the <strong><em>Options</em></strong> menu.
 > __THIRD PARTY CREDITS__\
 > Framework : [&ulcorner;Bulma&lrcorner;](https://bulma.io)\
 > Javascript randomizer : [&ulcorner;Brian Ramsay&lrcorner;](https://github.com/BrianRamsay/Randomizer)\
-> Flags : [&ulcorner;Lipis&lrcorner;](https://github.com/lipis/flag-icons)\
+> Flags : [&ulcorner;HatScripts&lrcorner;](https://github.com/HatScripts/circle-flags)\
 > <br/>
 > __Dictionaries:__
 > | Language 							| Language-country Code (ISO 639) 	| Sources |
@@ -51,7 +51,8 @@ You can enable these hints in the <strong><em>Options</em></strong> menu.
 > |	English								|	en-US															| [&ulcorner;Drulac&lrcorner;](https://github.com/Drulac/English-Verbs-Conjugates) |
 > |	Spanish								|	es-ES															| [&ulcorner;Cubiwan&lrcorner;](https://github.com/cubiwan/jsESverb) |
 > |	Finnish								|	fi-FI															| [&ulcorner;Abhishek Suresh&lrcorner;](https://github.com/absu5530/morphological_classifier) |
-> |	French								|	fr-FR															| [&ulcorner;Umontreal&lrcorner;](http://rali.iro.umontreal.ca) |
+> |	French (Québec)				|	fr-CA															| [&ulcorner;UsherBrooke&lrcorner;](https://usito.usherbrooke.ca) |
+> |	French (France)				|	fr-FR															| [&ulcorner;Umontreal&lrcorner;](http://rali.iro.umontreal.ca) |
 > |	Hungarian							|	hu-HU															| [&ulcorner;TravelWithLanguages&lrcorner;](https://travelwithlanguages.com/blog/most-common-hungarian-words.html) |
 > |	Italian								|	it-IT															| [&ulcorner;Roman Manasyan&lrcorner;](https://github.com/rmanasyan/italianverbsnext) |
 > |	Norwegian							|	nb-NO															| [&ulcorner;Lukas&lrcorner;](https://github.com/YesUseY/Norwegian-language-verbs-training-program) |
@@ -64,3 +65,4 @@ You can enable these hints in the <strong><em>Options</em></strong> menu.
 > |	Thai									|	th-TH															| [&ulcorner;TravelWithLanguages&lrcorner;](https://travelwithlanguages.com/blog/most-common-thai-words.html) |
 > |	Ukrainian							|	uk-UA															| [&ulcorner;Fiszkoteka&lrcorner;](https://fiszkoteka.pl/zestaw/309215-500-most-important-ukrainian-verbs-100-125)&emsp;[&ulcorner;Pinhok&lrcorner;](https://www.pinhok.com/kb/ukrainian/319/ukrainian-verbs/)&emsp;[&ulcorner;App2Brain&lrcorner;](https://app2brain.com/learn-languages/ukrainian/basic-verbs/)&emsp;[&ulcorner;MyLanguages&lrcorner;](https://mylanguages.org/ukrainian_verbs.php) |
 > |	Vietnamese						|	vi-VN															| [&ulcorner;MyLittleWordLand&lrcorner;](https://mylittlewordland.com/course/452073/vietnamese-verb-list) |
+

@@ -169,18 +169,6 @@ function bindFuncs() {
 		return arrJoined;
 	};
 
-	// Add function to convert any diacritical character to its equivalent without diacritical mark
-	// Note : !! DEPRECATED !!
-	String.prototype.rmvDiacr = function (char) {
-		const arrLangDiacriticOsef = [
-			'fr-FR'
-		];
-		if (arrLangDiacriticOsef.includes(window.vl_options['langue']))
-			return this.toLowerCase().normalize("NFKC").replace(/\p{Diacritic}/gu, "");
-		else
-			return this.toLowerCase().normalize("NFKC");
-	};
-	
 	// Encode string
 	String.prototype.vl_encode = function (char) {
 		const bytes = new TextEncoder().encode(this);
@@ -203,7 +191,7 @@ function bindFuncs() {
 	// Compare strings, take into account language specificities
 	String.prototype.vl_compare = function (_str) {
 		const arrLangDiacriticOsef = [
-			'fr-FR'
+			'fr-FR', 'fr-CA'
 		];
 		
 		return (
@@ -235,7 +223,6 @@ function getLang() {
 		it: 'it-IT',
 		nb: 'nb-NO',
 		nl: 'nl-NL',
-		pt: 'pt-BR',
 		pt: 'pt-PT',
 		ro: 'ro-RO',
 		ru: 'ru-RU',
@@ -252,9 +239,8 @@ function getLang() {
 
 	// Array of languages supported
 	const arrLangImpl = [
-		'cs-CZ', 'da-DK', 'de-DE', 'en-US', 'el-GR', 'es-ES', 'fi-FI', 'fr-FR', 'hu-HU', 'it-IT',
+		'cs-CZ', 'da-DK', 'de-DE', 'en-US', 'el-GR', 'es-ES', 'fi-FI', 'fr-CA', 'fr-FR', 'hu-HU', 'it-IT',
 		'nb-NO', 'nl-NL', 'pt-BR', 'pt-PT', 'ro-RO', 'ru-RU', 'sv-SE', 'th-TH', 'uk-UA', 'vi-VN'
-		/* 'ar-A', 'ps-AF' */
 	];
 
 	// If the current language is not supported
@@ -456,7 +442,6 @@ function checkWord() {
 	// Get the user given word
 	// Convert the user word to lowercase (but keep diacritic, used to check if the word exists, and if it is equal to the the picked word)
 	// Convert the user word to non-diacritic string (used to determine if the picked word is alphabetically placed before or after)
-	//const wordUser = inputUser.value.rmvDiacr();
 	const wordUser = inputUser.value.vl_normalize();
 	// Store the tried word
 	window.vl_lastTry = wordUser;
@@ -556,7 +541,6 @@ function checkWord() {
 		// The given word does not match the picked one
 		else {
 			// Remove any diacritic from the given word (necessary to compare words alphabetically)
-			//const ag_nswrLoc = strDeobf.rmvDiacr();
 			const ag_nswrLoc = strDeobf.vl_normalize();
 			// Does the given word is alphabetically placed before or after the picked one
 			const givenIsBeforePicked = (wordUser.vl_compare(ag_nswrLoc) < 0);
@@ -590,7 +574,6 @@ function checkWord() {
 					const div = wordListNode.childNodes[i];
 				
 					// If the given word is placed before the current one
-					//if (wordUser.localeCompare(div.innerText.rmvDiacr()) <= 0) {
 					if (wordUser.vl_compare(div.innerText.vl_normalize()) <= 0) {
 						// Insert the Html fragment of the given word before the current word
 						wordListNode.insertBefore(frag, div);
@@ -696,9 +679,7 @@ function checkWord_End() {
 */
 function countEquality(_user, _picked, _reverse) {
 	// Determine the number of character to check
-	//let user = _user.rmvDiacr();
 	let user = _user.vl_normalize();
-	//let pick = _picked.rmvDiacr();
 	let pick = _picked.vl_normalize();
 	let len = Math.max(user.length, pick.length);
 	
