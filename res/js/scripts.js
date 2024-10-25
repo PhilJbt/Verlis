@@ -247,7 +247,7 @@ function getLang() {
 	
 	// If the length of the language ISO Code is 2, convert it to a length of 5
 	let strBrowserLang = navigator.language || navigator.userLanguage;
-	if (dctConvertIso2to5.includes(strBrowserLang))
+	if (strBrowserLang in dctConvertIso2to5)
 		strBrowserLang = dctConvertIso2to5[strBrowserLang];
 
 	// Array of languages supported
