@@ -38,31 +38,34 @@ You can enable these hints in the <strong><em>Options</em></strong> menu.
 > [!NOTE]
 > __THIRD PARTY CREDITS__\
 > Framework : [&ulcorner;Bulma&lrcorner;](https://bulma.io)\
+> Framework extension (tooltips) [&ulcorner;CreativeBulma&lrcorner;](https://bulma-tooltip.netlify.app/get-started/)
+> Framework extension (colored radios) [&ulcorner;Wikiki&lrcorner;](https://wikiki.github.io/form/checkradio/)
+> 
 > Javascript randomizer : [&ulcorner;Brian Ramsay&lrcorner;](https://github.com/BrianRamsay/Randomizer)\
 > Flags : [&ulcorner;HatScripts&lrcorner;](https://github.com/HatScripts/circle-flags)\
 > <br/>
 > __Dictionaries:__
-> | Language 							| Language-country Code (ISO 639) 	| Sources |
-> | --------------------- | --------------------------------- | ------- |
-> |	Czech									|	cs-CZ															| [&ulcorner;TravelWithLanguages&lrcorner;](https://travelwithlanguages.com/blog/most-common-czech-words.html) |
-> |	Danish								|	da-DK															| [&ulcorner;Jan Simon&lrcorner;](https://github.com/janhsimon/DanishVerbs) |
-> |	German								|	de-DE															| [&ulcorner;Michael Gerstenberg&lrcorner;](https://github.com/michael-gerstenberg/GermanVerbScraper) |
-> |	Greek									|	el-GR															| [&ulcorner;TravelWithLanguages&lrcorner;](https://travelwithlanguages.com/blog/most-common-modern-greek-words.html) |
-> |	English								|	en-US															| [&ulcorner;Drulac&lrcorner;](https://github.com/Drulac/English-Verbs-Conjugates) |
-> |	Spanish								|	es-ES															| [&ulcorner;Cubiwan&lrcorner;](https://github.com/cubiwan/jsESverb) |
-> |	Finnish								|	fi-FI															| [&ulcorner;Abhishek Suresh&lrcorner;](https://github.com/absu5530/morphological_classifier) |
-> |	French (Québec)				|	fr-CA															| [&ulcorner;UsherBrooke&lrcorner;](https://usito.usherbrooke.ca) |
-> |	French (France)				|	fr-FR															| [&ulcorner;Umontreal&lrcorner;](http://rali.iro.umontreal.ca) |
-> |	Hungarian							|	hu-HU															| [&ulcorner;TravelWithLanguages&lrcorner;](https://travelwithlanguages.com/blog/most-common-hungarian-words.html) |
-> |	Italian								|	it-IT															| [&ulcorner;Roman Manasyan&lrcorner;](https://github.com/rmanasyan/italianverbsnext) |
-> |	Norwegian							|	nb-NO															| [&ulcorner;Lukas&lrcorner;](https://github.com/YesUseY/Norwegian-language-verbs-training-program) |
-> |	Dutch									|	nl-NL															| [&ulcorner;Dimitri Witkowski&lrcorner;](https://github.com/antelle/sterke-werkwoorden) |
-> |	Portuguese (Brazil)  	|	pt-BR															| [&ulcorner;Edmundo Biglia&lrcorner;](https://github.com/edmundobiglia/ptbr-top-verbs) |
-> |	Portuguese (Portugal)	|	pt-PT															| [&ulcorner;Troyciv&lrcorner;](https://github.com/Troyciv/PT_ConjugationTrainer_Anki) |
-> |	Romanian							|	ro-RO															| [&ulcorner;TravelWithLanguages&lrcorner;](https://travelwithlanguages.com/blog/most-common-romanian-words.html)&emsp;[&ulcorner;Zeolan&lrcorner;](https://github.com/zeolan/digital-ocean-app) |
-> |	Russian								|	ru-RU															| [&ulcorner;Badestrand&lrcorner;](https://github.com/Badestrand/russian-dictionary) |
-> |	Swedish  							|	sv-SE															| [&ulcorner;Wiktionary&lrcorner;](https://en.wiktionary.org/wiki/Appendix:Swedish_verbs) |
-> |	Thai									|	th-TH															| [&ulcorner;TravelWithLanguages&lrcorner;](https://travelwithlanguages.com/blog/most-common-thai-words.html) |
-> |	Ukrainian							|	uk-UA															| [&ulcorner;Fiszkoteka&lrcorner;](https://fiszkoteka.pl/zestaw/309215-500-most-important-ukrainian-verbs-100-125)&emsp;[&ulcorner;Pinhok&lrcorner;](https://www.pinhok.com/kb/ukrainian/319/ukrainian-verbs/)&emsp;[&ulcorner;App2Brain&lrcorner;](https://app2brain.com/learn-languages/ukrainian/basic-verbs/)&emsp;[&ulcorner;MyLanguages&lrcorner;](https://mylanguages.org/ukrainian_verbs.php) |
-> |	Vietnamese						|	vi-VN															| [&ulcorner;MyLittleWordLand&lrcorner;](https://mylittlewordland.com/course/452073/vietnamese-verb-list) |
+> | Language naming				| Language-country Code (ISO 639) 	| Count of verbs	| Sources		|
+> | --------------------- | --------------------------------- | --------------- | --------- |
+> |	Czech									|	cs-CZ															| 190				 			| [&ulcorner;TravelWithLanguages&lrcorner;](https://travelwithlanguages.com/blog/most-common-czech-words.html) |
+> |	Danish								|	da-DK															| 514				 			| [&ulcorner;Jan Simon&lrcorner;](https://github.com/janhsimon/DanishVerbs) |
+> |	German								|	de-DE															| 17,679					| [&ulcorner;Michael Gerstenberg&lrcorner;](https://github.com/michael-gerstenberg/GermanVerbScraper) |
+> |	Greek									|	el-GR															| 163				 			| [&ulcorner;TravelWithLanguages&lrcorner;](https://travelwithlanguages.com/blog/most-common-modern-greek-words.html) |
+> |	English								|	en-US															| 1,011				 		| [&ulcorner;Drulac&lrcorner;](https://github.com/Drulac/English-Verbs-Conjugates) |
+> |	Spanish								|	es-ES															| 10,854					| [&ulcorner;Cubiwan&lrcorner;](https://github.com/cubiwan/jsESverb) |
+> |	Finnish								|	fi-FI															| 7,049				 		| [&ulcorner;Abhishek Suresh&lrcorner;](https://github.com/absu5530/morphological_classifier) |
+> |	French (Québec)				|	fr-CA															| 5,602				 		| [&ulcorner;UsherBrooke&lrcorner;](https://usito.usherbrooke.ca) |
+> |	French (France)				|	fr-FR															| 12,164					| [&ulcorner;Umontreal&lrcorner;](http://rali.iro.umontreal.ca) |
+> |	Hungarian							|	hu-HU															| 182				 			| [&ulcorner;TravelWithLanguages&lrcorner;](https://travelwithlanguages.com/blog/most-common-hungarian-words.html) |
+> |	Italian								|	it-IT															| 12,891					| [&ulcorner;Roman Manasyan&lrcorner;](https://github.com/rmanasyan/italianverbsnext) |
+> |	Norwegian							|	nb-NO															| 157							| [&ulcorner;Lukas&lrcorner;](https://github.com/YesUseY/Norwegian-language-verbs-training-program) |
+> |	Dutch									|	nl-NL															| 180				 			| [&ulcorner;Dimitri Witkowski&lrcorner;](https://github.com/antelle/sterke-werkwoorden) |
+> |	Portuguese (Brazil)  	|	pt-BR															| 5,001				 		| [&ulcorner;Edmundo Biglia&lrcorner;](https://github.com/edmundobiglia/ptbr-top-verbs) |
+> |	Portuguese (Portugal)	|	pt-PT															| 1,018				 		| [&ulcorner;Troyciv&lrcorner;](https://github.com/Troyciv/PT_ConjugationTrainer_Anki) |
+> |	Romanian							|	ro-RO															| 586				 			| [&ulcorner;TravelWithLanguages&lrcorner;](https://travelwithlanguages.com/blog/most-common-romanian-words.html)&emsp;[&ulcorner;Zeolan&lrcorner;](https://github.com/zeolan/digital-ocean-app) |
+> |	Russian								|	ru-RU															| 14,866					| [&ulcorner;Badestrand&lrcorner;](https://github.com/Badestrand/russian-dictionary) |
+> |	Swedish  							|	sv-SE															| 471				 			| [&ulcorner;Wiktionary&lrcorner;](https://en.wiktionary.org/wiki/Appendix:Swedish_verbs) |
+> |	Thai									|	th-TH															| 260				 			| [&ulcorner;TravelWithLanguages&lrcorner;](https://travelwithlanguages.com/blog/most-common-thai-words.html) |
+> |	Ukrainian							|	uk-UA															| 155				 			| [&ulcorner;Fiszkoteka&lrcorner;](https://fiszkoteka.pl/zestaw/309215-500-most-important-ukrainian-verbs-100-125)&emsp;[&ulcorner;Pinhok&lrcorner;](https://www.pinhok.com/kb/ukrainian/319/ukrainian-verbs/)&emsp;[&ulcorner;App2Brain&lrcorner;](https://app2brain.com/learn-languages/ukrainian/basic-verbs/)&emsp;[&ulcorner;MyLanguages&lrcorner;](https://mylanguages.org/ukrainian_verbs.php) |
+> |	Vietnamese						|	vi-VN															| 374				 			| [&ulcorner;MyLittleWordLand&lrcorner;](https://mylittlewordland.com/course/452073/vietnamese-verb-list) |
 
