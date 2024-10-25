@@ -44,22 +44,22 @@ You can enable these hints in the <strong><em>Options</em></strong> menu.
 > | Langue  							| Langage-Pays Code (ISO 639) 	| Url			|
 > | --------------------- | -----------------------------	| ------- |
 > |	Czech									|	cs-CZ													| [&#10102; TravelWithLanguages](https://travelwithlanguages.com/blog/most-common-czech-words.html) |
-> |	Danish								|	da-DK													| [&#10102; Wiktionary](https://en.wiktionary.org/wiki/Appendix:Swedish_verbs) |
-> |	German								|	de-DE													| [&#10102; Troyciv](https://github.com/Troyciv/PT_ConjugationTrainer_Anki) |
+> |	Danish								|	da-DK													| [&#10102; Jan Simon](https://github.com/janhsimon/DanishVerbs) |
+> |	German								|	de-DE													| [&#10102; Michael Gerstenberg](https://github.com/michael-gerstenberg/GermanVerbScraper) |
 > |	Greek									|	el-GR													| [&#10102; TravelWithLanguages](https://travelwithlanguages.com/blog/most-common-modern-greek-words.html) |
 > |	English								|	en-US													| [&#10102; Drulac](https://github.com/Drulac/English-Verbs-Conjugates) |
-> |	Spanish								|	es-ES													| [&#10102; Dimitri Witkowski](https://github.com/antelle/sterke-werkwoorden) |
-> |	Finnish								|	fi-FI													| [&#10102; Lukas](https://github.com/YesUseY/Norwegian-language-verbs-training-program) |
-> |	French								|	fr-FR													| [&#10102; Roman Manasyan](https://github.com/rmanasyan/italianverbsnext) |
+> |	Spanish								|	es-ES													| [&#10102; Cubiwan](https://github.com/cubiwan/jsESverb) |
+> |	Finnish								|	fi-FI													| [&#10102; Abhishek Suresh](https://github.com/absu5530/morphological_classifier) |
+> |	French								|	fr-FR													| [&#10102; Umontreal](http://rali.iro.umontreal.ca) |
 > |	Hungarian							|	hu-HU													| [&#10102; TravelWithLanguages](https://travelwithlanguages.com/blog/most-common-hungarian-words.html) |
-> |	Italian								|	it-IT													| [&#10102; Umontreal](http://rali.iro.umontreal.ca) |
-> |	Norwegian							|	nb-NO													| [&#10102; Abhishek Suresh](https://github.com/absu5530/morphological_classifier) |
-> |	Dutch									|	nl-NL													| [&#10102; Cubiwan](https://github.com/cubiwan/jsESverb) |
+> |	Italian								|	it-IT													| [&#10102; Roman Manasyan](https://github.com/rmanasyan/italianverbsnext) |
+> |	Norwegian							|	nb-NO													| [&#10102; Lukas](https://github.com/YesUseY/Norwegian-language-verbs-training-program) |
+> |	Dutch									|	nl-NL													| [&#10102; Dimitri Witkowski](https://github.com/antelle/sterke-werkwoorden) |
 > |	Portuguese (Brazil)  	|	pt-BR													| [&#10102; Edmundo Biglia](https://github.com/edmundobiglia/ptbr-top-verbs) |
-> |	Portuguese (Portugal)	|	pt-PT													| [&#10102; Michael Gerstenberg](https://github.com/michael-gerstenberg/GermanVerbScraper) |
+> |	Portuguese (Portugal)	|	pt-PT													| [&#10102; Troyciv](https://github.com/Troyciv/PT_ConjugationTrainer_Anki) |
 > |	Romanian							|	ro-RO													| [&#10102; TravelWithLanguages](https://travelwithlanguages.com/blog/most-common-romanian-words.html) [&#10103; Zeolan](https://github.com/zeolan/digital-ocean-app) |
 > |	Russian								|	ru-RU													| [&#10102; Badestrand](https://github.com/Badestrand/russian-dictionary) |
-> |	Swedish  							|	sv-SE													| [&#10102; Jan Simon](https://github.com/janhsimon/DanishVerbs) |
+> |	Swedish  							|	sv-SE													| [&#10102; Wiktionary](https://en.wiktionary.org/wiki/Appendix:Swedish_verbs) |
 > |	Thai									|	th-TH													| [&#10102; TravelWithLanguages](https://travelwithlanguages.com/blog/most-common-thai-words.html) |
 > |	Ukrainian							|	uk-UA													| [&#10102; Fiszkoteka](https://fiszkoteka.pl/zestaw/309215-500-most-important-ukrainian-verbs-100-125) [&#10103; Pinhok](https://www.pinhok.com/kb/ukrainian/319/ukrainian-verbs/) [&#10104; App2Brain](https://app2brain.com/learn-languages/ukrainian/basic-verbs/) [&#10105; MyLanguages](https://mylanguages.org/ukrainian_verbs.php) |
 > |	Vietnamese						|	vi-VN													| [&#10102; MyLittleWordLand](https://mylittlewordland.com/course/452073/vietnamese-verb-list) |
