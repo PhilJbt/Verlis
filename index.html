@@ -7,6 +7,8 @@
 		<link rel="icon" type="image/png" href="res/img/favicon.png" />
 		<link rel="stylesheet" href="res/dep/fontawesome-f6.6.0w/css/all.min.css" />
 		<link rel="stylesheet" href="res/dep/bulma/css/bulma.min.css">
+		<link rel="stylesheet" href="res/dep/bulma-tooltip/bulma-tooltip.min.css">
+		<link rel="stylesheet" href="res/dep/bulma-checkradio/bulma-checkradio.min.css">
 		<link rel="stylesheet" href="res/css/styles.css">
   </head>
   <body class="theme-dark">
@@ -25,79 +27,97 @@
 				<section class="modal-card-body">
 					<div class="field">
 						<label class="label" i18n="ih_indices"></label>
-						<div class="radios">
-							<label class="radio">
-								<input type="radio" id="rad-indice-0" name="rad-indice" value="0" />
-								<p i18n="ih_indice_a"></p>
-							</label>
-							<label class="radio">
-								<input type="radio" id="rad-indice-1" name="rad-indice" value="1" />
-								<p i18n="ih_indice_p"></p>
-							</label>
-							<label class="radio">
-								<input type="radio" id="rad-indice-2" name="rad-indice" value="2" />
-								<p i18n="ih_indice_n"></p>
-							</label>
+						<div class="field">
+							<input class="is-checkradio is-success" id="rad-indice-0" type="radio" name="rad-indice" value="0">
+							<label for="rad-indice-0" i18n="ih_indice_a"></label>
+							<input class="is-checkradio is-warning" id="rad-indice-1" type="radio" name="rad-indice" value="1">
+							<label for="rad-indice-1" i18n="ih_indice_p"></label>
+							<input class="is-checkradio is-danger" id="rad-indice-2" type="radio" name="rad-indice" value="2">
+							<label for="rad-indice-2" i18n="ih_indice_n"></label>
 						</div>
 					</div>
 					<div class="field">
 						<label class="label" i18n="ih_languages"></label>
-						<div class="fixed-grid rad-lng">
-							<label>
+						<div class="smart-grid rad-lng">
+							<label class="has-tooltip-arrow has-tooltip-info" data-tooltip="cs-CZ">
+								<input type="radio" name="rad-lang" value="cs-CZ">
+								<img src="res/img/flags/cs-CZ.svg" alt="cs-CZ">
+							</label>
+							<label class="has-tooltip-arrow has-tooltip-info" data-tooltip="da-DK">
 								<input type="radio" name="rad-lang" value="da-DK">
 								<img src="res/img/flags/da-DK.svg" alt="da-DK">
 							</label>
-							<label>
+							<label class="has-tooltip-arrow has-tooltip-info" data-tooltip="de-DE">
 								<input type="radio" name="rad-lang" value="de-DE">
 								<img src="res/img/flags/de-DE.svg" alt="de-DE">
 							</label>
-							<label>
-								<input type="radio" name="rad-lang" value="es-ES">
-								<img src="res/img/flags/es-ES.svg" alt="es-ES">
+							<label class="has-tooltip-arrow has-tooltip-info" data-tooltip="el-GR">
+								<input type="radio" name="rad-lang" value="el-GR">
+								<img src="res/img/flags/el-GR.svg" alt="el-GR">
 							</label>
-							<label>
+							<label class="has-tooltip-arrow has-tooltip-info" data-tooltip="en-US">
 								<input type="radio" name="rad-lang" value="en-US">
 								<img src="res/img/flags/en-US.svg" alt="en-US">
 							</label>
-							<label>
+							<label class="has-tooltip-arrow has-tooltip-info" data-tooltip="es-ES">
+								<input type="radio" name="rad-lang" value="es-ES">
+								<img src="res/img/flags/es-ES.svg" alt="es-ES">
+							</label>
+							<label class="has-tooltip-arrow has-tooltip-info" data-tooltip="fi-FI">
 								<input type="radio" name="rad-lang" value="fi-FI">
 								<img src="res/img/flags/fi-FI.svg" alt="fi-FI">
 							</label>
-							<label>
+							<label class="has-tooltip-arrow has-tooltip-info" data-tooltip="fr-FR">
 								<input type="radio" name="rad-lang" value="fr-FR">
 								<img src="res/img/flags/fr-FR.svg" alt="fr-FR">
 							</label>
-							<label>
+							<label class="has-tooltip-arrow has-tooltip-info" data-tooltip="hu-HU">
+								<input type="radio" name="rad-lang" value="hu-HU">
+								<img src="res/img/flags/hu-HU.svg" alt="hu-HU">
+							</label>
+							<label class="has-tooltip-arrow has-tooltip-info" data-tooltip="it-IT">
 								<input type="radio" name="rad-lang" value="it-IT">
 								<img src="res/img/flags/it-IT.svg" alt="it-IT">
 							</label>
-							<label>
+							<label class="has-tooltip-arrow has-tooltip-info" data-tooltip="nb-NO">
 								<input type="radio" name="rad-lang" value="nb-NO">
 								<img src="res/img/flags/nb-NO.svg" alt="nb-NO">
 							</label>
-							<label>
+							<label class="has-tooltip-arrow has-tooltip-info" data-tooltip="nl-NL">
 								<input type="radio" name="rad-lang" value="nl-NL">
 								<img src="res/img/flags/nl-NL.svg" alt="nl-NL">
 							</label>
-							<label>
+							<label class="has-tooltip-arrow has-tooltip-info" data-tooltip="pt-BR">
 								<input type="radio" name="rad-lang" value="pt-BR">
 								<img src="res/img/flags/pt-BR.svg" alt="pt-BR">
 							</label>
-							<label>
+							<label class="has-tooltip-arrow has-tooltip-info" data-tooltip="pt-PT">
 								<input type="radio" name="rad-lang" value="pt-PT">
 								<img src="res/img/flags/pt-PT.svg" alt="pt-PT">
 							</label>
-							<label>
+							<label class="has-tooltip-arrow has-tooltip-info" data-tooltip="ro-RO">
+								<input type="radio" name="rad-lang" value="ro-RO">
+								<img src="res/img/flags/ro-RO.svg" alt="ro-RO">
+							</label>
+							<label class="has-tooltip-arrow has-tooltip-info" data-tooltip="ru-RU">
+								<input type="radio" name="rad-lang" value="ru-RU">
+								<img src="res/img/flags/ru-RU.svg" alt="ru-RU">
+							</label>
+							<label class="has-tooltip-arrow has-tooltip-info" data-tooltip="sv-SE">
 								<input type="radio" name="rad-lang" value="sv-SE">
 								<img src="res/img/flags/sv-SE.svg" alt="sv-SE">
 							</label>
-							<label>
+							<label class="has-tooltip-arrow has-tooltip-info" data-tooltip="th-TH">
+								<input type="radio" name="rad-lang" value="th-TH">
+								<img src="res/img/flags/th-TH.svg" alt="th-TH">
+							</label>
+							<label class="has-tooltip-arrow has-tooltip-info" data-tooltip="uk-UA">
 								<input type="radio" name="rad-lang" value="uk-UA">
 								<img src="res/img/flags/uk-UA.svg" alt="uk-UA">
 							</label>
-							<label>
-								<input type="radio" name="rad-lang" value="ru-RU">
-								<img src="res/img/flags/ru-RU.svg" alt="ru-RU">
+							<label class="has-tooltip-arrow has-tooltip-info" data-tooltip="vi-VN">
+								<input type="radio" name="rad-lang" value="vi-VN">
+								<img src="res/img/flags/vi-VN.svg" alt="vi-VN">
 							</label>
 						</div>
 					</div>

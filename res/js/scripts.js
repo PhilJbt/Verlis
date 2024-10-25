@@ -222,8 +222,9 @@ function bindFuncs() {
 */
 function getLang() {
 	const arrLangImpl = [
-		'da-DK', 'de-DE', 'en-US', 'es-ES', 'fi-FI', 'fr-FR', 'it-IT',
-		'nb-NO', 'nl-NL', 'pt-BR', 'pt-PT', 'sv-SE', 'uk-UA', 'ru-RU'
+		'cs-CZ', 'da-DK', 'de-DE', 'en-US', 'el-GR', 'es-ES', 'fi-FI', 'fr-FR', 'hu-HU', 'it-IT',
+		'nb-NO', 'nl-NL', 'pt-BR', 'pt-PT', 'ro-RO', 'ru-RU', 'sv-SE', 'th-TH', 'uk-UA', 'vi-VN'
+		/* 'ar-A', 'ps-AF' */
 	];
 
 	let strBrowserLang = navigator.language || navigator.userLanguage;

@@ -30,24 +30,25 @@ body {
 * Alphabet
 */
 .alphabet {
-	position: fixed;
+  position: fixed;
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   flex-wrap: nowrap;
   justify-content: center;
   align-items: center;
-  left: 15px;
+  bottom: 15px;
   background-color: #c7e2fc17;
   padding: 3px;
   border-radius: 100px;
-  row-gap: 2px;
-	font-size: 1.7vh;
-  opacity: 0.5;
+	column-gap: 20px;
+  font-size: 2vh;
+  opacity: 0.25;
   cursor: default;
-	transition: opacity .125s;
+  transition: opacity .125s;
+  z-index: 2;
 }
 .alphabet:hover {
-	opacity: 1;
+	opacity: .75;
 }
 
 /**
@@ -228,8 +229,8 @@ a.dropdown-item, *.dropdown-item {
 .rad-lng input[type="radio"] ~ img {
 	opacity: .125;
 	cursor: pointer;
-	width: 32px;
-	height: 32px;
+	width: 50px;
+	height: 50px;
 }
 .rad-lng input[type="radio"]:hover ~ img {
 	opacity: 1;
@@ -246,4 +247,8 @@ a.dropdown-item, *.dropdown-item {
 
 .radio p {
 	display: inline;
+}
+
+[data-tooltip] {
+	display: inline-block;
 }

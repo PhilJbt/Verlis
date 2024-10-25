@@ -37,19 +37,25 @@ Il vous est possible d'activer ces indices dans le <strong>menu <em>Options</em>
 > Javascript randomizer : [Brian Ramsay](https://github.com/BrianRamsay/Randomizer)\
 > Flags : [Lipis](https://github.com/lipis/flag-icons)\
 > __Dictionnaires:__
-> | Langue  		| Langage-Pays Code (ISO 639) 	| Url 																																	|
-> | ----------- | -----------------------------	| --------------------------------------------------------------------- |
-> |	Danois  		|	da-DK													| https://en.wiktionary.org/wiki/Appendix:Swedish_verbs									|
-> |	Allemand  	|	de-DE													| https://github.com/Troyciv/PT_ConjugationTrainer_Anki									|
-> |	Anglais  		|	en-US													| https://github.com/edmundobiglia/ptbr-top-verbs												|
-> |	Espagnol  	|	es-ES													| https://github.com/antelle/sterke-werkwoorden													|
-> |	Finnois  		|	fi-FI													| https://github.com/YesUseY/Norwegian-language-verbs-training-program  |
-> |	Français  	|	fr-FR													| https://github.com/rmanasyan/italianverbsnext													|
-> |	Italien  		|	it-IT													| http://rali.iro.umontreal.ca																					|
-> |	Norvégien  	|	nb-NO													| https://github.com/absu5530/morphological_classifier									|
-> |	Néerlandais	|	nl-NL													| https://github.com/cubiwan/jsESverb																		|
-> |	Portugais  	|	pt-BR													| https://github.com/david47k/top-english-wordlists											|
-> |	Portugais  	|	pt-PT													| https://github.com/michael-gerstenberg/GermanVerbScraper							|
-> |	Russe				|	ru-RU													| https://github.com/Badestrand/russian-dictionary											|
-> |	Suédois  		|	sv-SE													| https://github.com/janhsimon/DanishVerbs															|
-> |	Ukrainien		|	uk-UA													| https://github.com/zeolan/digital-ocean-app														|
+> | Langue  		| Langage-Pays Code (ISO 639) 	| Url 																																			|
+> | ----------- | -----------------------------	| ------------------------------------------------------------------------- |
+> |	Tchèque			|	cs-CZ													| https://travelwithlanguages.com/blog/most-common-czech-words.html					|
+> |	Danois  		|	da-DK													| https://en.wiktionary.org/wiki/Appendix:Swedish_verbs											|
+> |	Allemand  	|	de-DE													| https://github.com/Troyciv/PT_ConjugationTrainer_Anki											|
+> |	Grec				|	el-GR													| https://travelwithlanguages.com/blog/most-common-modern-greek-words.html	|
+> |	Anglais  		|	en-US													| https://github.com/edmundobiglia/ptbr-top-verbs														|
+> |	Espagnol  	|	es-ES													| https://github.com/antelle/sterke-werkwoorden															|
+> |	Finnois  		|	fi-FI													| https://github.com/YesUseY/Norwegian-language-verbs-training-program  		|
+> |	Français  	|	fr-FR													| https://github.com/rmanasyan/italianverbsnext															|
+> |	Hongrois		|	hu-HU													| https://travelwithlanguages.com/blog/most-common-hungarian-words.html			|
+> |	Italien  		|	it-IT													| http://rali.iro.umontreal.ca																							|
+> |	Norvégien  	|	nb-NO													| https://github.com/absu5530/morphological_classifier											|
+> |	Néerlandais	|	nl-NL													| https://github.com/cubiwan/jsESverb																				|
+> |	Portugais  	|	pt-BR													| https://github.com/david47k/top-english-wordlists													|
+> |	Portugais  	|	pt-PT													| https://github.com/michael-gerstenberg/GermanVerbScraper									|
+> |	Roumain			|	ro-RO													| https://travelwithlanguages.com/blog/most-common-romanian-words.html			|
+> |	Russe				|	ru-RU													| https://github.com/Badestrand/russian-dictionary													|
+> |	Suédois  		|	sv-SE													| https://github.com/janhsimon/DanishVerbs																	|
+> |	Thaï				|	th-TH													| https://travelwithlanguages.com/blog/most-common-thai-words.html					|
+> |	Ukrainien		|	uk-UA													| https://github.com/zeolan/digital-ocean-app																|
+> |	Vietnamien	|	vi-VN													| https://mylittlewordland.com/course/452073/vietnamese-verb-list						|
