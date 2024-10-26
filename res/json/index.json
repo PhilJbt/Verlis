@@ -1,0 +1,128 @@
+[
+	{
+		"name": "Nepravidelná slovesa v češtině",
+		"dict": "cs-CZ",
+		"nmbr": 0,
+		"diff": 190
+	},
+	{
+		"name": "Uregelmæssige verber på dansk",
+		"dict": "da-DK",
+		"nmbr": 514,
+		"diff": 0
+	},
+	{
+		"name": "Unregelmäßige Verben im Deutschen",
+		"dict": "de-DE",
+		"nmbr": 17679,
+		"diff": 0
+	},
+	{
+		"name": "Ανώμαλα ρήματα στα ελληνικά",
+		"dict": "el-GR",
+		"nmbr": 163,
+		"diff": 0
+	},
+	{
+		"name": "Irregular Verbs in English",
+		"dict": "en-US",
+		"nmbr": 1011,
+		"diff": 0
+	},
+	{
+		"name": "Verbos irregulares en español",
+		"dict": "es-ES",
+		"nmbr": 10854,
+		"diff": 0
+	},
+	{
+		"name": "Epäsäännölliset verbit suomen kielessä",
+		"dict": "fi-FI",
+		"nmbr": 7049,
+		"diff": 0
+	},
+	{
+		"name": "Verbes irréguliers en français (Québec)",
+		"dict": "fr-CA",
+		"nmbr": 5602,
+		"diff": 0
+	},
+	{
+		"name": "Verbes irréguliers en français (France)",
+		"dict": "fr-FR",
+		"nmbr": 12164,
+		"diff": 0
+	},
+	{
+		"name": "Szabálytalan igék a magyarban",
+		"dict": "hu-HU",
+		"nmbr": 182,
+		"diff": 0
+	},
+	{
+		"name": "Verbi irregolari in italiano",
+		"dict": "it-IT",
+		"nmbr": 12891,
+		"diff": 0
+	},
+	{
+		"name": "Uregelmessige verb på norsk",
+		"dict": "nb-NO",
+		"nmbr": 157,
+		"diff": 0
+	},
+	{
+		"name": "Onregelmatige werkwoorden in het Nederlands",
+		"dict": "nl-NL",
+		"nmbr": 180,
+		"diff": 0
+	},
+	{
+		"name": "Verbos irregulares em português (Brazil)",
+		"dict": "pt-BR",
+		"nmbr": 5001,
+		"diff": 0
+	},
+	{
+		"name": "Verbos irregulares em português (Portugal)",
+		"dict": "pt-PT",
+		"nmbr": 1001,
+		"diff": 0
+	},
+	{
+		"name": "Verbe neregulate în română",
+		"dict": "ro-RO",
+		"nmbr": 586,
+		"diff": 0
+	},
+	{
+		"name": "Неправильные глаголы в русском языке",
+		"dict": "ru-RU",
+		"nmbr": 14866,
+		"diff": 0
+	},
+	{
+		"name": "Oregelbundna verb på svenska",
+		"dict": "sv-SE",
+		"nmbr": 471,
+		"diff": 0
+	},
+	{
+		"name": "กริยาที่ไม่สม่ำเสมอในภาษาไทย",
+		"dict": "th-TH",
+		"nmbr": 260,
+		"diff": 0
+	},
+	{
+		"name": "Неправильні дієслова в українській мові",
+		"dict": "uk-UA",
+		"nmbr": 150,
+		"diff": 0
+	},
+	{
+		"name": "Động từ bất quy tắc trong tiếng Việt",
+		"dict": "vi-VN",
+		"nmbr": 374,
+		"diff": 0
+	}	
+]

@@ -10,10 +10,11 @@
 		<link rel="stylesheet" href="res/dep/bulma-tooltip/bulma-tooltip.min.css">
 		<link rel="stylesheet" href="res/dep/bulma-checkradio/bulma-checkradio.min.css">
 		<link rel="stylesheet" href="res/css/styles.css">
+		<script src="res/dep/bulma-autocomplete/bulmahead.bundle.js" defer></script>
+		<script src="res/dep/randomizer.js" defer></script>
+		<script src="res/js/scripts.js" defer></script>
   </head>
   <body class="theme-dark">
-		<!-- Alphabet -->
-		<div class="alphabet patoush" i18n="ac_alphabet"></div>
 		<!-- Modal Options -->
 		<div id="mdl-options" class="modal patoush">
 			<div class="modal-background"></div>
@@ -130,8 +131,12 @@
 				<footer class="modal-card-foot">
 					<!-- Modal Options Footer Buttons -->
 					<div class="buttons">
-						<button class="button is-primary" id="btn-options" i18n="ih_save"></button>
-						<button class="button" i18n="ih_cancel"></button>
+						<button class="button is-primary" id="btn-options" i18n="ah_save">
+							<i class="fa-solid fa-floppy-disk"></i>
+						</button>
+						<button class="button" i18n="ah_cancel">
+							<i class="fa-solid fa-ban"></i>
+						</button>
 					</div>
 				</footer>
 			</div>
@@ -157,7 +162,7 @@
 			<div class="modal-card">
 				<!-- Modal Abandon Header -->
 				<header class="modal-card-head has-background-danger">
-					<p class="modal-card-title" i18n="ah_abandon"><i class="fas fa-skull-crossbones"></i> </p>
+					<p class="modal-card-title" i18n="ah_abandon"><i class="fas fa-skull"></i> </p>
 					<button class="delete" aria-label="close"></button>
 				</header>
 				<!-- Modal Abandon Content -->
@@ -166,123 +171,150 @@
 				<footer class="modal-card-foot">
 					<!-- Modal Abandon Footer Buttons -->
 					<div class="buttons">
-						<button class="button is-danger" id="btn-abandon" i18n="ih_abandon"></button>
-						<button class="button" i18n="ih_cancel"></button>
+						<button class="button is-danger" id="btn-abandon" i18n="ah_abandon">
+							<i class="fa-solid fa-skull-crossbones"></i>
+						</button>
+						<button class="button" i18n="ah_cancel">
+							<i class="fa-solid fa-ban"></i>
+						</button>
 					</div>
 				</footer>
 			</div>
 		</div>
-		<!-- Infobar -->
-		<nav class="level patoush">
-			<!-- Infobar Tries -->
-			<div class="level-item has-text-centered">
-				<div>
-					<p class="heading" i18n="ih_triesnbr"></p>
-					<p class="title" id="nav-try">0</p>
-				</div>
-			</div>
-			<!-- Infobar Time -->
-			<div class="level-item has-text-centered">
-				<div>
-					<p class="heading" i18n="ih_timeelapsed"></p>
-					<p class="title" id="nav-tim">--:--:--</p>
-				</div>
-			</div>
-			<!-- Menu -->
-			<div class="level-item has-text-centered">
-				<div class="dropdown" id="menu">
-					<!-- Menu Icon -->
-					<div class="dropdown-trigger">
-						<button class="button" aria-haspopup="true" aria-controls="dropdown-menu">
-							<span class="icon is-small">
-								<i class="fas fa-solid fa-bars" aria-hidden="true"></i>
-							</span>
-						</button>
+		<!-- Game Container -->
+		<div class="gui container">
+			<!-- Infobar -->
+			<nav class="level minimal patoush">
+				<!-- Infobar Tries -->
+				<div class="level-item has-text-centered" type="tries">
+					<div>
+						<p class="heading" i18n="ih_triesnbr"></p>
+						<p class="title" id="nav-try">0</p>
 					</div>
-					<div class="dropdown-menu" id="dropdown-menu" role="menu">
-						<!-- Menu Dropdown -->
-						<div class="dropdown-content">
-							<!-- Menu Dropdown ID -->
-							<div class="dropdown-item item-next">
-								<span class="icon-text has-text-grey">
-									<span class="icon">
-										<i class="fas fa-hashtag"></i>
-									</span>
-									<span id="day-id"></span>
-								</span>
-							</div>
-							<!-- Menu Dropdown Next -->
-							<div class="dropdown-item item-next">
-								<span class="icon-text has-text-grey">
-									<span class="icon">
-										<i class="fas fa-hourglass"></i>
-									</span>
-									<span id="timer-next"></span>
-								</span>
-							</div>
-							<!-- Menu Dropdown Divider -->
-							<hr class="dropdown-divider" />
-							<!-- Menu Dropdown Modal Help -->
-							<button class="dropdown-item has-text-info js-modal-trigger" data-target="mdl-infos">
-								<span class="icon-text">
-									<span class="icon">
-										<i class="fas fa-info"></i>
-									</span>
-									<span i18n="ih_help"></span>
+				</div>
+				<!-- Infobar Time -->
+				<div class="level-item has-text-centered" type="time">
+					<div>
+						<p class="heading" i18n="ih_timeelapsed"></p>
+						<p class="title" id="nav-tim">--:--:--</p>
+					</div>
+				</div>
+				<!-- Menu -->
+				<div class="level-item has-text-centered" type="menu">
+					<div class="dropdown" id="menu">
+						<!-- Menu Icon -->
+						<div class="dropdown-trigger">
+							<button class="button" aria-haspopup="true" aria-controls="dropdown-menu">
+								<span class="icon is-small">
+									<i class="fas fa-solid fa-bars" aria-hidden="true"></i>
 								</span>
 							</button>
-							<!-- Menu Dropdown Modal Options -->
-							<button class="dropdown-item has-text-primary js-modal-trigger" data-target="mdl-options">
-								<span class="icon-text">
-									<span class="icon">
-										<i class="fas fa-gear"></i>
+						</div>
+						<div class="dropdown-menu" id="dropdown-menu" role="menu">
+							<!-- Menu Dropdown -->
+							<div class="dropdown-content">
+								<!-- Menu Dropdown ID -->
+								<div class="dropdown-item item-next">
+									<span class="icon-text has-text-grey">
+										<span class="icon">
+											<i class="fas fa-hashtag"></i>
+										</span>
+										<span id="day-id"></span>
 									</span>
-									<span i18n="ih_options"></span>
-								</span>
-							</button>
-							<!-- Menu Dropdown Stop -->
-							<button class="dropdown-item has-text-danger" id="plzstahp">
-								<span class="icon-text">
-									<span class="icon">
-										<i class="fas fa-skull-crossbones"></i>
+								</div>
+								<!-- Menu Dropdown Next -->
+								<div class="dropdown-item item-next">
+									<span class="icon-text has-text-grey">
+										<span class="icon">
+											<i class="fas fa-hourglass"></i>
+										</span>
+										<span id="timer-next"></span>
 									</span>
-									<span i18n="ih_reveal"></span>
-								</span>
-							</button>
-							<!-- Menu Dropdown Divider -->
-							<hr class="dropdown-divider" />
-							<!-- Menu Dropdown Version -->
-							<div class="dropdown-item item-next">
-								<span class="icon-text has-text-grey">
-									<span class="icon">
-										<i class="fas fa-code-commit"></i>
+								</div>
+								<!-- Menu Dropdown Divider -->
+								<hr class="dropdown-divider" />
+								<!-- Menu Dropdown Modal Help -->
+								<button class="dropdown-item has-text-info js-modal-trigger" data-target="mdl-infos">
+									<span class="icon-text">
+										<span class="icon">
+											<i class="fas fa-info"></i>
+										</span>
+										<span i18n="ih_help"></span>
 									</span>
-									<span i18n="ih_version"></span><span>24.1023</span>
-								</span>
+								</button>
+								<!-- Menu Dropdown Modal Options -->
+								<button class="dropdown-item has-text-primary js-modal-trigger" data-target="mdl-options">
+									<span class="icon-text">
+										<span class="icon">
+											<i class="fas fa-gear"></i>
+										</span>
+										<span i18n="ih_options"></span>
+									</span>
+								</button>
+								<!-- Menu Dropdown Stop -->
+								<button class="dropdown-item has-text-danger" id="plzstahp" disabled>
+									<span class="icon-text">
+										<span class="icon">
+											<i class="fas fa-skull"></i>
+										</span>
+										<span i18n="ih_reveal"></span>
+									</span>
+								</button>
+								<!-- Menu Dropdown Divider -->
+								<hr class="dropdown-divider" />
+								<!-- Menu Dropdown Version -->
+								<div class="dropdown-item item-next">
+									<span class="icon-text has-text-grey">
+										<span class="icon">
+											<i class="fas fa-code-commit"></i>
+										</span>
+										<span i18n="ih_version"></span><span>24.1023</span>
+									</span>
+								</div>
+								<!-- Menu Dropdown Contact -->
+								<a href="mailto:philjbt@ik.me" class="dropdown-item">
+									<span class="icon-text">
+										<span class="icon">
+											<i class="fas fa-envelope"></i>
+										</span>
+										<span i18n="ih_contact"></span>
+									</span>
+								</a>
 							</div>
-							<!-- Menu Dropdown Contact -->
-							<a href="mailto:philjbt@ik.me" class="dropdown-item">
-								<span class="icon-text">
-									<span class="icon">
-										<i class="fas fa-envelope"></i>
-									</span>
-									<span i18n="ih_contact"></span>
-								</span>
-							</a>
 						</div>
 					</div>
 				</div>
-			</div>
-		</nav>
-		<!-- Game Container -->
-		<div class="container">
-			<div class="fixed-grid has-1-cols">
-				<div class="grid">
+			</nav>
+			<!-- Inputs -->
+			<div class="inputs">
+				<!-- Loading bar -->
+				<progress class="progress is-small is-primary" max="100" value="5" id="loading" style="width:50vw;"></progress>
+				<!-- Selector -->
+				<div id="selector-container">
+					<div class="field">
+						<label class="label" i18n="ih_setselect"></label>
+						<div class="dropdown">
+							<div class="dropdown-trigger">
+								<input id="selector" class="input" type="text" placeholder="" i18n="ph_setwrite" aria-haspopup="true" aria-controls="selector-menu" disabled>
+								<button id="run-set" class="button" disabled>
+									<span i18n="ih_setload"></span>
+									<span class="icon is-small">
+										<i class="fa-solid fa-share"></i>
+									</span>
+								</button>
+							</div>
+							<div class="dropdown-menu" id="selector-menu" role="menu"></div>
+						</div>
+								<p id="inp-set-dsc" class="help is-danger patoush" i18n="ih_setwrong"></p>
+						<div id="selector-infos" class="field is-grouped is-grouped-multiline"></div>
+					</div>
+				</div>
+				<!-- Words -->
+				<div class="ag-input-container">
 					<!-- Words before -->
-					<div class="cell" id="ag-words-before"></div>
-					<progress class="progress is-small is-primary" max="100" value="0" id="loading"></progress>
+					<div id="ag-words-before"></div>
 					<!-- User inputs -->
-					<div id="ag-input" class="cell">
+					<div id="ag-input">
 						<div class="field width-full">
 							<div class="control has-icons-left has-icons-right">
 								<input id="inp-usr" class="input" type="text" placeholder="" i18n="ph_writeverb" disabled>
@@ -299,17 +331,17 @@
 							<button id="btn-try" class="button" disabled>
 								<span i18n="ih_tryverb"></span>
 								<span class="icon is-small">
-									<i class="fa-solid fa-paper-plane"></i>
+									<i class="fa-solid fa-comment-dots"></i>
 								</span>
 							</button>
 						</div>
 					</div>
 					<!-- Words after -->
-					<div class="cell" id="ag-words-after"></div>
+					<div id="ag-words-after"></div>
 				</div>
 			</div>
+			<!-- Alphabet -->
+			<div class="alphabet patoush" i18n="ac_alphabet"></div>
 		</div>
   </body>
-	<script src="res/dep/randomizer.js"></script>
-	<script src="res/js/scripts.js"></script>
 </html>

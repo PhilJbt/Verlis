@@ -6,19 +6,31 @@ window.addEventListener('load', function () {
 });
 
 /**
-*
-* @param {number} _val - The percentage of the progress bar in percentage
+* Update the value of the progress bar
+* @param {number, bool} _val - The percentage of the progress bar in percentage if not bool, else if the progress bar visibility
 */
-function progressLoading(_val) {
-	document.getElementById('loading').value = _val;
+function progressBar(_val) {
+	switch (typeof(_val)) {
+		case 'number':
+			document.getElementById('loading').value = _val;
+		break;
+		case 'boolean':
+			if (_val === true)
+				document.getElementById('loading').style.display = 'block';
+			else
+				document.getElementById('loading').style.display = 'none';
+		break;
+	}
 }
 
 /**
 * Initialize the DOM and game systems once the main document is loaded
 */
 async function init() {
+	progressBar(10);
+	
 	// Declare and initialize global vars
-	window.vl_nswr = '';
+	window.vl_nswr = null;
 	window.vl_finished = false;
 	window.vl_tried = {};
 	window.vl_tryCount = 0;
@@ -29,62 +41,255 @@ async function init() {
 	window.vl_options = [];
 	window.vl_verblist = {};
 	window.vl_i18n = {};
-
+	window.vl_listSelection = null;
+	window.vl_dictName = '';
+	
 	// Remove any text from the user input text (some browser cache it)
 	document.getElementById('inp-usr').value = '';
 	
-	progressLoading(10);
+	progressBar(15);
 	
 	// Bind listeners to their callbacks
 	bindFuncs();
 	
-	progressLoading(20);
+	progressBar(20);
 	
 	// Load stored user's options
 	optionsLoad();
 	
-	progressLoading(30);
+	progressBar(30);
 	
-	// Retrieve the list of verbs and the ui localization
+	// Retrieve the ui localization
 	await i18n_ui();
-	progressLoading(40);
-	await i18n_vb();
 	
-	progressLoading(50);
-	
-	// Choose a word from the list
-	pickWord();
-	
-	progressLoading(60);
+	progressBar(50);
 	
 	// Init css framework
 	initBulma();
 	
-	progressLoading(70);
+	progressBar(60);
 	
 	// Start the time worker (i.e. the game elapsed timer and the "next word" timer)
 	initTime();
 	
-	progressLoading(80);
+	progressBar(70);
 	
 	// Determine word (day) ID
 	document.getElementById('day-id').innerHTML = `${window.vl_i18n['js_dayid']}${getWordID()}`;
 	
-	// Check if this word has already been done
-	checkLastFinish();
+	progressBar(80);
 	
-	progressLoading(90);
-	
-	// Show a welcome message if first visit
-	welcomeMessage();
-	
-	progressLoading(100);
+	// Show the dictionnary selector modal
+	dictSelect_init();
+}
 
-	// Erase the "Please wait loading" hero
-	document.getElementById('loading').remove();
+/**
+* Initialize the dictionary selector
+*/
+async function dictSelect_init() {
+	// Retrieve the list of dictionaries
+	await fetchWithProgress('res/json/index.json', dictSelect_show, [80, 100]);
+	
+	// Load the list of dictionaries
+	var api = function(inputValue) {
+		return new Promise(function(resolve) {
+			document.getElementById('selector').classList.remove('is-danger');
+			document.getElementById('inp-set-dsc').style.visibility = 'hidden';
+			resolve(window.vl_listSelection);
+		}).then(function(states) {
+			return states.filter(function(state) {
+				return state.name.toLowerCase().indexOf(inputValue.toLowerCase()) > -1
+			})
+		}).then(function(filtered) {
+			return filtered.map(function(state) {
+				difClr = '';
+				difNam = '';
+				switch(state.diff) {
+					case 0:
+					difClr = 'success';
+					difNam = 'Easy';
+					break;
+					case 1:
+					difClr = 'warning';
+					difNam = 'Moderate';
+					break;
+					case 2:
+					difClr = 'danger';
+					difNam = 'Hard';
+					break;
+				}
+				const frag = `
+					<div class="control">
+						<div class="tags has-addons are-medium">
+							<span class="tag is-dark">Difficulty</span>
+							<span class="tag is-${difClr}">${difNam}</span>
+						</div>
+					</div>
+					<div class="control">
+						<div class="tags has-addons are-medium">
+							<span class="tag is-dark">Count</span>
+							<span class="tag is-info">${state.nmbr.toLocaleString(window.vl_options['langue'])}</span>
+						</div>
+					</div>`;
+				return {label: state.name, value: frag}
+			})
+		}).then(function(transformed) {
+			return transformed.slice(0, 5)
+		})
+	};
+
+	var onSelect = function(state) {
+		var selected = document.getElementById("selector-infos");
+		selected.innerHTML = state.value;
+	};
+	
+	// Init the selector text input
+	await bulmahead('selector', 'selector-menu', api, onSelect, 0, 0);
+}
+
+/**
+* Initialize the dictionary selector
+*/
+async function dictSelect_show(_blob) {
+	document.getElementById('run-set').removeAttribute('disabled');
+	document.getElementById('selector').removeAttribute('disabled');
+	
+	window.vl_listSelection = JSON.parse(JSON.parse(JSON.stringify(await _blob.text())));
+	
+	// If the dict is given, populate the dict selector, then empty it (cache)
+	const dictName = (new URLSearchParams(window.location.search)).get('set');
+	if (dictName !== null
+	&& dictName !== '') {
+		document.getElementById('selector').value = dictName;
+		
+		loadDict();
+	}
+	else
+		document.getElementById('selector').value = '';
+	
+	progressBar(false);
+	
+	// Show the selector modal
+	document.getElementById('selector-container').style.display = 'flex';
+}
+
+/**
+* Download a remote file with progress tracking
+* @param {string} _url - File Url to fetch
+* @param {function} _onFinished - Callback to call when finished
+* @param {array[number]} _arrMinMax - Minimum and maximum values this fetch affects on the progress bar
+*/
+async function fetchWithProgress(_file, _onFinished, _arrMinMax = [0, 100]) {
+	fetchWithProgress_(_file, progress => {
+		const val = _arrMinMax[0] + ((_arrMinMax[1] - _arrMinMax[0]) * progress.toFixed(2));
+		progressBar(val);
+	}).then(response => response.blob())
+		.then(blob => {
+			_onFinished(blob);
+		})
+		.catch(console.error);
+}
+
+/**
+* Backend routine to download a remote file with progress tracking
+* @param {string} _url - File Url to fetch
+* @param {function} _onProgress - Progress callback to update fetch progression
+* @return {blob} - The retrieved file
+*/
+async function fetchWithProgress_(_url, _onProgress) {
+  const response = await fetch(_url);
+  if (!response.body) throw new Error("ReadableStream not supported");
+
+  const contentLength = response.headers.get("content-length");
+  if (!contentLength) throw new Error("Content-Length not specified");
+
+  const total = parseInt(contentLength, 10);
+  let loaded = 0;
+
+  const reader = response.body.getReader();
+  const stream = new ReadableStream({
+    start(controller) {
+      function read() {
+        reader.read().then(({ done, value }) => {
+          if (done) {
+            controller.close();
+            return;
+          }
+          loaded += value.length;
+          _onProgress(loaded / total);
+          controller.enqueue(value);
+          read();
+        });
+      }
+      read();
+    },
+  });
+
+  return new Response(stream);
+}
+
+/**
+* Load a dictionary
+*/
+async function loadDict() {
+	const userChoice = document.getElementById('selector').value;
+	const arrFound = window.vl_listSelection.filter(function(elem) {
+		return elem.name === userChoice;
+	});
+	
+	if (arrFound.length !== 1) {
+		document.getElementById('selector').classList.add('is-danger');
+		document.getElementById('inp-set-dsc').style.visibility = 'visible';
+		return;
+	}
+	
+	// Store the name of the selected set (load/save func)
+	window.vl_dictName = arrFound[0].dict;
+	
+	// Update the url	
+	history.pushState(null, '', `${window.location.origin+window.location.pathname}?set=${arrFound[0].name}`);
+
+	// Hide the selector modal
+	document.getElementById('selector-container').style.display = 'none';
+	
+	// Show the progress bar
+	progressBar(0);
+	progressBar(true);
+	
+	// Retrieve the list of verbs
+	await i18n_vb(arrFound[0].dict);
+	
+	// Choose a word from the list
+	pickWord();
+	
+	loadDict_end();
+	
+	checkLastFinish();
+}
+
+/**
+* Show the UI after loading the dictionary
+*/
+function loadDict_end() {
+	// Show the menu button and the alphabet
+	document.getElementsByTagName('nav')[0].style.visibility = 'visible';
+	document.getElementsByClassName('alphabet')[0].style.visibility = 'visible';
+	
+	// Show the navbar
+	document.getElementsByClassName('level')[0].classList.remove('minimal');
+	
+	// Enable the abandon button
+	document.getElementById('plzstahp').removeAttribute('disabled');
+	
+	// Hide the dict selection inputs
+	document.getElementById('selector-container').style.display = 'none';
+	
+	// Hide progress bar
+	progressBar(false);
+	
 	// Set the inputs visibile
-	if (document.getElementById('ag-input'))
-		document.getElementById('ag-input').style.display = 'flex';
+	if (document.getElementsByClassName('ag-input-container')[0])
+		document.getElementsByClassName('ag-input-container')[0].style.display = 'flex';
 	// Enable the button back
 	if (document.getElementById('btn-try'))
 		document.getElementById('btn-try').removeAttribute('disabled');
@@ -116,9 +321,14 @@ function bindFuncs() {
 		optionsSave();
 	});
 
-	// Bind the "Essayer" button to its callback
+	// Bind the "Send word" button to its callback
 	document.getElementById('btn-try').addEventListener('click', function () {
 		checkWord();
+	});
+
+	// Bind the "Play this set" button to its callback
+	document.getElementById('run-set').addEventListener('click', function () {
+		loadDict();
 	});
 	
 	// Bind text input to its callback to remove the red style assigned to it
@@ -136,22 +346,27 @@ function bindFuncs() {
 		}
 	});
 
-	// Bind the keyboard key pressing to its callback,
-	// only the Enter key will be used
+	// Bind the keyboard key pressing to its callback
 	document.addEventListener('keydown', function(e) {
-		// If the user text input has focus
-		if (document.getElementById('inp-usr') === document.activeElement) {
-			// Get the key code
-			const keynum = e.keyCode||e.which;
-			
-			// Enter key is pressed
-			if (keynum == 13)
+		// Get the key code
+		const keynum = e.keyCode||e.which;
+		
+		// Return key is pressed
+		if (keynum == 13) {
+			// If the user text input has focus (set selector)
+			if (document.activeElement === document.getElementById('selector'))
+				// Load the selected dict
+				loadDict();
+			// If the user text input has focus (word submission)
+			else if (document.activeElement === document.getElementById('inp-usr'))
 				// Start the word processing
 				checkWord();
-			// Up arrow is pressed
-			else if (keynum == 38
+		}
+		// Up arrow is pressed
+		else if (keynum == 38
+		&& document.activeElement === document.getElementById('inp-usr')) {
 			// A word has already been tried
-			&& window.vl_lastTry !== null)
+			if (window.vl_lastTry !== null)
 				// Set the last tried (successfully or not) word in the user text input
 				document.getElementById('inp-usr').value = window.vl_lastTry;
 			// Down arrow is pressed
@@ -278,8 +493,6 @@ async function i18n_ui() {
 	document.querySelectorAll('*[i18n^="ih_"]').forEach(e => {
 		const attName = e.getAttribute('i18n').substr(3);
 		let cont = attName.substr(0, 4) === 'a2b_' ? window.vl_i18n[attName].vl_decode() : window.vl_i18n[attName];
-		if (attName.substr(4) === 'help_dsc')
-			cont = cont.replace('%VERBCOUNT%', `<strong>${window.vl_i18n['js_verbcount']}</strong>`);
 		e.innerHTML = cont;
 	});
 	
@@ -292,9 +505,10 @@ async function i18n_ui() {
 
 /**
 * Retrieve word list depending on the current language
+* @param {string} _dict - Dictionnary chosen by the user
 */
-async function i18n_vb() {
-	const nsr = await fetch(`res/json/verb/${window.vl_options['langue']}.json`);
+async function i18n_vb(_dict) {
+	const nsr = await fetch(`res/json/dict/${_dict}.json`);
 	const jsn = await nsr.json();
 	window.vl_verblist = jsn;
 }
@@ -304,16 +518,6 @@ async function i18n_vb() {
 */
 function getWordID() {
 	return getDailyIntWithTimezone() - 20015;
-}
-
-/**
-* Help modal opened as a welcome message
-*/
-function welcomeMessage() {
-	if (localStorage.getItem('wm') !== 'true') {
-		document.getElementById('mdl-infos').classList.add('is-active');
-		localStorage.setItem('wm', 'true');
-	}
 }
 
 /**
@@ -715,7 +919,7 @@ function gameEnd(_success, _save = true) {
 	// Save the result
 	if (_save === true)
 		localStorage.setItem(
-			`lf_${window.vl_options['langue']}`,
+			`lf_${window.vl_dictName}`,
 			JSON.stringify({
 				day: getDailyIntWithTimezone(),
 				type: _success,
@@ -760,7 +964,7 @@ function gameEnd(_success, _save = true) {
 */
 function checkLastFinish() {
 	// Retrieve the latest potentially stored game information
-	const lastFinished = JSON.parse(localStorage.getItem(`lf_${window.vl_options['langue']}`) || '{"day": -1, "type": "none"}');
+	const lastFinished = JSON.parse(localStorage.getItem(`lf_${window.vl_dictName}`) || '{"day": -1, "type": "none"}');
 	
 	// If the infos are valid,
 	if (lastFinished.type !== 'none'
@@ -913,7 +1117,8 @@ function initBulma() {
   }
 
   function closeModal($el) {
-    $el.classList.remove('is-active');
+		if (($el).id !== 'mdl-selector')
+			$el.classList.remove('is-active');
   }
 
   function closeAllModals() {
