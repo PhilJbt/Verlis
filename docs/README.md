@@ -44,28 +44,28 @@ You can enable these hints in the <strong><em>Options</em></strong> menu.
 > Flags : [&ulcorner;HatScripts&lrcorner;](https://github.com/HatScripts/circle-flags)\
 > <br/>
 > __Dictionaries:__
-> | Language	| Entries			  	| Sources		|
-> | --------- | --------------- | --------- |
-> | N/A 			| 300				 			| [&ulcorner;Walk of Fame&lrcorner;](https://walkoffame.com/browse-stars/)&emsp;[&ulcorner;Tmdb&lrcorner;](https://www.themoviedb.org/) |
-> |	cs-CZ			| 190				 			| [&ulcorner;Travel with Languages&lrcorner;](https://travelwithlanguages.com/blog/most-common-czech-words.html) |
-> |	da-DK			| 514				 			| [&ulcorner;Jan Simon&lrcorner;](https://github.com/janhsimon/DanishVerbs) |
-> |	de-DE			| 17,679					| [&ulcorner;Michael Gerstenberg&lrcorner;](https://github.com/michael-gerstenberg/GermanVerbScraper) |
-> |	el-GR			| 163				 			| [&ulcorner;Travel with Languages&lrcorner;](https://travelwithlanguages.com/blog/most-common-modern-greek-words.html) |
-> |	en-US			| 1,011				 		| [&ulcorner;Drulac&lrcorner;](https://github.com/Drulac/English-Verbs-Conjugates) |
-> |	es-ES			| 10,854					| [&ulcorner;Cubiwan&lrcorner;](https://github.com/cubiwan/jsESverb) |
-> |	fi-FI			| 7,049				 		| [&ulcorner;Abhishek Suresh&lrcorner;](https://github.com/absu5530/morphological_classifier) |
-> |	fr-CA			| 5,602				 		| [&ulcorner;UsherBrooke&lrcorner;](https://usito.usherbrooke.ca) |
-> |	fr-FR			| 12,164					| [&ulcorner;Umontreal&lrcorner;](http://rali.iro.umontreal.ca) |
-> |	hu-HU			| 182				 			| [&ulcorner;Travel with Languages&lrcorner;](https://travelwithlanguages.com/blog/most-common-hungarian-words.html) |
-> |	it-IT			| 12,891					| [&ulcorner;Roman Manasyan&lrcorner;](https://github.com/rmanasyan/italianverbsnext) |
-> |	nb-NO			| 157							| [&ulcorner;Lukas&lrcorner;](https://github.com/YesUseY/Norwegian-language-verbs-training-program) |
-> |	nl-NL			| 180				 			| [&ulcorner;Dimitri Witkowski&lrcorner;](https://github.com/antelle/sterke-werkwoorden) |
-> |	pt-BR			| 5,001				 		| [&ulcorner;Edmundo Biglia&lrcorner;](https://github.com/edmundobiglia/ptbr-top-verbs) |
-> |	pt-PT			| 1,018				 		| [&ulcorner;Troyciv&lrcorner;](https://github.com/Troyciv/PT_ConjugationTrainer_Anki) |
-> |	ro-RO			| 586				 			| [&ulcorner;Travel with Languages&lrcorner;](https://travelwithlanguages.com/blog/most-common-romanian-words.html)&emsp;[&ulcorner;Zeolan&lrcorner;](https://github.com/zeolan/digital-ocean-app) |
-> |	ru-RU			| 14,866					| [&ulcorner;Badestrand&lrcorner;](https://github.com/Badestrand/russian-dictionary) |
-> |	sv-SE			| 471				 			| [&ulcorner;Wiktionary&lrcorner;](https://en.wiktionary.org/wiki/Appendix:Swedish_verbs) |
-> |	th-TH			| 260				 			| [&ulcorner;Travel with Languages&lrcorner;](https://travelwithlanguages.com/blog/most-common-thai-words.html) |
-> |	uk-UA			| 155				 			| [&ulcorner;Fiszkoteka&lrcorner;](https://fiszkoteka.pl/zestaw/309215-500-most-important-ukrainian-verbs-100-125)&emsp;[&ulcorner;Pinhok&lrcorner;](https://www.pinhok.com/kb/ukrainian/319/ukrainian-verbs/)&emsp;[&ulcorner;App 2 Brain&lrcorner;](https://app2brain.com/learn-languages/ukrainian/basic-verbs/)&emsp;[&ulcorner;My Languages&lrcorner;](https://mylanguages.org/ukrainian_verbs.php) |
-> |	vi-VN			| 374				 			| [&ulcorner;MyLittle Word Land&lrcorner;](https://mylittlewordland.com/course/452073/vietnamese-verb-list) |
+> | Topic											| Language	| Entries			  	| Sources		|
+> | --------------------------| --------- | --------------- | --------- |
+> | Hollwood actors						| 		 			| 300				 			| [&ulcorner;Walk of Fame&lrcorner;](https://walkoffame.com/browse-stars/)&emsp;[&ulcorner;Tmdb&lrcorner;](https://www.themoviedb.org/) |
+> |	Verbs in the infinitive		|	cs-CZ			| 190				 			| [&ulcorner;Travel with Languages&lrcorner;](https://travelwithlanguages.com/blog/most-common-czech-words.html) |
+> |	Verbs in the infinitive		|	da-DK			| 514				 			| [&ulcorner;Jan Simon&lrcorner;](https://github.com/janhsimon/DanishVerbs) |
+> |	Verbs in the infinitive		|	de-DE			| 17,679					| [&ulcorner;Michael Gerstenberg&lrcorner;](https://github.com/michael-gerstenberg/GermanVerbScraper) |
+> |	Verbs in the infinitive		|	el-GR			| 163				 			| [&ulcorner;Travel with Languages&lrcorner;](https://travelwithlanguages.com/blog/most-common-modern-greek-words.html) |
+> |	Verbs in the infinitive		|	en-US			| 1,011				 		| [&ulcorner;Drulac&lrcorner;](https://github.com/Drulac/English-Verbs-Conjugates) |
+> |	Verbs in the infinitive		|	es-ES			| 10,854					| [&ulcorner;Cubiwan&lrcorner;](https://github.com/cubiwan/jsESverb) |
+> |	Verbs in the infinitive		|	fi-FI			| 7,049				 		| [&ulcorner;Abhishek Suresh&lrcorner;](https://github.com/absu5530/morphological_classifier) |
+> |	Verbs in the infinitive		|	fr-CA			| 5,602				 		| [&ulcorner;UsherBrooke&lrcorner;](https://usito.usherbrooke.ca) |
+> |	Verbs in the infinitive		|	fr-FR			| 12,164					| [&ulcorner;Umontreal&lrcorner;](http://rali.iro.umontreal.ca) |
+> |	Verbs in the infinitive		|	hu-HU			| 182				 			| [&ulcorner;Travel with Languages&lrcorner;](https://travelwithlanguages.com/blog/most-common-hungarian-words.html) |
+> |	Verbs in the infinitive		|	it-IT			| 12,891					| [&ulcorner;Roman Manasyan&lrcorner;](https://github.com/rmanasyan/italianverbsnext) |
+> |	Verbs in the infinitive		|	nb-NO			| 157							| [&ulcorner;Lukas&lrcorner;](https://github.com/YesUseY/Norwegian-language-verbs-training-program) |
+> |	Verbs in the infinitive		|	nl-NL			| 180				 			| [&ulcorner;Dimitri Witkowski&lrcorner;](https://github.com/antelle/sterke-werkwoorden) |
+> |	Verbs in the infinitive		|	pt-BR			| 5,001				 		| [&ulcorner;Edmundo Biglia&lrcorner;](https://github.com/edmundobiglia/ptbr-top-verbs) |
+> |	Verbs in the infinitive		|	pt-PT			| 1,018				 		| [&ulcorner;Troyciv&lrcorner;](https://github.com/Troyciv/PT_ConjugationTrainer_Anki) |
+> |	Verbs in the infinitive		|	ro-RO			| 586				 			| [&ulcorner;Travel with Languages&lrcorner;](https://travelwithlanguages.com/blog/most-common-romanian-words.html)&emsp;[&ulcorner;Zeolan&lrcorner;](https://github.com/zeolan/digital-ocean-app) |
+> |	Verbs in the infinitive		|	ru-RU			| 14,866					| [&ulcorner;Badestrand&lrcorner;](https://github.com/Badestrand/russian-dictionary) |
+> |	Verbs in the infinitive		|	sv-SE			| 471				 			| [&ulcorner;Wiktionary&lrcorner;](https://en.wiktionary.org/wiki/Appendix:Swedish_verbs) |
+> |	Verbs in the infinitive		|	th-TH			| 260				 			| [&ulcorner;Travel with Languages&lrcorner;](https://travelwithlanguages.com/blog/most-common-thai-words.html) |
+> |	Verbs in the infinitive		|	uk-UA			| 155				 			| [&ulcorner;Fiszkoteka&lrcorner;](https://fiszkoteka.pl/zestaw/309215-500-most-important-ukrainian-verbs-100-125)&emsp;[&ulcorner;Pinhok&lrcorner;](https://www.pinhok.com/kb/ukrainian/319/ukrainian-verbs/)&emsp;[&ulcorner;App 2 Brain&lrcorner;](https://app2brain.com/learn-languages/ukrainian/basic-verbs/)&emsp;[&ulcorner;My Languages&lrcorner;](https://mylanguages.org/ukrainian_verbs.php) |
+> |	Verbs in the infinitive		|	vi-VN			| 374				 			| [&ulcorner;MyLittle Word Land&lrcorner;](https://mylittlewordland.com/course/452073/vietnamese-verb-list) |
 
