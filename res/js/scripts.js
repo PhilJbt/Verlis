@@ -11,9 +11,11 @@ window.addEventListener('load', function () {
 */
 function progressBar(_val) {
 	switch (typeof(_val)) {
+		// Update the progress bar value
 		case 'number':
 			document.getElementById('loading').value = _val;
 		break;
+		// Show or hide the progress bar
 		case 'boolean':
 			if (_val === true)
 				document.getElementById('loading').style.display = 'block';
@@ -43,39 +45,41 @@ async function init() {
 	window.vl_i18n = {};
 	window.vl_listSelection = null;
 	window.vl_dictName = '';
+	window.vl_alphabetProcessing = false;
 	
 	// Remove any text from the user input text (some browser cache it)
 	document.getElementById('inp-usr').value = '';
 	
-	progressBar(15);
-	
-	// Bind listeners to their callbacks
-	bindFuncs();
+	// Uncheck any checked by the cache of the browser
+	const arrLettersChecked = document.querySelectorAll('input[type="checkbox"][name="cb_alphabet"]:checked');
+	arrLettersChecked.forEach(e => {
+		e.checked = false;
+	});
 	
 	progressBar(20);
+	
+	// Bind listeners to their callbacks (part 1)
+	bindFuncs_pt1();
+	
+	progressBar(30);
 	
 	// Load stored user's options
 	optionsLoad();
 	
-	progressBar(30);
+	progressBar(40);
 	
 	// Retrieve the ui localization
-	await i18n_ui();
+	await fetchWithProgress(`res/json/loca/${window.vl_options['langue']}.json`, i18n_ui, [40, 60]);
 	
-	progressBar(50);
+	progressBar(60);
 	
 	// Init css framework
 	initBulma();
 	
-	progressBar(60);
+	progressBar(70);
 	
 	// Start the time worker (i.e. the game elapsed timer and the "next word" timer)
 	initTime();
-	
-	progressBar(70);
-	
-	// Determine word (day) ID
-	document.getElementById('day-id').innerHTML = `${window.vl_i18n['js_dayid']}${getWordID()}`;
 	
 	progressBar(80);
 	
@@ -96,51 +100,84 @@ async function dictSelect_init() {
 			document.getElementById('selector').classList.remove('is-danger');
 			document.getElementById('inp-set-dsc').style.visibility = 'hidden';
 			resolve(window.vl_listSelection);
-		}).then(function(states) {
-			return states.filter(function(state) {
-				return state.name.toLowerCase().indexOf(inputValue.toLowerCase()) > -1
+		}).then(function(Elems) {
+			return Elems.filter(function(elem) {
+				const filteredElems = elem.name.filter(elem => 
+					elem.toLowerCase().indexOf(inputValue.toLowerCase()) > -1
+				);
+				return filteredElems.length > 0
 			})
 		}).then(function(filtered) {
-			return filtered.map(function(state) {
-				difClr = '';
-				difNam = '';
-				switch(state.diff) {
-					case 0:
-					difClr = 'success';
-					difNam = 'Easy';
-					break;
-					case 1:
-					difClr = 'warning';
-					difNam = 'Moderate';
-					break;
-					case 2:
-					difClr = 'danger';
-					difNam = 'Hard';
-					break;
-				}
-				const frag = `
-					<div class="control">
-						<div class="tags has-addons are-medium">
-							<span class="tag is-dark">Difficulty</span>
-							<span class="tag is-${difClr}">${difNam}</span>
-						</div>
-					</div>
-					<div class="control">
-						<div class="tags has-addons are-medium">
-							<span class="tag is-dark">Count</span>
-							<span class="tag is-info">${state.nmbr.toLocaleString(window.vl_options['langue'])}</span>
-						</div>
-					</div>`;
-				return {label: state.name, value: frag}
+			return filtered.map(function(elem) {
+				return {label: elem.name.filter(elem => 
+					elem.toLowerCase().indexOf(inputValue.toLowerCase()) > -1
+				)[0], value: JSON.stringify(elem)}
 			})
 		}).then(function(transformed) {
-			return transformed.slice(0, 5)
+			return transformed.slice(0, 15)
 		})
 	};
 
-	var onSelect = function(state) {
-		var selected = document.getElementById("selector-infos");
-		selected.innerHTML = state.value;
+	var onSelect = function(elem) {
+		const data = JSON.parse(elem.value);
+		
+		difClr = '';
+		difNam = '';
+		difDsc = '';
+		
+		// Labels' colors
+		switch(data.diff) {
+			case 0:
+			difClr = 'success';
+			difNam = 'Easy';
+			difDsc = window.vl_i18n['js_setdiff0'];
+			break;
+			case 1:
+			difClr = 'warning';
+			difNam = 'Moderate';
+			difDsc = window.vl_i18n['js_setdiff1'];
+			break;
+			case 2:
+			difClr = 'danger';
+			difNam = 'Hard';
+			difDsc = window.vl_i18n['js_setdiff2'];
+			break;
+		}
+		
+		// Forging html the frag
+		let frag = `
+			<div class="control">
+				<div class="tags has-addons are-medium">
+					<span class="tag is-dark">${window.vl_i18n['js_setdiff']}</span>
+					<span class="tag is-${difClr}">${difDsc}</span>
+				</div>
+			</div>
+			<div class="control">
+				<div class="tags has-addons are-medium">
+					<span class="tag is-dark">${window.vl_i18n['js_setnmbr']}</span>
+					<span class="tag is-info">${data.nmbr.toLocaleString(window.vl_options['langue'])}</span>
+				</div>
+			</div>
+			<div class="control">
+				<div class="tags has-addons are-medium">
+					<span class="tag is-dark">${window.vl_i18n['js_clue']}</span>
+					<span class="tag is-${data.clue ? 'white' : 'black'}">${data.clue ? window.vl_i18n['js_clueyes'] : window.vl_i18n['js_clueno']}</span>
+				</div>
+			</div>`;
+		
+		// If a note exists in the current language, or by default in global english
+		const note = data[window.vl_options['langue']] || data['en-US'];
+		// Append the note to the html fragment
+		if (note)
+			frag +=
+			`<div class="control">
+				<div class="tags has-addons are-medium">
+					<span class="tag is-link">${note}</span>
+				</div>
+			</div>`;
+			
+		// Populate the description div with the html fragment
+		document.getElementById("selector-infos").innerHTML = frag;
 	};
 	
 	// Init the selector text input
@@ -149,6 +186,7 @@ async function dictSelect_init() {
 
 /**
 * Initialize the dictionary selector
+* @param {blob} _blob - The data retrieved
 */
 async function dictSelect_show(_blob) {
 	document.getElementById('run-set').removeAttribute('disabled');
@@ -159,8 +197,13 @@ async function dictSelect_show(_blob) {
 	// If the dict is given, populate the dict selector, then empty it (cache)
 	const dictName = (new URLSearchParams(window.location.search)).get('set');
 	if (dictName !== null
-	&& dictName !== '') {
-		document.getElementById('selector').value = dictName;
+	&& dictName !== '') {		
+		const arrFound = window.vl_listSelection.filter(function(elem) {
+			return elem.dict === dictName;
+		});
+		
+		if (arrFound.length > 0)
+			document.getElementById('selector').value = arrFound[0].name[0];
 		
 		loadDict();
 	}
@@ -181,9 +224,11 @@ async function dictSelect_show(_blob) {
 */
 async function fetchWithProgress(_file, _onFinished, _arrMinMax = [0, 100]) {
 	fetchWithProgress_(_file, progress => {
+		// Calculates the progression within the specified range
 		const val = _arrMinMax[0] + ((_arrMinMax[1] - _arrMinMax[0]) * progress.toFixed(2));
+		// Update the progress bar
 		progressBar(val);
-	}).then(response => response.blob())
+	}).then(response => response.blob()) // response to binary blob
 		.then(blob => {
 			_onFinished(blob);
 		})
@@ -198,9 +243,12 @@ async function fetchWithProgress(_file, _onFinished, _arrMinMax = [0, 100]) {
 */
 async function fetchWithProgress_(_url, _onProgress) {
   const response = await fetch(_url);
+	// Throw error if response has not a body
   if (!response.body) throw new Error("ReadableStream not supported");
 
+	// Retrieves the Content-Length header from the response, which indicates the total file size (in bytes)
   const contentLength = response.headers.get("content-length");
+	// Throws an error if Content-Length is missing
   if (!contentLength) throw new Error("Content-Length not specified");
 
   const total = parseInt(contentLength, 10);
@@ -232,12 +280,18 @@ async function fetchWithProgress_(_url, _onProgress) {
 * Load a dictionary
 */
 async function loadDict() {
+	// Retrieve the user dict choice
 	const userChoice = document.getElementById('selector').value;
-	const arrFound = window.vl_listSelection.filter(function(elem) {
-		return elem.name === userChoice;
+	// Check if this name exists in the index.json
+	const arrFound = window.vl_listSelection.filter(function(dict) {
+		return dict.name.filter(function(elem) {
+			return elem === userChoice
+		}).length > 0
 	});
 	
+	// No dict has been found, force exit
 	if (arrFound.length !== 1) {
+		// Indicate the user no dict eixst with this name
 		document.getElementById('selector').classList.add('is-danger');
 		document.getElementById('inp-set-dsc').style.visibility = 'visible';
 		return;
@@ -246,9 +300,14 @@ async function loadDict() {
 	// Store the name of the selected set (load/save func)
 	window.vl_dictName = arrFound[0].dict;
 	
-	// Update the url	
-	history.pushState(null, '', `${window.location.origin+window.location.pathname}?set=${arrFound[0].name}`);
-
+	// Set the set title to the nav
+	document.getElementById('set-title').innerHTML = userChoice;
+	
+	// Fill the copy link text input with the set url
+	document.getElementById('inp-link').value = `${window.location.origin+window.location.pathname}?set=${arrFound[0].dict}`;
+	// And make its modal trigger button visible
+	document.querySelector('button[data-target="mdl-link"]').style.display = 'flex';
+	
 	// Hide the selector modal
 	document.getElementById('selector-container').style.display = 'none';
 	
@@ -256,15 +315,8 @@ async function loadDict() {
 	progressBar(0);
 	progressBar(true);
 	
-	// Retrieve the list of verbs
-	await i18n_vb(arrFound[0].dict);
-	
-	// Choose a word from the list
-	pickWord();
-	
-	loadDict_end();
-	
-	checkLastFinish();
+	// Retrieve the dict
+	await fetchWithProgress(`res/json/dict/${arrFound[0].dict}.json`, retrieveDict, [0, 100]);
 }
 
 /**
@@ -299,16 +351,27 @@ function loadDict_end() {
 		// Automatically focus the text input
 		document.getElementById('inp-usr').focus();
 	}
+	
+	// Bind listeners to their callbacks (part 2)
+	bindFuncs_pt2();
 }
 
 /**
-* Bind listeners to their callbacks
+* Bind listeners to their callbacks (part 1)
 */
-function bindFuncs() {
+function bindFuncs_pt1() {
 	// Bind the "Abandon" button from the menu to its callback
 	document.getElementById('plzstahp').addEventListener('click', function(e) {
 		if (window.vl_finished !== true)
 			document.getElementById('mdl-abandon').classList.add('is-active');
+	});
+	
+	// Bind the copy link button to its callback 
+	document.getElementById('btn-copylink').addEventListener('click', function(e) {
+		var inp = document.getElementById('inp-link');
+		inp.select();
+		inp.setSelectionRange(0, 99999);
+		navigator.clipboard.writeText(inp.value);
 	});
 	
 	// Bind the "Abandon" button from the abandon modal to its callback
@@ -351,22 +414,16 @@ function bindFuncs() {
 		// Get the key code
 		const keynum = e.keyCode||e.which;
 		
-		// Return key is pressed
-		if (keynum == 13) {
-			// If the user text input has focus (set selector)
-			if (document.activeElement === document.getElementById('selector'))
-				// Load the selected dict
-				loadDict();
-			// If the user text input has focus (word submission)
-			else if (document.activeElement === document.getElementById('inp-usr'))
+		// If the user text input has focus (word submission)
+		if (document.activeElement === document.getElementById('inp-usr')) {
+			// Return key is pressed
+			if (keynum == 13)
 				// Start the word processing
 				checkWord();
-		}
-		// Up arrow is pressed
-		else if (keynum == 38
-		&& document.activeElement === document.getElementById('inp-usr')) {
 			// A word has already been tried
-			if (window.vl_lastTry !== null)
+			else if (window.vl_lastTry !== null
+			// Up arrow is pressed
+			&& keynum == 38)
 				// Set the last tried (successfully or not) word in the user text input
 				document.getElementById('inp-usr').value = window.vl_lastTry;
 			// Down arrow is pressed
@@ -374,14 +431,28 @@ function bindFuncs() {
 				// Erase the value of the user text input
 				document.getElementById('inp-usr').value = '';
 		}
+		// If the user text input has focus (set selector)
+		else if (document.activeElement === document.getElementById('selector')) {
+			// Return key is pressed
+			if (keynum == 13)
+				// Load the selected dict
+				loadDict();
+		}
 	});
 	
 	// Add function to reverse a string
-	String.prototype.reverse = function (char) {
+	String.prototype.vl_reverse = function (char) {
 		var arrSlitted = this.split("");
 		var arrReversed = arrSlitted.reverse();
 		var arrJoined = arrReversed.join("");
 		return arrJoined;
+	};
+	
+	// Add function to capitalize a string
+	String.prototype.vl_capitalize = function (char) {
+		return this.split(' ').map(e => {
+			return e.charAt(0).toUpperCase() + e.substr(1);
+		}).join(' ');
 	};
 
 	// Encode string
@@ -393,9 +464,14 @@ function bindFuncs() {
 	
 	// Decode string
 	String.prototype.vl_decode = function (char) {
-		const bin = atob(this);
-		const bytes = Uint8Array.from(bin, (m) => m.codePointAt(0));
-		return new TextDecoder().decode(bytes);
+		try {
+			const bin = atob(this);
+			const bytes = Uint8Array.from(bin, (m) => m.codePointAt(0));
+			return new TextDecoder().decode(bytes);
+		}
+		catch(e) {
+			return '';
+		}
 	};
 	
 	// Normalize special characters encoding
@@ -420,30 +496,88 @@ function bindFuncs() {
 }
 
 /**
+* Adjust the range of alphabet letters to highlight when the user checked/uncheck a new one
+* @param {object} _lid - The div node ref of the new checked/unchecked letter of the alphabet
+*/
+function alphabetCheckedChange(_lid) {
+	if (window.vl_alphabetProcessing) return;
+	else window.vl_alphabetProcessing = true;
+	
+	try {
+		// Does the letter has just been checked or unchecked
+		const isAdded = _lid.checked;
+		// Get all checked letters
+		const arrLettersChecked = document.querySelectorAll('input[type="checkbox"][name="cb_alphabet"]:checked');
+		
+		// Unhighlight currently highlighted letters
+		const arrLettersHighlithed = document.querySelectorAll('input[type="checkbox"][name="cb_alphabet"].highlight');
+		arrLettersHighlithed.forEach(e => {
+			e.classList.remove('highlight');
+		});
+		
+		// A range was previously already highlighted and a letter has been addedd
+		if (arrLettersChecked.length > 2) {
+			// Get the letters IDs of the previous alphabet state
+			const arrLettersCheckedOld = Object.values(arrLettersChecked).filter(div => div.getAttribute('lid') !== _lid.getAttribute('lid'));
+			const lidCurr = parseInt(_lid.getAttribute('lid'));
+			const lidPrv1 = parseInt(arrLettersCheckedOld[0].getAttribute('lid'));
+			const lidPrv2 = parseInt(arrLettersCheckedOld[1].getAttribute('lid'));
+			
+			// Determine the closest checked letter from the removed one
+			const diffCurr1 = Math.abs(lidCurr - lidPrv1);
+			const diffCurr2 = Math.abs(lidCurr - lidPrv2);
+			
+			// Uncheck it
+			document.querySelector(`input[type="checkbox"][name="cb_alphabet"][lid="${(diffCurr1 < diffCurr2 ? lidPrv1 : lidPrv2)}"]`).checked = false;
+		}
+		
+		// Highlight the range of letters
+		if (arrLettersChecked.length >= 2) {
+			// Highlight the new range of letters
+			const arrLettersCheckedUpd = document.querySelectorAll('input[type="checkbox"][name="cb_alphabet"]:checked');
+			const lidOne = parseInt(arrLettersCheckedUpd[0].getAttribute('lid'));
+			const lidTwo = parseInt(arrLettersCheckedUpd[1].getAttribute('lid'));
+			const lidMin = Math.min(lidOne, lidTwo) + 1;
+			const lidMax = Math.max(lidOne, lidTwo) - 1;
+			
+			const arrLettersToHighlith = document.querySelectorAll(
+				Array.from({ length: lidMax - lidMin + 1 }, (_, i) => `input[type="checkbox"][name="cb_alphabet"][lid="${lidMin + i}"]`).join(',')
+			);
+			arrLettersToHighlith.forEach(e => {
+				e.classList.add('highlight');
+			});
+		}
+	}
+	catch(err) {
+		window.vl_alphabetProcessing = false;
+		return;
+	}
+	
+	window.vl_alphabetProcessing = false;
+}
+
+/**
+* Bind listeners to their callbacks (part 2)
+*/
+function bindFuncs_pt2() {
+	// Bind each alphabet letter to their global callback
+	document.querySelectorAll('input[type="checkbox"][name="cb_alphabet"]').forEach(e => {
+		e.addEventListener('change', function (l) {
+			alphabetCheckedChange(l.srcElement);
+		});
+	});
+}
+
+/**
 * Get the browser language
 * @return {} - The language of the browser if implemented, else "en-US"
 */
 function getLang() {
 	// Language ISO Code 2 and their 5 translation
 	const dctConvertIso2to5 = {
-		cs: 'cs-CZ',
-		da: 'da-DK',
-		de: 'de-DE',
-		en: 'en-US',
-		el: 'el-GR',
-		es: 'es-ES',
-		fi: 'fi-FI',
-		fr: 'fr-FR',
-		hu: 'hu-HU',
-		it: 'it-IT',
-		nb: 'nb-NO',
-		nl: 'nl-NL',
-		pt: 'pt-PT',
-		ro: 'ro-RO',
-		ru: 'ru-RU',
-		sv: 'sv-SE',
-		th: 'th-TH',
-		uk: 'uk-UA',
+		cs: 'cs-CZ', da: 'da-DK', de: 'de-DE', en: 'en-US', el: 'el-GR', es: 'es-ES',
+		fi: 'fi-FI', fr: 'fr-FR', hu: 'hu-HU', it: 'it-IT', nb: 'nb-NO', nl: 'nl-NL',
+		pt: 'pt-PT', ro: 'ro-RO', ru: 'ru-RU', sv: 'sv-SE', th: 'th-TH', uk: 'uk-UA',
 		vi: 'vi-VN'
   };
 	
@@ -454,8 +588,9 @@ function getLang() {
 
 	// Array of languages supported
 	const arrLangImpl = [
-		'cs-CZ', 'da-DK', 'de-DE', 'en-US', 'el-GR', 'es-ES', 'fi-FI', 'fr-CA', 'fr-FR', 'hu-HU', 'it-IT',
-		'nb-NO', 'nl-NL', 'pt-BR', 'pt-PT', 'ro-RO', 'ru-RU', 'sv-SE', 'th-TH', 'uk-UA', 'vi-VN'
+		'cs-CZ', 'da-DK', 'de-DE', 'en-US', 'el-GR', 'es-ES', 'fi-FI', 'fr-CA', 'fr-FR',
+		'hu-HU', 'it-IT', 'nb-NO', 'nl-NL', 'pt-BR', 'pt-PT', 'ro-RO', 'ru-RU', 'sv-SE',
+		'th-TH', 'uk-UA', 'vi-VN'
 	];
 
 	// If the current language is not supported
@@ -468,19 +603,33 @@ function getLang() {
 
 /**
 * Apply localization on UI
+* @param {blob} _blob - The data retrieved
 */
-async function i18n_ui() {
-	const nsr = await fetch(`res/json/loca/${window.vl_options['langue']}.json`);
-	window.vl_i18n = await nsr.json();
+async function i18n_ui(_blob) {
+	window.vl_i18n = JSON.parse(JSON.parse(JSON.stringify(await _blob.text())));
+	
+	// Determine word (day) ID
+	document.getElementById('day-id').innerHTML = `${window.vl_i18n['js_dayid']}${getWordID()}`;
 	
 	// Append to child
 	document.querySelectorAll('*[i18n^="ac_"]').forEach(e => {
 		const attName = e.getAttribute('i18n').substr(3);
-		window.vl_i18n[attName].split(';').forEach(c => {
+		
+		if (attName === 'alphabet') {
+			let i = 0;
+			window.vl_i18n[attName].split(';').forEach(c => {
+				var newNode = document.createElement('div');
+				newNode.innerHTML = `<input type="checkbox" lid="${i}" id="alphabet_${i.toString()}" name="cb_alphabet" /><label for="alphabet_${i.toString()}">${c}</label>`;
+				e.appendChild(newNode);
+				
+				++i;
+			});
+		}
+		else {
 			var newNode = document.createElement('div');
-			newNode.innerHTML = c;
+			newNode.innerHTML = window.vl_i18n[attName];
 			e.appendChild(newNode);
-		});
+		}
 	});
 	
 	// Append to (inner)HTML
@@ -504,13 +653,18 @@ async function i18n_ui() {
 }
 
 /**
-* Retrieve word list depending on the current language
-* @param {string} _dict - Dictionnary chosen by the user
+* Retrieve the dict
+* @param {blob} _blob - The data retrieved
 */
-async function i18n_vb(_dict) {
-	const nsr = await fetch(`res/json/dict/${_dict}.json`);
-	const jsn = await nsr.json();
-	window.vl_verblist = jsn;
+async function retrieveDict(_blob) {
+	window.vl_verblist = await JSON.parse(JSON.parse(JSON.stringify(await _blob.text())));
+	
+	// Choose a word from the list
+	pickWord();
+	
+	loadDict_end();
+	
+	checkLastFinish();
 }
 
 /**
@@ -530,14 +684,14 @@ function optionsLoad() {
 		window.vl_options = opt;
 		
 		// clues
-		document.getElementById(`rad-indice-${opt['indice']}`).checked = true;
+		document.getElementById(`rad-ranking-${opt['ranking']}`).checked = true;
 		
 		// Language
 		document.querySelector(`.rad-lng input[type="radio"][value="${opt['langue']}"]`).checked = true;
 	}
 	else {
 		// Clues
-		document.getElementById('rad-indice-0').checked = true;
+		document.getElementById('rad-ranking-0').checked = true;
 		
 		// Language
 		const strBrowserLang = getLang();
@@ -555,7 +709,7 @@ function optionsSave() {
 		const opt = JSON.parse(localStorage.getItem('opt') || '{}');
 		
 		// Clues
-		opt['indice'] = parseInt(document.querySelector('*[name="rad-indice"]:checked').value);
+		opt['ranking'] = parseInt(document.querySelector('*[name="rad-ranking"]:checked').value);
 		
 		// Language
 		const oldLang = opt['langue'];
@@ -578,14 +732,14 @@ function applyWordAfterStyle() {
 	// Apply the style to the word::after corresponding to the alphabetically closest words
 	document.querySelectorAll('#ag-words-before .word:last-of-type, #ag-words-after .word:first-of-type').forEach(e => {
 		e.classList.remove('show-after');
-		if (window.vl_options['indice'] < 2)
+		if (window.vl_options['ranking'] < 2)
 			e.classList.add('show-after');
 	});
 	
 	// Apply the style to the word::after corresponding to the alphabetically farest words
 	document.querySelectorAll('#ag-words-before .word:not(:last-of-type), #ag-words-after .word:not(:first-of-type)').forEach(e => {
 		e.classList.remove('show-after');
-		if (window.vl_options['indice'] === 0)
+		if (window.vl_options['ranking'] === 0)
 			e.classList.add('show-after');
 	});
 }
@@ -602,9 +756,11 @@ function pickWord() {
 	let currBranch = window.vl_verblist;
 	// Added offset to seed, increased when going throw a new branch
 	let iAdd = Object.keys(currBranch).length * 5;
+	// 
+	let bRun = true;
 	
 	// Move deeper into the tree until the bottom has been reach
-	do {
+	while(bRun) {
 		// Pick a random number with the current day (independently of the time zone) as seed.
 		// Pay attention, the rand lib uses included min and max.
 		const iRand = getRandom(iAdd).randomInteger(1, Object.keys(currBranch).length) - 1;
@@ -615,13 +771,29 @@ function pickWord() {
 		
 		// If no end of a word has been reached...
 		// Note: In the tree, words end with an ACK character. This is useful to determine if the user tries an existing word.
-		if (cChar.charCodeAt() !== 6)
+		if (cChar.charCodeAt() !== 6) {
 			// ... append the picked character to the reste of the word.
 			strWord += cChar.toLowerCase();
 			
-		// Move to the branch corresponding to the picked character
-		currBranch = currBranch[cChar];
-	} while (Object.keys(currBranch).length > 0);
+			// Move to the branch corresponding to the picked character
+			currBranch = currBranch[cChar];
+		}
+		else {
+			const clue = currBranch[cChar];
+			if (clue !== true) {
+				if (clue.indexOf('data:image/jpeg;base64,/') === 0)
+					document.getElementById('clue-content').innerHTML = `<img src="${clue}" />`;
+				else if (clue.indexOf('data:audio/mpeg;base64,/') === 0)
+					document.getElementById('clue-content').innerHTML = `<audio controls="controls" autobuffer="autobuffer"><source src="${clue}" /></audio>`;
+				else
+					document.getElementById('clue-content').innerHTML = `<p>${clue}</p>`;
+			
+				document.getElementById('plzclue').removeAttribute('disabled');
+			}
+			
+			bRun = false;
+		}
+	};
 	
 	// Relatively hide the chosen word
 	window.vl_nswr = obfus(strWord);
@@ -715,7 +887,7 @@ function checkWord() {
 	// The word does not match any known word
 	if (wordNotFound === true
 	// or the user gave an unfinished word
-	|| branchCurr['\x06'] !== true) {
+	|| branchCurr['\x06'] === undefined) {
 		// Apply the corresponding style to the user text input
 		inputUser.classList.add('is-danger');
 		// Show the user text input warning icon
@@ -889,8 +1061,8 @@ function countEquality(_user, _picked, _reverse) {
 	
 	// Reverse strings in case the first difference to found is from the end
 	if (_reverse) {
-		user = user.reverse();
-		pick = pick.reverse();
+		user = user.vl_reverse();
+		pick = pick.vl_reverse();
 	}
 	
 	pick = pick.padEnd(len, '\ufffd');
@@ -937,7 +1109,7 @@ function gameEnd(_success, _save = true) {
 	// Determine the hero color
 	const clr = _success ? 'success' : 'danger';
 	// Deobfuscate the picked word
-	const strDeobf = deobf(window.vl_nswr);
+	const strDeobf = deobf(window.vl_nswr).vl_capitalize();
 	
 	// Show the end game hero in the DOM
 	document.getElementById('ag-input').innerHTML =
@@ -947,14 +1119,16 @@ function gameEnd(_success, _save = true) {
 				<p class="title">${_success ? window.vl_i18n['js_win'] : window.vl_i18n['js_abandon']}</p>
 				<p class="subtitle">${window.vl_i18n['js_verbwas'].replace('%VERBID%', getWordID())} : &#171; <word><b>${strDeobf}</b></word> &#187;</p>
 			</div>
+			<!--
 			<p>
 				<a href="${window.vl_i18n['js_urldef'].replace('%', encodeURIComponent(strDeobf))}" target="_blank" class="button is-${clr} is-inverted">
-					<span>${window.vl_i18n['js_verbdef']}</span>
+					<span>${window.vl_i18n['js_search']}</span>
 					<span class="icon is-small">
 						<i class="fa-solid fa-up-right-from-square"></i>
 					</span>
 				</a>
 			</p>
+			-->
 		</div>
 	</section>`;
 }

@@ -43,18 +43,35 @@ body {
   align-items: center;
 	padding: 3px 15px 3px 15px;
   bottom: 15px;
-  background-color: #c7e2fc17;
+  background-color: #1a1c20;
+	color: #2b2d31;
   border-radius: 100px;
-	column-gap: 20px;
-  font-size: 2vh;
-  opacity: 0.25;
+	column-gap: 0px;
+  font-size: 1.5vw;
   cursor: default;
-  transition: opacity .125s;
+  transition: background-color .125s, color .125s;
   z-index: 2;
 	visibility: hidden;
 }
 .alphabet:hover {
-	opacity: .75;
+  background-color: #1e242e;
+	color: #506690;
+}
+
+input[type="checkbox"][name="cb_alphabet"] {
+	display: none;
+}
+input[type="checkbox"][name="cb_alphabet"] ~ label {
+	cursor: pointer;
+	padding: 0px .5vw 0px .5vw;
+	width: 2.5vw;
+}
+input[type="checkbox"][name="cb_alphabet"] ~ label:hover,
+input[type="checkbox"][name="cb_alphabet"].highlight ~ label {
+	color: #9c7230;
+}
+input[type="checkbox"][name="cb_alphabet"]:checked ~ label {
+	color: #ff9c00;
 }
 
 /**
@@ -84,8 +101,6 @@ body {
 }
 
 #ag-input {
-	width: 100%;
-	
 	margin-top: 20px;
 	
   display: flex;
@@ -138,12 +153,6 @@ input::placeholder {
 	display: none;
 	width: 50%;
 }
-#selector-container .field,
-#selector-container .field .dropdown,
-#selector-container .field .dropdown-trigger,
-#selector-container .field .dropdown-trigger input {
-	width: 100%;
-}
 
 .dropdown-trigger {
 	display: flex;
@@ -171,6 +180,15 @@ input::placeholder {
 
 .tags .tag:nth-child(2) {
 	font-weight: bold;
+}
+
+#selector {
+	border-radius: 6px 0px 0px 6px;
+  border-right: none;
+}
+
+#run-set {
+	border-radius: 0px 6px 6px 0px;
 }
 
 
@@ -299,11 +317,19 @@ a.dropdown-item, *.dropdown-item {
 * menu
 */
 #plzstahp[disabled] {
-	cursor: default;
+	cursor: no-drop;
 	color: hsl(var(--bulma-danger-h),var(--bulma-danger-s),var(--bulma-danger-dark-l)) !important;
 }
-footer button i {
+#plzclue[disabled] {
+	cursor: no-drop;
+	color: hsl(var(--bulma-warning-h),var(--bulma-warning-s),var(--bulma-warning-dark-l)) !important;
+}
+button[i18n] i {
   padding-right: 5px;
+}
+
+button[data-target="mdl-link"] {
+	display: none;
 }
 
 /**
@@ -354,4 +380,25 @@ footer button i {
 
 [data-tooltip] {
 	display: inline-block;
+}
+
+#clue-content {
+  display: flex;
+  flex-direction: column;
+  flex-wrap: nowrap;
+  align-content: center;
+  justify-content: center;
+  align-items: center;
+}
+
+#clue-content {
+	transition: all .25s ease;
+	filter: brightness(0);
+	cursor: help;
+}
+#clue-content:hover {
+	filter: brightness(1);
+}
+#clue-content > p {
+	padding: 10px 20px 10px 20px;
 }

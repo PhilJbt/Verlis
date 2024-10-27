@@ -1,13 +1,12 @@
 ## What is Verlis?
 
-Verlis is a game whose objective is to guess a verb based on the alphabetical order of the propositions made.
+Verlis is a game whose objective is to guess a word based on the alphabetical order of the propositions made.
 
-## Les règles
+## Rules
 
 - Once a day (the countdown is visible in the menu), a new verb to guess is chosen at random from a list of <strong>12,164</strong>;
 - The verbs proposed must be verbs in <strong>the selected language</strong>, in the <strong>infinitive</strong>;
 - The accentuation (if applicable) of the letters <strong>must be</strong> respected;
-- In french, diacritics <strong>do not</strong> affect the alphabetical order of words (e.g. the letter &laquo; <em>é</em> &raquo; is considered an &laquo; <em>e</em> &raquo;);
 - There is <strong>no limit</strong> on time or number of attempts;
 - A diamond, after a verb, is divided vertically into two parts. Each represents the number of similar letters at the beginning or end of a word. Here are some examples:<br/>
 <strong>$${\color{#ff9c00}&#9671;}$$</strong> would mean <strong>no letters</strong> at the beginning or end of a word are similar.<br/>
@@ -45,27 +44,28 @@ You can enable these hints in the <strong><em>Options</em></strong> menu.
 > Flags : [&ulcorner;HatScripts&lrcorner;](https://github.com/HatScripts/circle-flags)\
 > <br/>
 > __Dictionaries:__
-> | Language naming				| Language-country Code (ISO 639) 	| Count of verbs	| Sources		|
-> | --------------------- | --------------------------------- | --------------- | --------- |
-> |	Czech									|	cs-CZ															| 190				 			| [&ulcorner;TravelWithLanguages&lrcorner;](https://travelwithlanguages.com/blog/most-common-czech-words.html) |
-> |	Danish								|	da-DK															| 514				 			| [&ulcorner;Jan Simon&lrcorner;](https://github.com/janhsimon/DanishVerbs) |
-> |	German								|	de-DE															| 17,679					| [&ulcorner;Michael Gerstenberg&lrcorner;](https://github.com/michael-gerstenberg/GermanVerbScraper) |
-> |	Greek									|	el-GR															| 163				 			| [&ulcorner;TravelWithLanguages&lrcorner;](https://travelwithlanguages.com/blog/most-common-modern-greek-words.html) |
-> |	English								|	en-US															| 1,011				 		| [&ulcorner;Drulac&lrcorner;](https://github.com/Drulac/English-Verbs-Conjugates) |
-> |	Spanish								|	es-ES															| 10,854					| [&ulcorner;Cubiwan&lrcorner;](https://github.com/cubiwan/jsESverb) |
-> |	Finnish								|	fi-FI															| 7,049				 		| [&ulcorner;Abhishek Suresh&lrcorner;](https://github.com/absu5530/morphological_classifier) |
-> |	French (Québec)				|	fr-CA															| 5,602				 		| [&ulcorner;UsherBrooke&lrcorner;](https://usito.usherbrooke.ca) |
-> |	French (France)				|	fr-FR															| 12,164					| [&ulcorner;Umontreal&lrcorner;](http://rali.iro.umontreal.ca) |
-> |	Hungarian							|	hu-HU															| 182				 			| [&ulcorner;TravelWithLanguages&lrcorner;](https://travelwithlanguages.com/blog/most-common-hungarian-words.html) |
-> |	Italian								|	it-IT															| 12,891					| [&ulcorner;Roman Manasyan&lrcorner;](https://github.com/rmanasyan/italianverbsnext) |
-> |	Norwegian							|	nb-NO															| 157							| [&ulcorner;Lukas&lrcorner;](https://github.com/YesUseY/Norwegian-language-verbs-training-program) |
-> |	Dutch									|	nl-NL															| 180				 			| [&ulcorner;Dimitri Witkowski&lrcorner;](https://github.com/antelle/sterke-werkwoorden) |
-> |	Portuguese (Brazil)  	|	pt-BR															| 5,001				 		| [&ulcorner;Edmundo Biglia&lrcorner;](https://github.com/edmundobiglia/ptbr-top-verbs) |
-> |	Portuguese (Portugal)	|	pt-PT															| 1,018				 		| [&ulcorner;Troyciv&lrcorner;](https://github.com/Troyciv/PT_ConjugationTrainer_Anki) |
-> |	Romanian							|	ro-RO															| 586				 			| [&ulcorner;TravelWithLanguages&lrcorner;](https://travelwithlanguages.com/blog/most-common-romanian-words.html)&emsp;[&ulcorner;Zeolan&lrcorner;](https://github.com/zeolan/digital-ocean-app) |
-> |	Russian								|	ru-RU															| 14,866					| [&ulcorner;Badestrand&lrcorner;](https://github.com/Badestrand/russian-dictionary) |
-> |	Swedish  							|	sv-SE															| 471				 			| [&ulcorner;Wiktionary&lrcorner;](https://en.wiktionary.org/wiki/Appendix:Swedish_verbs) |
-> |	Thai									|	th-TH															| 260				 			| [&ulcorner;TravelWithLanguages&lrcorner;](https://travelwithlanguages.com/blog/most-common-thai-words.html) |
-> |	Ukrainian							|	uk-UA															| 155				 			| [&ulcorner;Fiszkoteka&lrcorner;](https://fiszkoteka.pl/zestaw/309215-500-most-important-ukrainian-verbs-100-125)&emsp;[&ulcorner;Pinhok&lrcorner;](https://www.pinhok.com/kb/ukrainian/319/ukrainian-verbs/)&emsp;[&ulcorner;App2Brain&lrcorner;](https://app2brain.com/learn-languages/ukrainian/basic-verbs/)&emsp;[&ulcorner;MyLanguages&lrcorner;](https://mylanguages.org/ukrainian_verbs.php) |
-> |	Vietnamese						|	vi-VN															| 374				 			| [&ulcorner;MyLittleWordLand&lrcorner;](https://mylittlewordland.com/course/452073/vietnamese-verb-list) |
+> | Language	| Entries			  	| Sources		|
+> | --------- | --------------- | --------- |
+> | N/A 			| 300				 			| [&ulcorner;Walk of Fame&lrcorner;](https://walkoffame.com/browse-stars/)&emsp;[&ulcorner;Tmdb&lrcorner;](https://www.themoviedb.org/) |
+> |	cs-CZ			| 190				 			| [&ulcorner;Travel with Languages&lrcorner;](https://travelwithlanguages.com/blog/most-common-czech-words.html) |
+> |	da-DK			| 514				 			| [&ulcorner;Jan Simon&lrcorner;](https://github.com/janhsimon/DanishVerbs) |
+> |	de-DE			| 17,679					| [&ulcorner;Michael Gerstenberg&lrcorner;](https://github.com/michael-gerstenberg/GermanVerbScraper) |
+> |	el-GR			| 163				 			| [&ulcorner;Travel with Languages&lrcorner;](https://travelwithlanguages.com/blog/most-common-modern-greek-words.html) |
+> |	en-US			| 1,011				 		| [&ulcorner;Drulac&lrcorner;](https://github.com/Drulac/English-Verbs-Conjugates) |
+> |	es-ES			| 10,854					| [&ulcorner;Cubiwan&lrcorner;](https://github.com/cubiwan/jsESverb) |
+> |	fi-FI			| 7,049				 		| [&ulcorner;Abhishek Suresh&lrcorner;](https://github.com/absu5530/morphological_classifier) |
+> |	fr-CA			| 5,602				 		| [&ulcorner;UsherBrooke&lrcorner;](https://usito.usherbrooke.ca) |
+> |	fr-FR			| 12,164					| [&ulcorner;Umontreal&lrcorner;](http://rali.iro.umontreal.ca) |
+> |	hu-HU			| 182				 			| [&ulcorner;Travel with Languages&lrcorner;](https://travelwithlanguages.com/blog/most-common-hungarian-words.html) |
+> |	it-IT			| 12,891					| [&ulcorner;Roman Manasyan&lrcorner;](https://github.com/rmanasyan/italianverbsnext) |
+> |	nb-NO			| 157							| [&ulcorner;Lukas&lrcorner;](https://github.com/YesUseY/Norwegian-language-verbs-training-program) |
+> |	nl-NL			| 180				 			| [&ulcorner;Dimitri Witkowski&lrcorner;](https://github.com/antelle/sterke-werkwoorden) |
+> |	pt-BR			| 5,001				 		| [&ulcorner;Edmundo Biglia&lrcorner;](https://github.com/edmundobiglia/ptbr-top-verbs) |
+> |	pt-PT			| 1,018				 		| [&ulcorner;Troyciv&lrcorner;](https://github.com/Troyciv/PT_ConjugationTrainer_Anki) |
+> |	ro-RO			| 586				 			| [&ulcorner;Travel with Languages&lrcorner;](https://travelwithlanguages.com/blog/most-common-romanian-words.html)&emsp;[&ulcorner;Zeolan&lrcorner;](https://github.com/zeolan/digital-ocean-app) |
+> |	ru-RU			| 14,866					| [&ulcorner;Badestrand&lrcorner;](https://github.com/Badestrand/russian-dictionary) |
+> |	sv-SE			| 471				 			| [&ulcorner;Wiktionary&lrcorner;](https://en.wiktionary.org/wiki/Appendix:Swedish_verbs) |
+> |	th-TH			| 260				 			| [&ulcorner;Travel with Languages&lrcorner;](https://travelwithlanguages.com/blog/most-common-thai-words.html) |
+> |	uk-UA			| 155				 			| [&ulcorner;Fiszkoteka&lrcorner;](https://fiszkoteka.pl/zestaw/309215-500-most-important-ukrainian-verbs-100-125)&emsp;[&ulcorner;Pinhok&lrcorner;](https://www.pinhok.com/kb/ukrainian/319/ukrainian-verbs/)&emsp;[&ulcorner;App 2 Brain&lrcorner;](https://app2brain.com/learn-languages/ukrainian/basic-verbs/)&emsp;[&ulcorner;My Languages&lrcorner;](https://mylanguages.org/ukrainian_verbs.php) |
+> |	vi-VN			| 374				 			| [&ulcorner;MyLittle Word Land&lrcorner;](https://mylittlewordland.com/course/452073/vietnamese-verb-list) |
 
