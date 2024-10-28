@@ -259,6 +259,8 @@ async function dictSelect_show(_blob) {
 	
 	progressBar(false);
 	
+	document.querySelector('.level.minimal .level-item[type="menu"]').style.visibility = 'visible';
+	
 	// Show the selector modal
 	document.getElementById('selector-container').style.display = 'flex';
 	
@@ -445,6 +447,12 @@ function bindFuncs_pt1() {
 		inp.select();
 		inp.setSelectionRange(0, 99999);
 		navigator.clipboard.writeText(inp.value);
+		
+		document.getElementById('btn-copylink-icn').classList.remove('fa-clipboard');
+		document.getElementById('btn-copylink-icn').classList.add('fa-check');
+		document.getElementById('btn-copylink').classList.remove('is-info');
+		document.getElementById('btn-copylink').classList.add('is-success');
+		document.getElementById('btn-copylink-txt').innerHTML = window.vl_i18n['js_linkcopied'];
 	});
 	
 	// Bind the "Abandon" button from the abandon modal to its callback
@@ -975,10 +983,12 @@ function checkWord() {
 			gameEnd(true);
 		// The given word does not match the picked one
 		else {
+			// Deobfuscate the picked word
+			const strDeobf = deobf(window.vl_nswr[1]);
 			// Remove any diacritic from the given word (necessary to compare words alphabetically)
 			const ag_nswrLoc = wordUser.vl_normalize();
 			// Does the given word is alphabetically placed before or after the picked one
-			const givenIsBeforePicked = (wordUser.vl_compare(ag_nswrLoc) < 0);
+			const givenIsBeforePicked = (ag_nswrLoc.vl_compare(strDeobf) < 0);
 			// Get the corresponding tried words list in the DOM
 			let wordListNode = document.getElementById((givenIsBeforePicked ? 'ag-words-before' : 'ag-words-after'));
 			
@@ -989,8 +999,8 @@ function checkWord() {
 			frag.setAttribute('word-uid', branchCurr['\x06']);
 			frag.innerHTML = wordUser;
 			// Add the clue according to the number of identical letters at the beginning and end
-			const countSameBeg = countEquality(wordUser, ag_nswrLoc, false);
-			const countSameEnd = countEquality(wordUser, ag_nswrLoc, true);
+			const countSameBeg = countEquality(strDeobf, ag_nswrLoc, false);
+			const countSameEnd = countEquality(strDeobf, ag_nswrLoc, true);
 			
 			if (countSameBeg === 0 && countSameEnd === 0)
 				frag.setAttribute('data-nfo', '\u25c7');
@@ -1011,7 +1021,7 @@ function checkWord() {
 					const div = wordListNode.childNodes[i];
 				
 					// If the given word is placed before the current one
-					if (wordUser.vl_compare(div.innerText.vl_normalize()) <= 0) {
+					if (ag_nswrLoc.vl_compare(div.innerText.vl_normalize()) <= 0) {
 						// Insert the Html fragment of the given word before the current word
 						wordListNode.insertBefore(frag, div);
 						// Store the information that the given word already has been added to the list
