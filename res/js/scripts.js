@@ -64,23 +64,23 @@ async function init() {
 	
 	progressBar(30);
 	
-	// Retrieve the ui localization
-	await fetchWithProgress(`res/json/loca/${window.vl_options['langue']}.json`, i18n_ui, [30, 50]);
+	// Load stored user's options
+	optionsLoad();
 	
-	progressBar(50);
+	progressBar(40);
+	
+	// Retrieve the ui localization
+	await fetchWithProgress(`res/json/loca/${window.vl_options['langue']}.json`, i18n_ui, [40, 60]);
+	
+	progressBar(60);
 	
 	// Init css framework
 	initBulma();
 	
-	progressBar(60);
+	progressBar(70);
 	
 	// Start the time worker (i.e. the game elapsed timer and the "next word" timer)
 	initTime();
-	
-	progressBar(70);
-	
-	// Load stored user's options
-	optionsLoad();
 	
 	progressBar(80);
 	
