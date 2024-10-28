@@ -34,6 +34,8 @@
 	"setwrong": "Ez a készlet nem létezik.",
 	"setload": "Terhelés",
 	"setselect": "Válasszon ki egy készletet",
+	"slctlangsearch": "Nyelv szerint",
+	"slctlangglobal": "Globális",
 	"js_setdiff0": "Könnyen",
 	"js_setdiff1": "Mérsékelt",
 	"js_setdiff2": "Kemény",

@@ -34,6 +34,8 @@
 	"setwrong": "Cet ensemble n'existe pas.",
 	"setload": "Charger",
 	"setselect": "Sélectionnez un ensemble",
+	"slctlangsearch": "Par langue",
+	"slctlangglobal": "Global",
 	"js_setdiff0": "Facile",
 	"js_setdiff1": "Modéré",
 	"js_setdiff2": "Dur",

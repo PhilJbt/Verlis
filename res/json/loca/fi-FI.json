@@ -34,6 +34,8 @@
 	"setwrong": "Tätä sarjaa ei ole olemassa.",
 	"setload": "Ladata",
 	"setselect": "Valitse sarja",
+	"slctlangsearch": "Kielen mukaan",
+	"slctlangglobal": "Globaali",
 	"js_setdiff0": "Helppo",
 	"js_setdiff1": "Kohtalainen",
 	"js_setdiff2": "Kovaa",

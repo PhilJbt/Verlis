@@ -34,6 +34,8 @@
 	"setwrong": "Такого набора не существует.",
 	"setload": "Нагрузка",
 	"setselect": "Выберите набор",
+	"slctlangsearch": "По языку",
+	"slctlangglobal": "Глобальный",
 	"js_setdiff0": "Легкий",
 	"js_setdiff1": "Умеренный",
 	"js_setdiff2": "Жесткий",

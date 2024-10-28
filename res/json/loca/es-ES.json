@@ -34,6 +34,8 @@
 	"setwrong": "Este conjunto no existe.",
 	"setload": "Carga",
 	"setselect": "Seleccione un conjunto",
+	"slctlangsearch": "Por idioma",
+	"slctlangglobal": "Global",
 	"js_setdiff0": "Fácil",
 	"js_setdiff1": "Moderado",
 	"js_setdiff2": "Duro",

@@ -97,7 +97,7 @@ async function dictSelect_init() {
 	
 	// Load the list of dictionaries
 	var api = function(inputValue) {
-		const inputValueLower = inputValue.toLowerCase();
+		const inputValueLower = inputValue.replaceAll('\u2506', '').trim().toLowerCase().split(' ');
 		
 		return new Promise(function(resolve) {
 			document.getElementById('selector').classList.remove('is-danger');
@@ -108,12 +108,12 @@ async function dictSelect_init() {
 		.then(function(decks) {
 			return decks.filter(function(deck) {
 				if (typeof(deck.name) === 'string') {
-					return deck.name.toLowerCase().indexOf(inputValueLower) > -1;
+					return inputValueLower.filter(word => deck.name.toLowerCase().split(' ').includes(word)).length === inputValueLower.length;
 				}
 				else {
 					return Object.entries(deck.name).filter(function(elem) {
-						return elem[1].toLowerCase().indexOf(inputValueLower) > -1;
-					}).length > 0;
+						return inputValueLower.some(word => elem[1].toLowerCase().split(' ').includes(word));
+					}).length === inputValueLower.length;
 				}
 			})
 		})
@@ -128,8 +128,8 @@ async function dictSelect_init() {
 				}
 				else {
 					const userLangISO2 = window.vl_options['langue'].substr(0, 2);
-					const arrFitLang = Object.entries(elem.name).filter(trans => 
-						trans[1].toLowerCase().indexOf(inputValueLower) > -1
+					const arrFitLang = Object.entries(elem.name).filter(trans =>
+						inputValueLower.some(word => trans[1].toLowerCase().split(' ').includes(word))
 					);
 					
 					const dctFitLang = arrFitLang.reduce((acc, _, i) => {
@@ -138,7 +138,7 @@ async function dictSelect_init() {
 					}, {});
 					
 					return {
-						label: (dctFitLang[userLangISO2] || dctFitLang['xx'] || arrFitLang[0][1]),
+						label: (dctFitLang[userLangISO2] || dctFitLang['xx'] || Object.entries(dctFitLang)[0][1]),
 						value: JSON.stringify(elem)
 					}
 				}
@@ -177,8 +177,8 @@ async function dictSelect_init() {
 		}
 		
 		// Forging html the frag
-		let frag = `
-			<div class="control">
+		let frag = 
+			`<div class="control">
 				<div class="tags has-addons are-medium">
 					<span class="tag is-dark">${window.vl_i18n['js_setdiff']}</span>
 					<span class="tag is-${difClr}">${difDsc}</span>
@@ -212,7 +212,11 @@ async function dictSelect_init() {
 		}
 			
 		// Populate the description div with the html fragment
-		document.getElementById("selector-infos").innerHTML = frag;
+		const selectLang = document.getElementById("selector-infos");
+		selectLang.innerHTML = frag;
+		selectLang.style.animation = 'none';
+		selectLang.offsetHeight;
+		selectLang.style.animation = null;
 	};
 	
 	// Init the selector text input
@@ -224,31 +228,47 @@ async function dictSelect_init() {
 * @param {blob} _blob - The data retrieved
 */
 async function dictSelect_show(_blob) {
-	document.getElementById('run-set').removeAttribute('disabled');
-	document.getElementById('selector').removeAttribute('disabled');
-	
 	window.vl_listSelection = JSON.parse(JSON.parse(JSON.stringify(await _blob.text())));
 	
 	// If the dict is given, populate the dict selector, then empty it (cache)
-	const dictName = (new URLSearchParams(window.location.search)).get('set');
-	if (dictName !== null
-	&& dictName !== '') {		
+	let dictName = (new URLSearchParams(window.location.search)).get('deck') || '';
+	if (dictName !== '') {
 		const arrFound = window.vl_listSelection.filter(function(elem) {
 			return elem.dict === dictName;
 		});
 		
-		if (arrFound.length > 0)
-			document.getElementById('selector').value = arrFound[0].name[0];
+		// The given dict exists
+		if (arrFound.length > 0) {
+			if (typeof(arrFound[0].name) === 'string')
+				document.getElementById('selector').value = arrFound[0].name;
+			else {
+				const userLangISO2 = window.vl_options['langue'].substr(0, 2);
+				document.getElementById('selector').value = arrFound[0].name[userLangISO2];
+			}
 		
-		loadDict();
+			loadDict();
+		}
+		else
+			dictName = '';
 	}
 	else
 		document.getElementById('selector').value = '';
+	
+	document.getElementById('run-set').removeAttribute('disabled');
+	document.getElementById('selector').removeAttribute('disabled');
 	
 	progressBar(false);
 	
 	// Show the selector modal
 	document.getElementById('selector-container').style.display = 'flex';
+	
+	// If a prefill param is provided
+	const prefill = (new URLSearchParams(window.location.search)).get('search') || '';
+	if (dictName === ''
+	&& prefill !== '') {
+		document.getElementById('selector').value = prefill;
+		document.getElementById('selector').focus();
+	}
 }
 
 /**
@@ -319,9 +339,14 @@ async function loadDict() {
 	const userChoice = document.getElementById('selector').value;
 	// Check if this name exists in the index.json
 	const arrFound = window.vl_listSelection.filter(function(dict) {
-		return dict.name.filter(function(elem) {
-			return elem === userChoice
-		}).length > 0
+		if (typeof(dict.name) === 'string') {
+			return dict.name === userChoice
+		}
+		else {
+			return Object.entries(dict.name).filter(function(elem) {
+				return elem[1] === userChoice
+			}).length > 0
+		}
 	});
 	
 	// No dict has been found, force exit
@@ -339,10 +364,10 @@ async function loadDict() {
 	window.vl_dictNfos = arrFound[0];
 	
 	// Set the set title to the nav
-	document.getElementById('set-title').innerHTML = userChoice;
+	document.getElementById('set-title').innerHTML = userChoice.substr(userChoice.indexOf('\u2506') + 2);
 	
 	// Fill the copy link text input with the set url
-	document.getElementById('inp-link').value = `${window.location.origin+window.location.pathname}?set=${arrFound[0].dict}`;
+	document.getElementById('inp-link').value = `${window.location.origin+window.location.pathname}?deck=${arrFound[0].dict}`;
 	// And make its modal trigger button visible
 	document.querySelector('button[data-target="mdl-link"]').style.display = 'flex';
 	
@@ -398,6 +423,16 @@ function loadDict_end() {
 * Bind listeners to their callbacks (part 1)
 */
 function bindFuncs_pt1() {
+	// Bind the selector lang dropdown menu to its callback
+	document.getElementById('slct-lang').addEventListener('change', e => {
+		const langSearch = e.srcElement.value;
+		
+		document.getElementById('slct-lang').value = 'none';
+		
+		document.getElementById('selector').value = langSearch;
+		document.getElementById('selector').focus();
+	});
+	
 	// Bind the "Abandon" button from the menu to its callback
 	document.getElementById('plzstahp').addEventListener('click', function(e) {
 		if (window.vl_finished !== true)
@@ -1159,9 +1194,10 @@ function gameEnd(_success, _save = true) {
 	// Set the quick search url if provided for this deck
 	let fragQuickSearch = null;
 	if (window.vl_dictNfos['urls'] !== undefined) {
+		const userLangISO2 = window.vl_options['langue'].substr(0, 2);
 		fragQuickSearch = 
 		`<p>
-			<a href="${(window.vl_dictNfos['urls'][window.vl_options['langue']] || window.vl_dictNfos['urls']['xx']).replace('~#:LV_INSERT:#~', encodeURIComponent(strDeobf))}" target="_blank" class="button is-${clr} is-inverted">
+			<a href="${(window.vl_dictNfos['urls'][userLangISO2] || window.vl_dictNfos['urls']['xx']).replace('~#:LV_INSERT:#~', encodeURIComponent(strDeobf))}" target="_blank" class="button is-${clr} is-inverted">
 				<span>${window.vl_i18n['js_search']}</span>
 				<span class="icon is-small">
 					<i class="fa-solid fa-up-right-from-square"></i>

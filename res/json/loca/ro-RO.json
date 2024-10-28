@@ -34,6 +34,8 @@
 	"setwrong": "Acest set nu există.",
 	"setload": "Încărca",
 	"setselect": "Selectați un set",
+	"slctlangsearch": "După limbă",
+	"slctlangglobal": "La nivel global",
 	"js_setdiff0": "Uşor",
 	"js_setdiff1": "Moderat",
 	"js_setdiff2": "Greu",

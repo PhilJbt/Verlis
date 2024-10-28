@@ -13,6 +13,14 @@ body {
 }
 
 /**
+* Fonts
+*/
+@font-face {
+  font-family: "NotoEmojiFlags";
+  src: URL("../fnt/NotoColorEmoji-flagsonly.ttf") format("truetype");
+}
+
+/**
 * General
 */
 .patoush {
@@ -176,19 +184,38 @@ input::placeholder {
 	height: 32px;
 	
   top: 10px;
+	
+	animation: .25s ease-out slct-nfo-anm;
 }
+
+@keyframes slct-nfo-anm {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
 
 .tags .tag:nth-child(2) {
 	font-weight: bold;
 }
 
 #selector {
-	border-radius: 6px 0px 0px 6px;
+	border-radius: 0px;
   border-right: none;
+  border-left: none;
+	font-family: "NotoEmojiFlags";
+}
+
+.dropdown-content {
+	font-family: "NotoEmojiFlags";
 }
 
 #run-set {
 	border-radius: 0px 6px 6px 0px;
+}
+
+#slct-lang {
+	border-radius: 6px 0px 0px 6px;
+	font-family: "NotoEmojiFlags";
 }
 
 

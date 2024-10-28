@@ -357,6 +357,35 @@
 					<div class="field width-full">
 						<label class="label" i18n="ih_setselect"></label>
 						<div class="dropdown width-full">
+							<p class="control">
+								<span class="select">
+									<select id="slct-lang">
+										<option value="none" selected="selected" style="display:none" disabled="true" i18n="ih_slctlangsearch">...</option>
+										<option value="&#127760;" i18n="ah_slctlangglobal">&#127760; </option>
+										<option value="&#127465;&#127466;">&#127465;&#127466; Deutsch</option>
+										<option value="&#127465;&#127472;">&#127465;&#127472; Dänisch</option>
+										<option value="&#127482;&#127480;">&#127482;&#127480; English (USA)</option>
+										<option value="&#127468;&#127463;">&#127468;&#127463; English (United Kingdom)</option>
+										<option value="&#127466;&#127480;">&#127466;&#127480; Español</option>
+										<option value="&#127467;&#127479;">&#127467;&#127479; Français</option>
+										<option value="&#127470;&#127481;">&#127470;&#127481; Italiano</option>
+										<option value="&#127469;&#127482;">&#127469;&#127482; Magyar</option>
+										<option value="&#127475;&#127473;">&#127475;&#127473; Nederlands</option>
+										<option value="&#127475;&#127476;">&#127475;&#127476; Norsk</option>
+										<option value="&#127463;&#127479;">&#127463;&#127479; Português (Brasil)</option>
+										<option value="&#127477;&#127481;">&#127477;&#127481; Português (Portugal)</option>
+										<option value="&#127479;&#127476;">&#127479;&#127476; Română</option>
+										<option value="&#127467;&#127470;">&#127467;&#127470; Suomalainen</option>
+										<option value="&#127480;&#127466;">&#127480;&#127466; Svenska</option>
+										<option value="&#127483;&#127475;">&#127483;&#127475; Tiếng Việt</option>
+										<option value="&#127464;&#127487;">&#127464;&#127487; Čeština</option>
+										<option value="&#127468;&#127479;">&#127468;&#127479; Ελληνικά</option>
+										<option value="&#127479;&#127482;">&#127479;&#127482; Русский</option>
+										<option value="&#127482;&#127462;">&#127482;&#127462; Українська</option>
+										<option value="&#127481;&#127469;">&#127481;&#127469; แบบไทย</option>
+									</select>
+								</span>
+							</p>
 							<div class="dropdown-trigger width-full">
 								<input id="selector" class="input width-full" type="text" placeholder="" i18n="ph_setwrite" aria-haspopup="true" aria-controls="selector-menu" disabled>
 								<button id="run-set" class="button is-info" disabled>
@@ -368,8 +397,8 @@
 							</div>
 							<div class="dropdown-menu" id="selector-menu" role="menu"></div>
 						</div>
-							<p id="inp-set-dsc" class="help is-danger patoush" i18n="ih_setwrong"></p>
-						<div id="selector-infos" class="field is-grouped is-grouped-multiline"></div>
+						<p id="inp-set-dsc" class="help is-danger patoush" i18n="ih_setwrong"></p>
+						<div id="selector-infos" class="field is-grouped is-grouped-multiline patoush"></div>
 					</div>
 				</div>
 				<!-- Words -->

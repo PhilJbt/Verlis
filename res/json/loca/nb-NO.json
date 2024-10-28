@@ -34,6 +34,8 @@
 	"setwrong": "Dette settet finnes ikke.",
 	"setload": "Laste",
 	"setselect": "Velg et sett",
+	"slctlangsearch": "Etter språk",
+	"slctlangglobal": "Global",
 	"js_setdiff0": "Lett",
 	"js_setdiff1": "Moderat",
 	"js_setdiff2": "Hard",

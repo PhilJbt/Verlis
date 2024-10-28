@@ -34,6 +34,8 @@
 	"setwrong": "Deze set bestaat niet.",
 	"setload": "Laden",
 	"setselect": "Selecteer een set",
+	"slctlangsearch": "Per taal",
+	"slctlangglobal": "Wereldwijd",
 	"js_setdiff0": "Eenvoudig",
 	"js_setdiff1": "Gematigd",
 	"js_setdiff2": "Moeilijk",

@@ -34,6 +34,8 @@
 	"setwrong": "ชุดนี้ไม่มีอยู่.",
 	"setload": "โหลด",
 	"setselect": "เลือกชุด",
+	"slctlangsearch": "ตามภาษา",
+	"slctlangglobal": "ทั่วโลก",
 	"js_setdiff0": "ง่าย",
 	"js_setdiff1": "ปานกลาง",
 	"js_setdiff2": "แข็ง",

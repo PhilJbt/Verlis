@@ -34,6 +34,8 @@
 	"setwrong": "Αυτό το σετ δεν υπάρχει.",
 	"setload": "Φορτίο",
 	"setselect": "Επιλέξτε ένα σύνολο",
+	"slctlangsearch": "Κατά γλώσσα",
+	"slctlangglobal": "Καθολικός",
 	"js_setdiff0": "Εύκολος",
 	"js_setdiff1": "Μέτριος",
 	"js_setdiff2": "Σκληρά",
