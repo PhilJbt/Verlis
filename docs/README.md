@@ -4,7 +4,7 @@
 
 <br/>
 
-![screencast](screencast.gif)
+<a href="https://youtu.be/4C6_A_8q3dc" target="_blank"><img src="screencast.gif" alt="Screencast" /></a>
 
 <br/>
 
