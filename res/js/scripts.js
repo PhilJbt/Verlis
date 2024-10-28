@@ -64,23 +64,23 @@ async function init() {
 	
 	progressBar(30);
 	
-	// Load stored user's options
-	optionsLoad();
-	
-	progressBar(40);
-	
 	// Retrieve the ui localization
-	await fetchWithProgress(`res/json/loca/${window.vl_options['langue']}.json`, i18n_ui, [40, 60]);
+	await fetchWithProgress(`res/json/loca/${window.vl_options['langue']}.json`, i18n_ui, [30, 50]);
 	
-	progressBar(60);
+	progressBar(50);
 	
 	// Init css framework
 	initBulma();
 	
-	progressBar(70);
+	progressBar(60);
 	
 	// Start the time worker (i.e. the game elapsed timer and the "next word" timer)
 	initTime();
+	
+	progressBar(70);
+	
+	// Load stored user's options
+	optionsLoad();
 	
 	progressBar(80);
 	
@@ -688,14 +688,14 @@ function optionsLoad() {
 		
 		window.vl_options = opt;
 		
-		// clues
+		// Ranking
 		document.getElementById(`rad-ranking-${opt['ranking']}`).checked = true;
 		
 		// Language
 		document.querySelector(`.rad-lng input[type="radio"][value="${opt['langue']}"]`).checked = true;
 	}
 	else {
-		// Clues
+		// Ranking
 		document.getElementById('rad-ranking-0').checked = true;
 		
 		// Language
@@ -713,7 +713,7 @@ function optionsLoad() {
 function optionsSave() {
 		const opt = JSON.parse(localStorage.getItem('opt') || '{}');
 		
-		// Clues
+		// Ranking
 		opt['ranking'] = parseInt(document.querySelector('*[name="rad-ranking"]:checked').value);
 		
 		// Language
