@@ -93,7 +93,7 @@ async function init() {
 */
 async function dictSelect_init() {
 	// Retrieve the list of dictionaries
-	await fetchWithProgress('res/json/deck/_index.json', dictSelect_show, [80, 100]);
+	await fetchWithProgress('res/json/deck/0.json', dictSelect_show, [80, 100]);
 	
 	// Load the list of dictionaries
 	var api = function(inputValue) {
