@@ -15,6 +15,7 @@
 	"cancel": "Cancel",
 	"link": "Direct link",
 	"linkcopy": "Copy",
+	"js_linkcopied": "Copied",
 	"triesnbr": "Attempts",
 	"settitle": "Set title",
 	"timeelapsed": "Time elapsed",
