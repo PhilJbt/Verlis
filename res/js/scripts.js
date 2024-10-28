@@ -45,6 +45,7 @@ async function init() {
 	window.vl_i18n = {};
 	window.vl_listSelection = null;
 	window.vl_dictName = '';
+	window.vl_dictNfos = null;
 	window.vl_alphabetProcessing = false;
 	
 	// Remove any text from the user input text (some browser cache it)
@@ -92,7 +93,7 @@ async function init() {
 */
 async function dictSelect_init() {
 	// Retrieve the list of dictionaries
-	await fetchWithProgress('res/json/index.json', dictSelect_show, [80, 100]);
+	await fetchWithProgress('res/json/deck/_index.json', dictSelect_show, [80, 100]);
 	
 	// Load the list of dictionaries
 	var api = function(inputValue) {
@@ -128,20 +129,20 @@ async function dictSelect_init() {
 		// Labels' colors
 		switch(data.diff) {
 			case 0:
-			difClr = 'success';
-			difNam = 'Easy';
-			difDsc = window.vl_i18n['js_setdiff0'];
-			break;
+				difClr = 'success';
+				difNam = 'Easy';
+				difDsc = window.vl_i18n['js_setdiff0'];
+				break;
 			case 1:
-			difClr = 'warning';
-			difNam = 'Moderate';
-			difDsc = window.vl_i18n['js_setdiff1'];
-			break;
+				difClr = 'warning';
+				difNam = 'Moderate';
+				difDsc = window.vl_i18n['js_setdiff1'];
+				break;
 			case 2:
-			difClr = 'danger';
-			difNam = 'Hard';
-			difDsc = window.vl_i18n['js_setdiff2'];
-			break;
+				difClr = 'danger';
+				difNam = 'Hard';
+				difDsc = window.vl_i18n['js_setdiff2'];
+				break;
 		}
 		
 		// Forging html the frag
@@ -164,17 +165,18 @@ async function dictSelect_init() {
 					<span class="tag is-${data.clue ? 'white' : 'black'}">${data.clue ? window.vl_i18n['js_clueyes'] : window.vl_i18n['js_clueno']}</span>
 				</div>
 			</div>`;
-		
-		// If a note exists in the current language, or by default in global english
-		const note = data[window.vl_options['langue']] || data['en-US'];
+			
 		// Append the note to the html fragment
-		if (note)
+		if (data['note']) {
+		// If a note exists in the current language, or by default in global english
+		const note = data['note'][window.vl_options['langue']] || data['note']['xx-XX'] || undefined;
 			frag +=
 			`<div class="control">
 				<div class="tags has-addons are-medium">
 					<span class="tag is-link">${note}</span>
 				</div>
 			</div>`;
+		}
 			
 		// Populate the description div with the html fragment
 		document.getElementById("selector-infos").innerHTML = frag;
@@ -300,6 +302,9 @@ async function loadDict() {
 	// Store the name of the selected set (load/save func)
 	window.vl_dictName = arrFound[0].dict;
 	
+	// Store the Urls for quick search
+	window.vl_dictNfos = arrFound[0];
+	
 	// Set the set title to the nav
 	document.getElementById('set-title').innerHTML = userChoice;
 	
@@ -316,7 +321,7 @@ async function loadDict() {
 	progressBar(true);
 	
 	// Retrieve the dict
-	await fetchWithProgress(`res/json/dict/${arrFound[0].dict}.json`, retrieveDict, [0, 100]);
+	await fetchWithProgress(`res/json/deck/${arrFound[0].dict}.json`, retrieveDict, [0, 100]);
 }
 
 /**
@@ -1109,8 +1114,29 @@ function gameEnd(_success, _save = true) {
 	// Determine the hero color
 	const clr = _success ? 'success' : 'danger';
 	// Deobfuscate the picked word
-	const strDeobf = deobf(window.vl_nswr).vl_capitalize();
+	let strDeobf = deobf(window.vl_nswr);
 	
+	// Depending on the type, change the text transform
+	switch (window.vl_dictNfos['type']) {
+		case 'name':
+			strDeobf = strDeobf.vl_capitalize();
+			break;
+	}
+	
+	// Set the quick search url if provided for this deck
+	let fragQuickSearch = null;
+	if (window.vl_dictNfos['urls'] !== undefined) {
+		fragQuickSearch = 
+		`<p>
+			<a href="${(window.vl_dictNfos['urls'][window.vl_options['langue']] || window.vl_dictNfos['urls']['xx-XX']).replace('~#:LV_INSERT:#~', encodeURIComponent(strDeobf))}" target="_blank" class="button is-${clr} is-inverted">
+				<span>${window.vl_i18n['js_search']}</span>
+				<span class="icon is-small">
+					<i class="fa-solid fa-up-right-from-square"></i>
+				</span>
+			</a>
+		</p>`;
+	}
+
 	// Show the end game hero in the DOM
 	document.getElementById('ag-input').innerHTML =
 	`<section class="hero is-small is-${clr}">
@@ -1119,16 +1145,7 @@ function gameEnd(_success, _save = true) {
 				<p class="title">${_success ? window.vl_i18n['js_win'] : window.vl_i18n['js_abandon']}</p>
 				<p class="subtitle">${window.vl_i18n['js_verbwas'].replace('%VERBID%', getWordID())} : &#171; <word><b>${strDeobf}</b></word> &#187;</p>
 			</div>
-			<!--
-			<p>
-				<a href="${window.vl_i18n['js_urldef'].replace('%', encodeURIComponent(strDeobf))}" target="_blank" class="button is-${clr} is-inverted">
-					<span>${window.vl_i18n['js_search']}</span>
-					<span class="icon is-small">
-						<i class="fa-solid fa-up-right-from-square"></i>
-					</span>
-				</a>
-			</p>
-			-->
+			${fragQuickSearch ?? ''}
 		</div>
 	</section>`;
 }
