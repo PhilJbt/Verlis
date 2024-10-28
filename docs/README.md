@@ -21,6 +21,8 @@ You can enable these hints in the <strong><em>Options</em></strong> menu.
 | Link																																| Topic											| Language			| Entries 	| Clues				  			| Sources		|
 | ------------------------------------------------------------------- | --------------------------| ------------- | --------- | ------------------- | --------- |
 | [:link:](https://philjbt.github.io/Verlis/?deck=stars_hollywood)		| Hollwood actors						| &varnothing;	| 300				| Pictures of stars 	| [&ulcorner;Walk of Fame&lrcorner;](https://walkoffame.com/browse-stars/)&emsp;[&ulcorner;Tmdb&lrcorner;](https://www.themoviedb.org/) |
+| [:link:](https://philjbt.github.io/Verlis/?deck=video_games)				| Videos games							| en						| 474				| 									 	| [&ulcorner;Pwn Rank&lrcorner;](https://www.pwnrank.com/top-500) |
+| [:link:](https://philjbt.github.io/Verlis/?deck=knitting_en)				| Knitting									| en						| 474				| 									 	| [&ulcorner;Wiktionary&lrcorner;](https://en.wiktionary.org/wiki/Category:en:Knitting) |
 | [:link:](https://philjbt.github.io/Verlis/?deck=verb_inf_cs-CZ)			|	Verbs in the infinitive		|	cs-CZ					| 190				| 					 					| [&ulcorner;Travel with Languages&lrcorner;](https://travelwithlanguages.com/blog/most-common-czech-words.html) |
 | [:link:](https://philjbt.github.io/Verlis/?deck=verb_inf_da-DK)			|	Verbs in the infinitive		|	da-DK					| 514				| 					 					| [&ulcorner;Jan Simon&lrcorner;](https://github.com/janhsimon/DanishVerbs) |
 | [:link:](https://philjbt.github.io/Verlis/?deck=verb_inf_de-DE)			|	Verbs in the infinitive		|	de-DE					| 17,679		| 										| [&ulcorner;Michael Gerstenberg&lrcorner;](https://github.com/michael-gerstenberg/GermanVerbScraper) |
@@ -64,8 +66,7 @@ You can enable these hints in the <strong><em>Options</em></strong> menu.
 > [!NOTE]
 > __THIRD PARTY CREDITS__\
 > Framework : [&ulcorner;Bulma&lrcorner;](https://bulma.io)\
-> Framework extension (tooltips) [&ulcorner;CreativeBulma&lrcorner;](https://bulma-tooltip.netlify.app/get-started/)
-> Framework extension (colored radios) [&ulcorner;Wikiki&lrcorner;](https://wikiki.github.io/form/checkradio/)
-> 
+> Framework extension (tooltips) [&ulcorner;CreativeBulma&lrcorner;](https://bulma-tooltip.netlify.app/get-started/)\
+> Framework extension (colored radios) [&ulcorner;Wikiki&lrcorner;](https://wikiki.github.io/form/checkradio/)\
 > Javascript randomizer : [&ulcorner;Brian Ramsay&lrcorner;](https://github.com/BrianRamsay/Randomizer)\
 > Flags : [&ulcorner;HatScripts&lrcorner;](https://github.com/HatScripts/circle-flags)

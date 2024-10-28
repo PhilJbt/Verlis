@@ -97,7 +97,7 @@ async function dictSelect_init() {
 	
 	// Load the list of dictionaries
 	var api = function(inputValue) {
-		const inputValueLower = inputValue.replaceAll('\u2506', '').trim().toLowerCase().split(' ');
+		const inputValueLower = inputValue.toLowerCase().replaceAll('\u2506', '').trim().replace(/[ ]{2,}/gi, ' ').split(' ');
 		
 		return new Promise(function(resolve) {
 			document.getElementById('selector').classList.remove('is-danger');
@@ -112,8 +112,8 @@ async function dictSelect_init() {
 				}
 				else {
 					return Object.entries(deck.name).filter(function(elem) {
-						return inputValueLower.some(word => elem[1].toLowerCase().split(' ').includes(word));
-					}).length === inputValueLower.length;
+						return inputValueLower.filter(word => elem[1].toLowerCase().split(' ').includes(word)).length == inputValueLower.length;
+					}).length > 0;
 				}
 			})
 		})
@@ -826,7 +826,7 @@ function pickWord() {
 	// Final word when every characters have been picked
 	let strWord = '';
 	// Set the current branch of the n-ary tree to its root
-	let currBranch = window.vl_verblist;
+	let currBranch = window.vl_verblist['words'];
 	// Added offset to seed, increased when going throw a new branch
 	let iAdd = Object.keys(currBranch).length * 5;
 	// 
@@ -852,24 +852,24 @@ function pickWord() {
 			currBranch = currBranch[cChar];
 		}
 		else {
-			const clue = currBranch[cChar];
-			if (clue !== true) {
-				if (clue.indexOf('data:image/jpeg;base64,/') === 0)
-					document.getElementById('clue-content').innerHTML = `<img src="${clue}" />`;
-				else if (clue.indexOf('data:audio/mpeg;base64,/') === 0)
-					document.getElementById('clue-content').innerHTML = `<audio controls="controls" autobuffer="autobuffer"><source src="${clue}" /></audio>`;
+			const clueUid = currBranch[cChar];
+			if (window.vl_verblist['clues'][clueUid] !== undefined) {
+				if (window.vl_verblist['clues'][clueUid].indexOf('data:image/jpeg;base64,/') === 0)
+					document.getElementById('clue-content').innerHTML = `<img src="${window.vl_verblist['clues'][clueUid]}" />`;
+				else if (window.vl_verblist['clues'][clueUid].indexOf('data:audio/mpeg;base64,/') === 0)
+					document.getElementById('clue-content').innerHTML = `<audio controls="controls" autobuffer="autobuffer"><source src="${window.vl_verblist['clues'][clueUid]}" /></audio>`;
 				else
-					document.getElementById('clue-content').innerHTML = `<p>${clue}</p>`;
+					document.getElementById('clue-content').innerHTML = `<p>${window.vl_verblist['clues'][clueUid]}</p>`;
 			
 				document.getElementById('plzclue').removeAttribute('disabled');
 			}
 			
 			bRun = false;
+			
+			// Store the chosen word uid and relativerly hide the word
+			window.vl_nswr = [currBranch[cChar], obfus(strWord)];
 		}
 	};
-	
-	// Relatively hide the chosen word
-	window.vl_nswr = obfus(strWord);
 }
 
 /**
@@ -903,43 +903,10 @@ function checkWord() {
 		return;
 	
 	/*
-	** WORD ALREADY TRIED
-	*/
-	// The user already tried this word
-	if (window.vl_tried[wordUser] !== undefined) {
-		// If the "already tried" animation is not running
-		if (window.vl_tried[wordUser].hnd === null
-		// ... and the word is still exists in either the "before" or the "after" list...
-		// Note: words overflowing the window are deleted.
-		&& document.body.contains(window.vl_tried[wordUser].node)) {
-			// Assign the "already tried" animation to this word in the DOM
-			window.vl_tried[wordUser].node.classList.add('highlight');
-			
-			// Remove the "already tried" animation in 3 seconds
-			window.vl_tried[wordUser].hnd = setTimeout(() => {
-				// If the word is still exists in either the "before" or the "after" list
-				if (document.body.contains(window.vl_tried[wordUser].node))
-					// Remove the "already tried" animation
-					window.vl_tried[wordUser].node.classList.remove('highlight');
-					
-				// Release the timeout handle
-				window.vl_tried[wordUser].hnd = null;
-			}, 3000);
-		}
-		
-		// Flush the user input text
-		inputUser.value = '';
-		// Revert the "Essayer" button, and update the word processing status
-		checkWord_End();
-		
-		return;
-	}
-	
-	/*
 	** DOES THE WORD EXIST?
 	*/
 	// Set the current branch of the tree to its root
-	let branchCurr = window.vl_verblist;
+	let branchCurr = window.vl_verblist['words'];
 	let wordNotFound = false;
 	
 	// For each character of the given word
@@ -956,6 +923,27 @@ function checkWord() {
 			return;
 		}
 	});
+	
+	/*
+	** WORD ALREADY TRIED
+	*/
+	// The user already tried this word
+	if (window.vl_tried[branchCurr['\x06']] !== undefined) {
+		// Assign the "already tried" animation to this word in the DOM
+		const selectLang = document.querySelector(`.word[word-uid="${branchCurr['\x06']}"]`);
+		if (selectLang !== null) {
+			selectLang.style.animation = 'none';
+			selectLang.offsetHeight;
+			selectLang.style.animation = null;
+		}
+		
+		// Flush the user input text
+		inputUser.value = '';
+		// Revert the "Essayer" button, and update the word processing status
+		checkWord_End();
+		
+		return;
+	}
 	
 	// The word does not match any known word
 	if (wordNotFound === true
@@ -981,16 +969,14 @@ function checkWord() {
 		// Flush the user input text
 		inputUser.value = '';
 	
-		// Deobfuscate the picked word
-		const strDeobf = deobf(window.vl_nswr);
 		// The word given matches the picked one
-		if (strDeobf === wordUser)
+		if (window.vl_nswr[0] === branchCurr['\x06'])
 			// End the game
 			gameEnd(true);
 		// The given word does not match the picked one
 		else {
 			// Remove any diacritic from the given word (necessary to compare words alphabetically)
-			const ag_nswrLoc = strDeobf.vl_normalize();
+			const ag_nswrLoc = wordUser.vl_normalize();
 			// Does the given word is alphabetically placed before or after the picked one
 			const givenIsBeforePicked = (wordUser.vl_compare(ag_nswrLoc) < 0);
 			// Get the corresponding tried words list in the DOM
@@ -999,6 +985,8 @@ function checkWord() {
 			// Create a Html fragment for the given word
 			let frag = document.createElement('div');
 			frag.classList.add('word');
+			frag.classList.add('highlight');
+			frag.setAttribute('word-uid', branchCurr['\x06']);
 			frag.innerHTML = wordUser;
 			// Add the clue according to the number of identical letters at the beginning and end
 			const countSameBeg = countEquality(wordUser, ag_nswrLoc, false);
@@ -1041,7 +1029,7 @@ function checkWord() {
 				wordListNode.appendChild(frag);
 			
 			// Store information that this given word has been tried
-			window.vl_tried[wordUser] = {node: frag, hnd: null};
+			window.vl_tried[branchCurr['\x06']] = true;
 			
 			/*
 			** REMOVE OVERFLOWING WORDS
@@ -1182,7 +1170,7 @@ function gameEnd(_success, _save = true) {
 	// Determine the hero color
 	const clr = _success ? 'success' : 'danger';
 	// Deobfuscate the picked word
-	let strDeobf = deobf(window.vl_nswr);
+	let strDeobf = deobf(window.vl_nswr[1]);
 	
 	// Depending on the type, change the text transform
 	switch (window.vl_dictNfos['type']) {
