@@ -4,7 +4,7 @@
 body {
 	width: 100vw;
 	height: 100vh;
-	
+	font-family: "NotoSans";
 	overflow: hidden;
 }
 ::selection {
@@ -18,6 +18,12 @@ body {
 @font-face {
   font-family: "NotoEmojiFlags";
   src: URL("../fnt/NotoColorEmoji-flagsonly.ttf") format("truetype");
+	unicode-range: U+1F1E6-U+1F1FF;
+}
+@font-face {
+  font-family: "NotoSans";
+  src: URL("../fnt/NotoSans.ttf") format("truetype");
+	unicode-range: U+0000-1F1E5, U+1F200-10FFFF;
 }
 
 /**
@@ -202,11 +208,11 @@ input::placeholder {
 	border-radius: 0px;
   border-right: none;
   border-left: none;
-	font-family: "NotoEmojiFlags";
+	font-family: NotoEmojiFlags, NotoSans;
 }
 
-.dropdown-content {
-	font-family: "NotoEmojiFlags";
+#selector-menu {
+	font-family: NotoEmojiFlags, NotoSans;
 }
 
 #run-set {
@@ -215,7 +221,7 @@ input::placeholder {
 
 #slct-lang {
 	border-radius: 6px 0px 0px 6px;
-	font-family: "NotoEmojiFlags";
+	font-family: NotoEmojiFlags, NotoSans;
 }
 
 
@@ -324,7 +330,7 @@ nav {
   align-items: flex-start;
 }
 
-.level.minimal .level-item[type]:not([type="menu"]) {
+.level.minimal .level-item[type] {
 	visibility: hidden;
 }
 
@@ -428,4 +434,8 @@ button[data-target="mdl-link"] {
 }
 #clue-content > p {
 	padding: 10px 20px 10px 20px;
+}
+
+#btn-copylink-icn {
+	padding-right: 5px;
 }
