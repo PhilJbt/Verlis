@@ -158,8 +158,8 @@
 			<div class="modal-background"></div>
 			<div class="modal-card mdl-infos-content">
 				<!-- Modal Link Header -->
-				<header class="modal-card-head has-background-info">
-					<p class="modal-card-title" i18n="ah_link"><i class="fas fa-link"></i> </p>
+				<header class="modal-card-head  has-background-white">
+					<p class="modal-card-title has-text-black" i18n="ah_link"><i class="fas fa-link"></i> </p>
 					<button class="delete" aria-label="close"></button>
 				</header>
 				<!-- Modal Link Content -->
@@ -170,8 +170,9 @@
 								<input class="input" type="text" id="inp-link" placeholder="Find a repository" readonly>
 							</div>
 							<div class="control">
-								<button class="button is-info" id="btn-copylink" i18n="ah_linkcopy">
-									<i class="fa-solid fa-clipboard"></i>
+								<button class="button is-info" id="btn-copylink">
+									<i class="fa-solid fa-clipboard" id="btn-copylink-icn"></i>
+									<p id="btn-copylink-txt" i18n="ah_linkcopy"></p>
 								</button>
 							</div>
 						</div>
@@ -185,7 +186,7 @@
 			<div class="modal-card">
 				<!-- Modal Clue Header -->
 				<header class="modal-card-head has-background-warning">
-					<p class="modal-card-title" i18n="ah_clue"><i class="fas fa-puzzle-piece"></i> </p>
+					<p class="modal-card-title has-text-black" i18n="ah_clue"><i class="fas fa-puzzle-piece"></i> </p>
 					<button class="delete" aria-label="close"></button>
 				</header>
 				<!-- Modal Clue Content -->
@@ -355,9 +356,9 @@
 				<!-- Selector -->
 				<div id="selector-container" class="width-full">
 					<div class="field width-full">
-						<label class="label" i18n="ih_setselect"></label>
+						<label class="label patoush" i18n="ih_setselect"></label>
 						<div class="dropdown width-full">
-							<p class="control">
+							<p class="control patoush">
 								<span class="select">
 									<select id="slct-lang">
 										<option value="none" selected="selected" style="display:none" disabled="true" i18n="ih_slctlangsearch">...</option>
