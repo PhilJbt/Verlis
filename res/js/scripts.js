@@ -29,7 +29,7 @@ function progressBar(_val) {
 * Initialize the DOM and game systems once the main document is loaded
 */
 async function init() {
-	progressBar(10);
+	progressBar(5);
 	
 	// Declare and initialize global vars
 	window.vl_nswr = null;
@@ -57,32 +57,32 @@ async function init() {
 		e.checked = false;
 	});
 	
-	progressBar(20);
+	progressBar(10);
 	
 	// Bind listeners to their callbacks (part 1)
 	bindFuncs_pt1();
 	
-	progressBar(30);
+	progressBar(15);
 	
 	// Load stored user's options
 	optionsLoad();
 	
-	progressBar(40);
+	progressBar(20);
 	
 	// Retrieve the ui localization
-	await fetchWithProgress(`res/json/loca/${window.vl_options['langue']}.json`, i18n_ui, [40, 60]);
+	await fetchWithProgress(`res/json/loca/${window.vl_options['langue']}.json`, i18n_ui, [20, 55]);
 	
-	progressBar(60);
+	progressBar(55);
 	
 	// Init css framework
 	initBulma();
 	
-	progressBar(70);
+	progressBar(60);
 	
 	// Start the time worker (i.e. the game elapsed timer and the "next word" timer)
 	initTime();
 	
-	progressBar(80);
+	progressBar(65);
 	
 	// Show the dictionnary selector modal
 	dictSelect_init();
@@ -93,28 +93,59 @@ async function init() {
 */
 async function dictSelect_init() {
 	// Retrieve the list of dictionaries
-	await fetchWithProgress('res/json/deck/_index.json', dictSelect_show, [80, 100]);
+	await fetchWithProgress('res/json/deck/_index.json', dictSelect_show, [65, 100]);
 	
 	// Load the list of dictionaries
 	var api = function(inputValue) {
+		const inputValueLower = inputValue.toLowerCase();
+		
 		return new Promise(function(resolve) {
 			document.getElementById('selector').classList.remove('is-danger');
 			document.getElementById('inp-set-dsc').style.visibility = 'hidden';
 			resolve(window.vl_listSelection);
-		}).then(function(Elems) {
-			return Elems.filter(function(elem) {
-				const filteredElems = elem.name.filter(elem => 
-					elem.toLowerCase().indexOf(inputValue.toLowerCase()) > -1
-				);
-				return filteredElems.length > 0
+		})
+		// Filter decks whose name matches with user text input
+		.then(function(decks) {
+			return decks.filter(function(deck) {
+				if (typeof(deck.name) === 'string') {
+					return deck.name.toLowerCase().indexOf(inputValueLower) > -1;
+				}
+				else {
+					return Object.entries(deck.name).filter(function(elem) {
+						return elem[1].toLowerCase().indexOf(inputValueLower) > -1;
+					}).length > 0;
+				}
 			})
-		}).then(function(filtered) {
+		})
+		// Return best name match, prioritize user language
+		.then(function(filtered) {
 			return filtered.map(function(elem) {
-				return {label: elem.name.filter(elem => 
-					elem.toLowerCase().indexOf(inputValue.toLowerCase()) > -1
-				)[0], value: JSON.stringify(elem)}
+				if (typeof(elem.name) === 'string') {
+					return {
+						label: elem.name,
+						value: JSON.stringify(elem)
+					}
+				}
+				else {
+					const userLangISO2 = window.vl_options['langue'].substr(0, 2);
+					const arrFitLang = Object.entries(elem.name).filter(trans => 
+						trans[1].toLowerCase().indexOf(inputValueLower) > -1
+					);
+					
+					const dctFitLang = arrFitLang.reduce((acc, _, i) => {
+						acc[arrFitLang[i][0]] = arrFitLang[i][1];
+						return acc;
+					}, {});
+					
+					return {
+						label: (dctFitLang[userLangISO2] || dctFitLang['xx'] || arrFitLang[0][1]),
+						value: JSON.stringify(elem)
+					}
+				}
 			})
-		}).then(function(transformed) {
+		})
+		// Return the 15 first items
+		.then(function(transformed) {
 			return transformed.slice(0, 15)
 		})
 	};
@@ -168,14 +199,16 @@ async function dictSelect_init() {
 			
 		// Append the note to the html fragment
 		if (data['note']) {
-		// If a note exists in the current language, or by default in global english
-		const note = data['note'][window.vl_options['langue']] || data['note']['xx-XX'] || undefined;
-			frag +=
-			`<div class="control">
-				<div class="tags has-addons are-medium">
-					<span class="tag is-link">${note}</span>
-				</div>
-			</div>`;
+			// Retrieve ISO Code 2 user language
+			const userLangISO2 = window.vl_options['langue'].substr(0, 2);
+			// If a note exists in the current language, or by default in global english
+			const note = data['note'][userLangISO2] || data['note']['xx'] || undefined;
+				frag +=
+				`<div class="control">
+					<div class="tags has-addons are-medium">
+						<span class="tag is-link">${note}</span>
+					</div>
+				</div>`;
 		}
 			
 		// Populate the description div with the html fragment
@@ -1128,7 +1161,7 @@ function gameEnd(_success, _save = true) {
 	if (window.vl_dictNfos['urls'] !== undefined) {
 		fragQuickSearch = 
 		`<p>
-			<a href="${(window.vl_dictNfos['urls'][window.vl_options['langue']] || window.vl_dictNfos['urls']['xx-XX']).replace('~#:LV_INSERT:#~', encodeURIComponent(strDeobf))}" target="_blank" class="button is-${clr} is-inverted">
+			<a href="${(window.vl_dictNfos['urls'][window.vl_options['langue']] || window.vl_dictNfos['urls']['xx']).replace('~#:LV_INSERT:#~', encodeURIComponent(strDeobf))}" target="_blank" class="button is-${clr} is-inverted">
 				<span>${window.vl_i18n['js_search']}</span>
 				<span class="icon is-small">
 					<i class="fa-solid fa-up-right-from-square"></i>
