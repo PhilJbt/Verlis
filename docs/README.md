@@ -2,6 +2,8 @@
 
 #### Verlis is a game whose objective is to guess a word based on the alphabetical order of the propositions made.
 
+<p align="center"><a href="https://philjbt.github.io/Verlis/" target="_self"><img src="playbtn.gif" width="50"  alt="Screencast" /></a></p>
+
 <br/>
 
 <a href="https://youtu.be/4C6_A_8q3dc" target="_blank"><img src="screencast.gif" alt="Screencast" /></a>
