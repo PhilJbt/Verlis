@@ -316,7 +316,7 @@ async function dictSelect_show(_blob) {
 		if (arrFound.length === 0)
 			document.getElementById('selector').focus();
 		else {
-			const deckNote = arrFound[0].slct.note[langUser] || arrFound[0].slct.note['xx'] || Object.entries(arrFound[0].slct.note)[0];
+			const deckNote = arrFound[0].slct.note ? (arrFound[0].slct.note[langUser] || arrFound[0].slct.note['xx'] || Object.entries(arrFound[0].slct.note)[0]) : '';
 			const deckInfos = {
 				'lang': arrFound[0].lang,
 				'diff': arrFound[0].slct.diff,
