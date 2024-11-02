@@ -56,27 +56,24 @@ async function init() {
 	arrLettersChecked.forEach(e => {
 		e.checked = false;
 	});
-	
 	progressBar(10);
-	
-	// Bind listeners to their callbacks (part 1)
-	bindFuncs_pt1();
-	
-	progressBar(15);
 	
 	// Load stored user's options
 	optionsLoad();
+	
+	progressBar(15);
+	
+	// Retrieve the ui localization
+	await fetchWithProgress(`res/cmpr/loca/${window.vl_options['langue']}.cmpr`, i18n_ui, [15, 50]);
+	
+	// Bind listeners to their callbacks (part 1)
+	bindFuncs_pt1();
 	
 	// Lang (deck selector)
 	let lang = window.vl_options['langue'];
 	if (lang.length === 2)
 		lang = `${lang.toLowerCase()}-${lang.toUpperCase()}`;
 	document.getElementById('slct-lang').value = lang;
-	
-	progressBar(20);
-	
-	// Retrieve the ui localization
-	await fetchWithProgress(`res/cmpr/loca/${window.vl_options['langue']}.cmpr`, i18n_ui, [20, 55]);
 	
 	progressBar(55);
 	
@@ -132,33 +129,33 @@ function fromDropdownToInfos(_elem, _isString = true) {
 	
 	// Append all languages targeted by the deck
 	const arrLangCode = {
-		'xx-XX': '&#127760;',
-		'de-DE': '&#127465;&#127466;',
-		'da-DK': '&#127465;&#127472;',
-		'en-US': '&#127482;&#127480;',
-		'en-UK': '&#127468;&#127463;',
-		'es-ES': '&#127466;&#127480;',
-		'fr-CA': '&#127988;&#917603;&#917601;&#917617;&#917603;&#917631;',
-		'fr-FR': '&#127467;&#127479;',
-		'it-IT': '&#127470;&#127481;',
-		'hu-HU': '&#127469;&#127482;',
-		'nl-NL': '&#127475;&#127473;',
-		'nb-NO': '&#127475;&#127476;',
-		'pt-BR': '&#127463;&#127479;',
-		'pt-PT': '&#127477;&#127481;',
-		'ro-RO': '&#127479;&#127476;',
-		'fi-FI': '&#127467;&#127470;',
-		'sv-SE': '&#127480;&#127466;',
-		'vi-VN': '&#127483;&#127475;',
-		'cs-CZ': '&#127464;&#127487;',
-		'el-GR': '&#127468;&#127479;',
-		'ru-RU': '&#127479;&#127482;',
-		'uk-UA': '&#127482;&#127462;',
-		'th-TH': '&#127481;&#127469;'
+		'xx-XX': ['&#127760;', 'Universal'],
+		'de-DE': ['&#127465;&#127466;', 'Deutsch'],
+		'da-DK': ['&#127465;&#127472;', 'Dansk'],
+		'en-US': ['&#127482;&#127480;', 'English (US)'],
+		'en-UK': ['&#127468;&#127463;', 'English (UK)'],
+		'es-ES': ['&#127466;&#127480;', 'Español'],
+		'fr-CA': ['&#127988;&#917603;&#917601;&#917617;&#917603;&#917631;', 'Français (Québec)'],
+		'fr-FR': ['&#127467;&#127479;', 'Français (France)'],
+		'it-IT': ['&#127470;&#127481;', 'Italiano'],
+		'hu-HU': ['&#127469;&#127482;', 'Magyar'],
+		'nl-NL': ['&#127475;&#127473;', 'Nederlands'],
+		'nb-NO': ['&#127475;&#127476;', 'Norsk'],
+		'pt-BR': ['&#127463;&#127479;', 'Português (Brasil)'],
+		'pt-PT': ['&#127477;&#127481;', 'Português (Portugal)'],
+		'ro-RO': ['&#127479;&#127476;', 'Română'],
+		'fi-FI': ['&#127467;&#127470;', 'Suomalainen'],
+		'sv-SE': ['&#127480;&#127466;', 'Svenska'],
+		'vi-VN': ['&#127483;&#127475;', 'Tiếng Việt'],
+		'cs-CZ': ['&#127464;&#127487;', 'Čeština'],
+		'el-GR': ['&#127468;&#127479;', 'Ελληνικά'],
+		'ru-RU': ['&#127479;&#127482;', 'Русский'],
+		'uk-UA': ['&#127482;&#127462;', 'Українська'],
+		'th-TH': ['&#127481;&#127469;', 'แบบไทย']
 	};
 	let frag_lang = '';
 	for (let lang of data.lang)
-		frag_lang += arrLangCode[lang];
+		frag_lang += `<div class="has-tooltip-arrow has-tooltip-info" data-tooltip="${arrLangCode[lang][1]}">${arrLangCode[lang][0]}</div>`;
 	
 	// Forging html the frag
 	const selectLang = document.getElementById("selector-infos");
@@ -225,9 +222,12 @@ async function dictSelect_init() {
 
 			return decksLangFilter.filter(function(deck) {
 				return Object.entries(deck.name).filter(function(elem) {
-					return arrWordsUser.filter(word => elem[1].toLowerCase().split(' ').includes(word)).length == arrWordsUser.length;
+					if (document.getElementById('slct-lang').value.substr(0, 2) !== elem[0]
+					&& elem[0] !== 'xx')
+						return false;
+					return arrWordsUser.filter(word => elem[1].toLowerCase().includes(word)).length == arrWordsUser.length;
 				}).length > 0;
-			})
+			});
 		})
 		// Return best name match, prioritize user language
 		.then(function(filtered) {

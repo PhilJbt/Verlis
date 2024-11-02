@@ -361,6 +361,7 @@
 							<p class="control patoush">
 								<span class="select">
 									<select id="slct-lang">
+										<option value="xx-XX">&#128506; Universal</option>
 										<option value="de-DE">&#127465;&#127466; Deutsch</option>
 										<option value="da-DK">&#127465;&#127472; Dänisch</option>
 										<option value="en-US">&#127482;&#127480; English (USA)</option>
@@ -388,14 +389,14 @@
 							</p>
 							<div class="dropdown-trigger width-full">
 								<input id="selector" class="input width-full" type="text" placeholder="" i18n="ph_setwrite" aria-haspopup="true" aria-controls="selector-menu" disabled>
-								<button id="run-set" class="button is-info" disabled>
-									<span i18n="ih_setload"></span>
-									<span class="icon is-small">
-										<i class="fa-solid fa-share"></i>
-									</span>
-								</button>
+								<div class="dropdown-menu" id="selector-menu" role="menu"></div>
 							</div>
-							<div class="dropdown-menu" id="selector-menu" role="menu"></div>
+							<button id="run-set" class="button is-info" disabled>
+								<span i18n="ih_setload"></span>
+								<span class="icon is-small">
+									<i class="fa-solid fa-share"></i>
+								</span>
+							</button>
 						</div>
 						<p id="inp-set-dsc" class="help is-danger patoush" i18n="ih_setwrong"></p>
 						<div id="selector-infos" class="field is-grouped is-grouped-multiline patoush"></div>

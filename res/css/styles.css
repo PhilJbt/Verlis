@@ -17,12 +17,35 @@ body {
 */
 @font-face {
   font-family: "OpenMoji";
-  src: URL("../fnt/OpenMoji-color-glyf_colr_0.ttf") format("truetype");
-	unicode-range: 1F3F4-E0063-E0061-E0071-E0063-E007F;
+  src: URL("../fnt/OpenMoji-color-glyf_colr_0.woff2") format("woff2");
+	unicode-range: 
+	1F5FA, 				/* xx-XX */
+	1F1E9-1F1EA, 	/* de-DE */
+	1F1E9-1F1F0, 	/* da-DK */
+	1F1FA-1F1F8, 	/* en-US */
+	1F1EC-1F1E7, 	/* en-UK */
+	1F1EA-1F1F8, 	/* es-ES */
+	1F3F4-E0063-E0061-E0071-E0063-E007F, /* fr-CA */
+	1F1EB-1F1F7, 	/* fr-FR */
+	1F1EE-1F1F9, 	/* it-IT */
+	1F1ED-1F1FA, 	/* hu-HU */
+	1F1F3-1F1F1, 	/* nl-NL */
+	1F1F3-1F1F4, 	/* nb-NO */
+	1F1E7-1F1F7, 	/* pt-BR */
+	1F1F5-1F1F9, 	/* pt-PT */
+	1F1F7-1F1F4, 	/* ro-RO */
+	1F1EB-1F1EE, 	/* fi-FI */
+	1F1F8-1F1EA, 	/* sv-SE */
+	1F1FB-1F1F3, 	/* vi-VN */
+	1F1E8-1F1FF, 	/* cs-CZ */
+	1F1EC-1F1F7, 	/* el-GR */
+	1F1F7-1F1FA, 	/* ru-RU */
+	1F1FA-1F1E6, 	/* uk-UA */
+	1F1F9-1F1ED; 	/* th-TH */
 }
 @font-face {
   font-family: "NotoSans";
-  src: URL("../fnt/NotoSans.ttf") format("truetype");
+  src: URL("../fnt/NotoSans.woff2") format("woff2");
 }
 
 /**
@@ -169,11 +192,11 @@ input::placeholder {
 
 .dropdown-trigger {
 	display: flex;
-  flex-direction: row;
+  flex-direction: column;
   flex-wrap: nowrap;
   align-content: flex-start;
-  justify-content: center;
-  align-items: center;
+  justify-content: flex-start;
+  align-items: flex-start;
 }
 
 #selector-infos {
@@ -211,6 +234,7 @@ input::placeholder {
 }
 
 #selector-menu {
+	left: unset;
 	font-family: NotoSans, OpenMoji;
 }
 #selector-menu > .dropdown-content:not(:has(*)) {
