@@ -503,7 +503,7 @@ function bindFuncs_pt1() {
 	
 	// Bind the "Home page" button to its callback
 	document.getElementById('plzhome').addEventListener('click', function(e) {
-		window.location = window.location.origin;
+		window.location = window.location.origin + window.location.pathname;
 	});
 	
 	// Bind the "Abandon" button from the abandon modal to its callback
