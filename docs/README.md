@@ -8,6 +8,11 @@
 
 <br/>
 
+> [!IMPORTANT]
+> You can view the **LIST OF DECKS** by language by [CLICKING HERE](https://github.com/PhilJbt/Verlis/wiki)
+
+<br/>
+
 ## Rules
 
 - Once a day (the countdown is visible in the menu), a new verb to guess is chosen at random from a list of <strong>12,164</strong>;
@@ -21,12 +26,6 @@
 	- <strong>$${\color{#ff9c00}4 &#9670; 2}$$</strong> would mean that the <strong>first four</strong> and <strong>last two</strong> letters of the word are similar.<br/>
 	- Again, in French, diacritics do not affect the count.<br/>
 	- You can enable these hints in the <strong><em>Options</em></strong> menu.
-
-<br/>
-
-## List of Decks
-
-You can view the list of decks by language by [clicking here](https://github.com/PhilJbt/Verlis/wiki).
 
 <br/>
 
@@ -46,7 +45,7 @@ You can view the list of decks by language by [clicking here](https://github.com
 
 > [!NOTE]
 > __THIRD PARTY CREDITS__\
-> Made with &#10084; by [&ulcorner;Phil&lrcorner;](https://github.com/PhilJbt)
+> Made with &#10084; by [&ulcorner;Phil&lrcorner;](https://github.com/PhilJbt)\
 > Framework [&ulcorner;Bulma&lrcorner;](https://bulma.io)\
 > Framework extension (tooltips) [&ulcorner;CreativeBulma&lrcorner;](https://bulma-tooltip.netlify.app/get-started/)\
 > Framework extension (colored radios) [&ulcorner;Wikiki&lrcorner;](https://wikiki.github.io/form/checkradio/)\
