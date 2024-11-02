@@ -4,7 +4,7 @@
 
 <br/>
 
-<p align="center"><a href="https://philjbt.github.io/Verlis/" target="_self"><img src="btn_play.png" width="200"  alt="Screencast" /></a></p>
+<p align="center"><a href="https://philjbt.github.io/Verlis/" target="_self"><img src="btn_play.png" alt="Play button" /></a></p>
 
 <br/>
 
