@@ -16,14 +16,13 @@ body {
 * Fonts
 */
 @font-face {
-  font-family: "NotoEmojiFlags";
-  src: URL("../fnt/NotoColorEmoji-flagsonly.ttf") format("truetype");
-	unicode-range: U+1F1E6-U+1F1FF;
+  font-family: "OpenMoji";
+  src: URL("../fnt/OpenMoji-color-glyf_colr_0.ttf") format("truetype");
+	unicode-range: 1F3F4-E0063-E0061-E0071-E0063-E007F;
 }
 @font-face {
   font-family: "NotoSans";
   src: URL("../fnt/NotoSans.ttf") format("truetype");
-	unicode-range: U+0000-1F1E5, U+1F200-10FFFF;
 }
 
 /**
@@ -182,7 +181,7 @@ input::placeholder {
 	display: flex;
 	
   flex-direction: row;
-  flex-wrap: nowrap;
+  flex-wrap: wrap;
   align-content: flex-start;
   justify-content: flex-start;
   align-items: flex-end;
@@ -208,11 +207,14 @@ input::placeholder {
 	border-radius: 0px;
   border-right: none;
   border-left: none;
-	font-family: NotoEmojiFlags, NotoSans;
+	font-family: NotoSans, OpenMoji;
 }
 
 #selector-menu {
-	font-family: NotoEmojiFlags, NotoSans;
+	font-family: NotoSans, OpenMoji;
+}
+#selector-menu > .dropdown-content:not(:has(*)) {
+	display: none;
 }
 
 #run-set {
@@ -221,15 +223,28 @@ input::placeholder {
 
 #slct-lang {
 	border-radius: 6px 0px 0px 6px;
-	font-family: NotoEmojiFlags, NotoSans;
+	font-family: NotoSans, OpenMoji;
 }
+
+.tag-flag {
+	font-family: NotoSans, OpenMoji;
+}
+
+.control.multilines {
+  white-space: normal;
+	width: 100%;
+	background-color: #4258ff;
+  padding: 10px;
+  border-radius: 6px;
+  color: #f5f6ff;
+}
+
 
 
 /**
 * Words lists
 */
 word, .word {
-	text-transform: capitalize;
 	user-select: all;
 	cursor: pointer;
 }
@@ -361,7 +376,7 @@ button[i18n] i {
   padding-right: 5px;
 }
 
-button[data-target="mdl-link"] {
+#plzhome {
 	display: none;
 }
 

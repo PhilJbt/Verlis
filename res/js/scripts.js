@@ -44,14 +44,14 @@ async function init() {
 	window.vl_verblist = {};
 	window.vl_i18n = {};
 	window.vl_listSelection = null;
-	window.vl_dictName = '';
+	window.vl_dictName = null;
 	window.vl_dictNfos = null;
 	window.vl_alphabetProcessing = false;
 	
 	// Remove any text from the user input text (some browser cache it)
 	document.getElementById('inp-usr').value = '';
 	
-	// Uncheck any checked by the cache of the browser
+	// Uncheck any checked checkbox by the cache of the browser
 	const arrLettersChecked = document.querySelectorAll('input[type="checkbox"][name="cb_alphabet"]:checked');
 	arrLettersChecked.forEach(e => {
 		e.checked = false;
@@ -67,10 +67,16 @@ async function init() {
 	// Load stored user's options
 	optionsLoad();
 	
+	// Lang (deck selector)
+	let lang = window.vl_options['langue'];
+	if (lang.length === 2)
+		lang = `${lang.toLowerCase()}-${lang.toUpperCase()}`;
+	document.getElementById('slct-lang').value = lang;
+	
 	progressBar(20);
 	
 	// Retrieve the ui localization
-	await fetchWithProgress(`res/json/loca/${window.vl_options['langue']}.json`, i18n_ui, [20, 55]);
+	await fetchWithProgress(`res/cmpr/loca/${window.vl_options['langue']}.cmpr`, i18n_ui, [20, 55]);
 	
 	progressBar(55);
 	
@@ -89,15 +95,119 @@ async function init() {
 }
 
 /**
+* Used by the deck selector on the selection deck page to transformed
+* an item of the dropdown list to the selector-infos
+* @param {html node|string} _elem - The html dropdown element of a deck, or the information of a deck
+* @param {bool} _isString - Does the elem comes from bulma (true) or is manually given when the search url arg is provided (false)
+*/
+function fromDropdownToInfos(_elem, _isString = true) {
+	let data = null;
+	if (_isString)
+		data = JSON.parse(_elem.value);
+	else
+		data = _elem;
+		
+	difClr = '';
+	difNam = '';
+	difDsc = '';
+	
+	// Labels' colors
+	switch(data.diff) {
+		case 0:
+			difClr = 'success';
+			difNam = 'Easy';
+			difDsc = window.vl_i18n['js_setdiff0'];
+			break;
+		case 1:
+			difClr = 'warning';
+			difNam = 'Moderate';
+			difDsc = window.vl_i18n['js_setdiff1'];
+			break;
+		case 2:
+			difClr = 'danger';
+			difNam = 'Hard';
+			difDsc = window.vl_i18n['js_setdiff2'];
+			break;
+	}
+	
+	// Append all languages targeted by the deck
+	const arrLangCode = {
+		'xx-XX': '&#127760;',
+		'de-DE': '&#127465;&#127466;',
+		'da-DK': '&#127465;&#127472;',
+		'en-US': '&#127482;&#127480;',
+		'en-UK': '&#127468;&#127463;',
+		'es-ES': '&#127466;&#127480;',
+		'fr-CA': '&#127988;&#917603;&#917601;&#917617;&#917603;&#917631;',
+		'fr-FR': '&#127467;&#127479;',
+		'it-IT': '&#127470;&#127481;',
+		'hu-HU': '&#127469;&#127482;',
+		'nl-NL': '&#127475;&#127473;',
+		'nb-NO': '&#127475;&#127476;',
+		'pt-BR': '&#127463;&#127479;',
+		'pt-PT': '&#127477;&#127481;',
+		'ro-RO': '&#127479;&#127476;',
+		'fi-FI': '&#127467;&#127470;',
+		'sv-SE': '&#127480;&#127466;',
+		'vi-VN': '&#127483;&#127475;',
+		'cs-CZ': '&#127464;&#127487;',
+		'el-GR': '&#127468;&#127479;',
+		'ru-RU': '&#127479;&#127482;',
+		'uk-UA': '&#127482;&#127462;',
+		'th-TH': '&#127481;&#127469;'
+	};
+	let frag_lang = '';
+	for (let lang of data.lang)
+		frag_lang += arrLangCode[lang];
+	
+	// Forging html the frag
+	const selectLang = document.getElementById("selector-infos");
+	selectLang.innerHTML =
+		`<div class="control">
+			<div class="tags has-addons are-medium">
+				<span class="tag is-dark">${window.vl_i18n['js_setdiff']}</span>
+				<span class="tag is-${difClr}">${difDsc}</span>
+			</div>
+		</div>
+		<div class="control">
+			<div class="tags has-addons are-medium">
+				<span class="tag is-dark">${window.vl_i18n['js_setnmbr']}</span>
+				<span class="tag is-info">${data.nmbr.toLocaleString(window.vl_options['langue'])}</span>
+			</div>
+		</div>
+		<div class="control">
+			<div class="tags has-addons are-medium">
+				<span class="tag is-dark">${window.vl_i18n['js_clue']}</span>
+				<span class="tag is-${data.clue ? 'white' : 'black'}">${data.clue ? window.vl_i18n['js_clueyes'] : window.vl_i18n['js_clueno']}</span>
+			</div>
+		</div>
+		<div class="control">
+			<div class="tags has-addons are-medium">
+				<span class="tag is-dark">${window.vl_i18n['languages']}</span>
+				<span class="tag tag-flag">${frag_lang}</span>
+			</div>
+		</div>`;
+		
+	// Append the note to the html fragment
+	if (data['note'])
+		selectLang.innerHTML += `<div class="control content is-small multilines">${data['note']}</div>`;
+	
+	// Populate the description div with the html fragment
+	selectLang.style.animation = 'none';
+	selectLang.offsetHeight;
+	selectLang.style.animation = null;
+}
+
+/**
 * Initialize the dictionary selector
 */
 async function dictSelect_init() {
 	// Retrieve the list of dictionaries
-	await fetchWithProgress('res/json/deck/_index.json', dictSelect_show, [65, 100]);
+	await fetchWithProgress('res/cmpr/deck/_index.cmpr', dictSelect_show, [65, 100]);
 	
 	// Load the list of dictionaries
 	var api = function(inputValue) {
-		const inputValueLower = inputValue.toLowerCase().replaceAll('\u2506', '').trim().replace(/[ ]{2,}/gi, ' ').split(' ');
+		const arrWordsUser = inputValue.toLowerCase().replaceAll('\u2506', '').trim().replace(/[ ]{2,}/gi, ' ').split(' ');
 		
 		return new Promise(function(resolve) {
 			document.getElementById('selector').classList.remove('is-danger');
@@ -106,41 +216,33 @@ async function dictSelect_init() {
 		})
 		// Filter decks whose name matches with user text input
 		.then(function(decks) {
-			return decks.filter(function(deck) {
-				if (typeof(deck.name) === 'string') {
-					return inputValueLower.filter(word => deck.name.toLowerCase().split(' ').includes(word)).length === inputValueLower.length;
-				}
-				else {
-					return Object.entries(deck.name).filter(function(elem) {
-						return inputValueLower.filter(word => elem[1].toLowerCase().split(' ').includes(word)).length == inputValueLower.length;
-					}).length > 0;
-				}
+			const decksLangFilter = decks.filter(function(deck) {
+				return Object.entries(deck.lang).filter(function(elem) {
+					return (elem.includes(document.getElementById('slct-lang').value)
+					|| elem.includes('xx-XX'));
+				}).length > 0;
+			});
+
+			return decksLangFilter.filter(function(deck) {
+				return Object.entries(deck.name).filter(function(elem) {
+					return arrWordsUser.filter(word => elem[1].toLowerCase().split(' ').includes(word)).length == arrWordsUser.length;
+				}).length > 0;
 			})
 		})
 		// Return best name match, prioritize user language
 		.then(function(filtered) {
 			return filtered.map(function(elem) {
-				if (typeof(elem.name) === 'string') {
-					return {
-						label: elem.name,
-						value: JSON.stringify(elem)
-					}
-				}
-				else {
-					const userLangISO2 = window.vl_options['langue'].substr(0, 2);
-					const arrFitLang = Object.entries(elem.name).filter(trans =>
-						inputValueLower.some(word => trans[1].toLowerCase().split(' ').includes(word))
-					);
-					
-					const dctFitLang = arrFitLang.reduce((acc, _, i) => {
-						acc[arrFitLang[i][0]] = arrFitLang[i][1];
-						return acc;
-					}, {});
-					
-					return {
-						label: (dctFitLang[userLangISO2] || dctFitLang['xx'] || Object.entries(dctFitLang)[0][1]),
-						value: JSON.stringify(elem)
-					}
+				const userLangISO2 = window.vl_options['langue'].substr(0, 2);
+				
+				let slctrValue =  {...elem['slct']};
+				if (slctrValue['note'] !== undefined)
+					slctrValue['note'] = (slctrValue['note'][userLangISO2] || slctrValue['note']['xx'] || Object.entries(slctrValue['note'])[0]);
+				
+				slctrValue['lang'] = elem['lang'];
+				
+				return {
+					label: (elem['name'][userLangISO2] || elem['name']['xx'] || Object.entries(elem['name'])[0][1]),
+					value: JSON.stringify(slctrValue)
 				}
 			})
 		})
@@ -151,72 +253,7 @@ async function dictSelect_init() {
 	};
 
 	var onSelect = function(elem) {
-		const data = JSON.parse(elem.value);
-		
-		difClr = '';
-		difNam = '';
-		difDsc = '';
-		
-		// Labels' colors
-		switch(data.diff) {
-			case 0:
-				difClr = 'success';
-				difNam = 'Easy';
-				difDsc = window.vl_i18n['js_setdiff0'];
-				break;
-			case 1:
-				difClr = 'warning';
-				difNam = 'Moderate';
-				difDsc = window.vl_i18n['js_setdiff1'];
-				break;
-			case 2:
-				difClr = 'danger';
-				difNam = 'Hard';
-				difDsc = window.vl_i18n['js_setdiff2'];
-				break;
-		}
-		
-		// Forging html the frag
-		let frag = 
-			`<div class="control">
-				<div class="tags has-addons are-medium">
-					<span class="tag is-dark">${window.vl_i18n['js_setdiff']}</span>
-					<span class="tag is-${difClr}">${difDsc}</span>
-				</div>
-			</div>
-			<div class="control">
-				<div class="tags has-addons are-medium">
-					<span class="tag is-dark">${window.vl_i18n['js_setnmbr']}</span>
-					<span class="tag is-info">${data.nmbr.toLocaleString(window.vl_options['langue'])}</span>
-				</div>
-			</div>
-			<div class="control">
-				<div class="tags has-addons are-medium">
-					<span class="tag is-dark">${window.vl_i18n['js_clue']}</span>
-					<span class="tag is-${data.clue ? 'white' : 'black'}">${data.clue ? window.vl_i18n['js_clueyes'] : window.vl_i18n['js_clueno']}</span>
-				</div>
-			</div>`;
-			
-		// Append the note to the html fragment
-		if (data['note']) {
-			// Retrieve ISO Code 2 user language
-			const userLangISO2 = window.vl_options['langue'].substr(0, 2);
-			// If a note exists in the current language, or by default in global english
-			const note = data['note'][userLangISO2] || data['note']['xx'] || undefined;
-				frag +=
-				`<div class="control">
-					<div class="tags has-addons are-medium">
-						<span class="tag is-link">${note}</span>
-					</div>
-				</div>`;
-		}
-			
-		// Populate the description div with the html fragment
-		const selectLang = document.getElementById("selector-infos");
-		selectLang.innerHTML = frag;
-		selectLang.style.animation = 'none';
-		selectLang.offsetHeight;
-		selectLang.style.animation = null;
+		fromDropdownToInfos(elem);
 	};
 	
 	// Init the selector text input
@@ -228,7 +265,7 @@ async function dictSelect_init() {
 * @param {blob} _blob - The data retrieved
 */
 async function dictSelect_show(_blob) {
-	window.vl_listSelection = JSON.parse(JSON.parse(JSON.stringify(await _blob.text())));
+	window.vl_listSelection = await _blob;
 	
 	// If the dict is given, populate the dict selector, then empty it (cache)
 	let dictName = (new URLSearchParams(window.location.search)).get('deck') || '';
@@ -269,7 +306,26 @@ async function dictSelect_show(_blob) {
 	if (dictName === ''
 	&& prefill !== '') {
 		document.getElementById('selector').value = prefill;
-		document.getElementById('selector').focus();
+		
+		const langUser = window.vl_options['langue'].substr(0, 2);
+		const arrFound = window.vl_listSelection.filter(function(elem) {
+			const dictName = elem.name[langUser] || elem.name['xx'] || Object.entries(elem.name)[0];
+			return dictName === decodeURIComponent(prefill);
+		});
+		
+		if (arrFound.length === 0)
+			document.getElementById('selector').focus();
+		else {
+			const deckNote = arrFound[0].slct.note[langUser] || arrFound[0].slct.note['xx'] || Object.entries(arrFound[0].slct.note)[0];
+			const deckInfos = {
+				'lang': arrFound[0].lang,
+				'diff': arrFound[0].slct.diff,
+				'nmbr': arrFound[0].slct.nmbr,
+				'clue': arrFound[0].slct.clue,
+				'note': deckNote
+			};
+			fromDropdownToInfos(deckInfos, false);
+		}
 	}
 }
 
@@ -287,7 +343,7 @@ async function fetchWithProgress(_file, _onFinished, _arrMinMax = [0, 100]) {
 		progressBar(val);
 	}).then(response => response.blob()) // response to binary blob
 		.then(blob => {
-			_onFinished(blob);
+			_onFinished(blob.vl_decompress());
 		})
 		.catch(console.error);
 }
@@ -338,15 +394,17 @@ async function fetchWithProgress_(_url, _onProgress) {
 */
 async function loadDict() {
 	// Retrieve the user dict choice
-	const userChoice = document.getElementById('selector').value;
-	// Check if this name exists in the index.json
+	const userChoice = document.getElementById('selector').value.toLowerCase();
+	// Check if this name exists in the index.cmpr
 	const arrFound = window.vl_listSelection.filter(function(dict) {
 		if (typeof(dict.name) === 'string') {
+			const dictName = dict.name.toLowerCase();
 			return dict.name === userChoice
 		}
 		else {
 			return Object.entries(dict.name).filter(function(elem) {
-				return elem[1] === userChoice
+				const dictName = elem[1].toLowerCase();
+				return dictName === userChoice
 			}).length > 0
 		}
 	});
@@ -366,12 +424,7 @@ async function loadDict() {
 	window.vl_dictNfos = arrFound[0];
 	
 	// Set the set title to the nav
-	document.getElementById('set-title').innerHTML = userChoice.substr(userChoice.indexOf('\u2506') + 2);
-	
-	// Fill the copy link text input with the set url
-	document.getElementById('inp-link').value = `${window.location.origin+window.location.pathname}?deck=${arrFound[0].dict}`;
-	// And make its modal trigger button visible
-	document.querySelector('button[data-target="mdl-link"]').style.display = 'flex';
+	document.getElementById('set-title').innerHTML = userChoice.substr(userChoice.indexOf('\u2506') + 1);
 	
 	// Hide the selector modal
 	document.getElementById('selector-container').style.display = 'none';
@@ -381,7 +434,7 @@ async function loadDict() {
 	progressBar(true);
 	
 	// Retrieve the dict
-	await fetchWithProgress(`res/json/deck/${arrFound[0].dict}.json`, retrieveDict, [0, 100]);
+	await fetchWithProgress(`res/cmpr/deck/${arrFound[0].dict}.cmpr`, retrieveDict, [0, 100]);
 }
 
 /**
@@ -391,6 +444,9 @@ function loadDict_end() {
 	// Show the menu button and the alphabet
 	document.getElementsByTagName('nav')[0].style.visibility = 'visible';
 	document.getElementsByClassName('alphabet')[0].style.visibility = 'visible';
+	
+	// Show the "Home page" menu button
+	document.getElementById('plzhome').style.display = 'flex';
 	
 	// Show the navbar
 	document.getElementsByClassName('level')[0].classList.remove('minimal');
@@ -425,16 +481,6 @@ function loadDict_end() {
 * Bind listeners to their callbacks (part 1)
 */
 function bindFuncs_pt1() {
-	// Bind the selector lang dropdown menu to its callback
-	document.getElementById('slct-lang').addEventListener('change', e => {
-		const langSearch = e.srcElement.value;
-		
-		document.getElementById('slct-lang').value = 'none';
-		
-		document.getElementById('selector').value = langSearch;
-		document.getElementById('selector').focus();
-	});
-	
 	// Bind the "Abandon" button from the menu to its callback
 	document.getElementById('plzstahp').addEventListener('click', function(e) {
 		if (window.vl_finished !== true)
@@ -455,9 +501,14 @@ function bindFuncs_pt1() {
 		document.getElementById('btn-copylink-txt').innerHTML = window.vl_i18n['js_linkcopied'];
 	});
 	
+	// Bind the "Home page" button to its callback
+	document.getElementById('plzhome').addEventListener('click', function(e) {
+		window.location = window.location.origin;
+	});
+	
 	// Bind the "Abandon" button from the abandon modal to its callback
 	document.getElementById('btn-abandon').addEventListener('click', function(e) {
-		gameEnd(false);
+		gameEnd('a');
 	});
 	
 	// Bind the "Save" options button from the options modal to its callback
@@ -521,6 +572,28 @@ function bindFuncs_pt1() {
 		}
 	});
 	
+	// Add function to decompress distant cmpr
+	Blob.prototype.vl_decompress = async function () {
+    // Convert Blob to ArrayBuffer
+    const arrayBuffer = await this.arrayBuffer();
+    
+    // Convert ArrayBuffer to Uint8Array
+    const bytes = new Uint8Array(arrayBuffer);
+
+    // Decompress using GZIP in the browser
+    const base64Encoded = await new Response(new Blob([bytes], { type: 'application/gzip' }))
+			.arrayBuffer()
+			.then(buffer => new TextDecoder('utf-8').decode(buffer));
+		
+		// Decode from Base64
+		const gzipCompressed = Uint8Array.from(atob(base64Encoded), c => c.charCodeAt(0));
+		
+    // Decompress GZIP
+    const decompressed = pako.ungzip(gzipCompressed, { to: 'string' });
+
+    return JSON.parse(decompressed);
+	};
+	
 	// Add function to reverse a string
 	String.prototype.vl_reverse = function (char) {
 		var arrSlitted = this.split("");
@@ -557,7 +630,8 @@ function bindFuncs_pt1() {
 	
 	// Normalize special characters encoding
 	String.prototype.vl_normalize = function (char) {
-		return this.toLowerCase().normalize("NFKC");
+		//return this.toLowerCase().normalize("NFKC");
+		return this.toLowerCase().normalize("NFC");
 	};
 	
 	// Compare strings, take into account language specificities
@@ -687,7 +761,7 @@ function getLang() {
 * @param {blob} _blob - The data retrieved
 */
 async function i18n_ui(_blob) {
-	window.vl_i18n = JSON.parse(JSON.parse(JSON.stringify(await _blob.text())));
+	window.vl_i18n = await _blob;
 	
 	// Determine word (day) ID
 	document.getElementById('day-id').innerHTML = `${window.vl_i18n['js_dayid']}${getWordID()}`;
@@ -738,8 +812,12 @@ async function i18n_ui(_blob) {
 * @param {blob} _blob - The data retrieved
 */
 async function retrieveDict(_blob) {
-	window.vl_verblist = await JSON.parse(JSON.parse(JSON.stringify(await _blob.text())));
+	window.vl_verblist = await _blob;
 	
+	for (let i = 0; i < window.vl_verblist.length; ++i)
+		if (window.vl_verblist[i].r !== undefined)
+			window.vl_verblist[i].r = new RegExp(`^${window.vl_verblist[i].r}$`, 'i');
+
 	// Choose a word from the list
 	pickWord();
 	
@@ -767,7 +845,7 @@ function optionsLoad() {
 		// Ranking
 		document.getElementById(`rad-ranking-${opt['ranking']}`).checked = true;
 		
-		// Language
+		// Lang (options)
 		document.querySelector(`.rad-lng input[type="radio"][value="${opt['langue']}"]`).checked = true;
 	}
 	else {
@@ -831,62 +909,54 @@ function applyWordAfterStyle() {
 * The dictionary has an n-ary tree shape, so the function randomly chooses a character and navigates under that branch.
 */
 function pickWord() {
-	// Final word when every characters have been picked
-	let strWord = '';
 	// Set the current branch of the n-ary tree to its root
-	let currBranch = window.vl_verblist['words'];
-	// Added offset to seed, increased when going throw a new branch
-	let iAdd = Object.keys(currBranch).length * 5;
-	// 
-	let bRun = true;
+	let currBranch = window.vl_verblist;
+	// Pick a random number with the current day (independently of the time zone) as seed.
+	// Pay attention, the rand lib uses included min and max.
+	const randNbr = getRandom().randomInteger(1, Object.keys(currBranch).length) - 1;
+
+	// Get the random picked element
+	const elemPicked = currBranch[randNbr];
 	
-	// Move deeper into the tree until the bottom has been reach
-	while(bRun) {
-		// Pick a random number with the current day (independently of the time zone) as seed.
-		// Pay attention, the rand lib uses included min and max.
-		const iRand = getRandom(iAdd).randomInteger(1, Object.keys(currBranch).length) - 1;
-		iAdd += Object.keys(currBranch).length * 3;
-		
-		// Get the character associated with the random picked number
-		const cChar = Object.keys(currBranch)[iRand];
-		
-		// If no end of a word has been reached...
-		// Note: In the tree, words end with an ACK character. This is useful to determine if the user tries an existing word.
-		if (cChar.charCodeAt() !== 6) {
-			// ... append the picked character to the reste of the word.
-			strWord += cChar.toLowerCase();
-			
-			// Move to the branch corresponding to the picked character
-			currBranch = currBranch[cChar];
-		}
-		else {
-			const clueUid = currBranch[cChar];
-			if (window.vl_verblist['clues'][clueUid] !== undefined) {
-				if (window.vl_verblist['clues'][clueUid].indexOf('data:image/jpeg;base64,/') === 0)
-					document.getElementById('clue-content').innerHTML = `<img src="${window.vl_verblist['clues'][clueUid]}" />`;
-				else if (window.vl_verblist['clues'][clueUid].indexOf('data:audio/mpeg;base64,/') === 0)
-					document.getElementById('clue-content').innerHTML = `<audio controls="controls" autobuffer="autobuffer"><source src="${window.vl_verblist['clues'][clueUid]}" /></audio>`;
-				else
-					document.getElementById('clue-content').innerHTML = `<p>${window.vl_verblist['clues'][clueUid]}</p>`;
-			
-				document.getElementById('plzclue').removeAttribute('disabled');
-			}
-			
-			bRun = false;
-			
-			// Store the chosen word uid and relativerly hide the word
-			window.vl_nswr = [currBranch[cChar], obfus(strWord)];
-		}
-	};
+	// Populate the Clue modal
+	if (elemPicked.c !== undefined) {
+		if (elemPicked.c.indexOf('data:image/jpeg;base64,/') === 0)
+			document.getElementById('clue-content').innerHTML = `<img src="${elemPicked.c}" />`;
+		else if (elemPicked.c.indexOf('data:audio/mpeg;base64,/') === 0)
+			document.getElementById('clue-content').innerHTML = `<audio controls="controls" autobuffer="autobuffer"><source src="${elemPicked.c}" /></audio>`;
+		else
+			document.getElementById('clue-content').innerHTML = `<p>${elemPicked.c}</p>`;
+
+		document.getElementById('plzclue').removeAttribute('disabled');
+	}
+	
+	// Release memory of other useless clues
+	for (let i = 0; i < currBranch.length; ++i)
+		currBranch[i].c = null;
+	
+	// Store the infos of the chosen word
+	window.vl_nswr = randNbr;
 }
 
 /**
 * Get a random number.
-* @param {number} _add - Offset to add to the seed (today's epoch) to randomize each visited branch of the dictionary
 * @return {number} Who knows
 */
-function getRandom(_add) {
-	return (new Randomizer({ rng : 'MersenneTwister', seed : ((getDailyIntWithTimezone() + 7891235) + _add)}));
+function getRandom() {
+	return (new Randomizer({ rng : 'CombinedMultipleRecursive', seed : (getDailyIntWithTimezone() + 7891235)}));
+}
+
+/**
+* Check if the given word exists in the dictionary, and if it is the picked one.
+* @param {string} _wordUser - The user given word
+* @param {regex|string} _compareTo - The string to compare, or the regex to test
+* @return {bool} Does the user given word is corresponding to the word from the deck
+*/
+function checkWord_isSame(_wordUser, _compareTo) {
+	if (_compareTo.r !== undefined)
+		return _compareTo.r.test(_wordUser);
+	else
+		return _wordUser === _compareTo.s;
 }
 
 /**
@@ -896,12 +966,12 @@ function getRandom(_add) {
 function checkWord() {
 	// Get the HTML user text input
 	const inputUser = document.getElementById('inp-usr');
-	// Get the user given word
-	// Convert the user word to lowercase (but keep diacritic, used to check if the word exists, and if it is equal to the the picked word)
-	// Convert the user word to non-diacritic string (used to determine if the picked word is alphabetically placed before or after)
-	const wordUser = inputUser.value.vl_normalize();
+	
 	// Store the tried word
-	window.vl_lastTry = wordUser;
+	window.vl_lastTry = inputUser.value;
+	
+	// Get the user given word, prepare it to comparison
+	const wordUser = inputUser.value.replaceAll(' ', '').toLowerCase().vl_normalize();
 	
 	// If the word string is empty
 	if (wordUser.length === 0
@@ -909,54 +979,37 @@ function checkWord() {
 	|| !checkWord_Beg())
 		// Stop the process
 		return;
-	
+
+
 	/*
-	** DOES THE WORD EXIST?
+	** CHECK THE WORD STATUS
 	*/
-	// Set the current branch of the tree to its root
-	let branchCurr = window.vl_verblist['words'];
-	let wordNotFound = false;
-	
-	// For each character of the given word
-	[...wordUser].forEach(e => {
-		// From the current character, a word exists with the next given character
-		if (branchCurr[e] !== undefined)
-			// Enter the branch corresponding to the given character
-			branchCurr = branchCurr[e];
-		// The next given character does not match any known word
-		else {
-			// Remember the word does not exist
-			wordNotFound = true;
-			// Do not process remaining characters
-			return;
+	let wordUserOfficialWriting = null;
+	// Initialize the proposition status
+	// -2: default and does not exists, -1: win, \d+: exists
+	let foundStatusOrID = -2;
+	// Get the answer, using the vl_verblist entry and the answer word uid
+	const nswr = window.vl_verblist[window.vl_nswr];
+	// Does the word given is the picked one of the day
+	if (checkWord_isSame(wordUser, nswr)) {
+		foundStatusOrID = -1;
+	}
+	// Does the word exists in the deck
+	else {
+		for (let i = 0; i < window.vl_verblist.length; ++i) {
+			if (checkWord_isSame(wordUser, window.vl_verblist[i])) {
+				foundStatusOrID = i;
+				wordUserOfficialWriting = window.vl_verblist[i].o;
+				i = window.vl_verblist.length;
+			}
 		}
-	});
-	
-	/*
-	** WORD ALREADY TRIED
-	*/
-	// The user already tried this word
-	if (window.vl_tried[branchCurr['\x06']] !== undefined) {
-		// Assign the "already tried" animation to this word in the DOM
-		const selectLang = document.querySelector(`.word[word-uid="${branchCurr['\x06']}"]`);
-		if (selectLang !== null) {
-			selectLang.style.animation = 'none';
-			selectLang.offsetHeight;
-			selectLang.style.animation = null;
-		}
-		
-		// Flush the user input text
-		inputUser.value = '';
-		// Revert the "Essayer" button, and update the word processing status
-		checkWord_End();
-		
-		return;
 	}
 	
-	// The word does not match any known word
-	if (wordNotFound === true
-	// or the user gave an unfinished word
-	|| branchCurr['\x06'] === undefined) {
+	/*
+	** WORD RESULT PROCESSING
+	*/
+	// The word does not match any known word or the user gave an unfinished word
+	if (foundStatusOrID === -2) {
 		// Apply the corresponding style to the user text input
 		inputUser.classList.add('is-danger');
 		// Show the user text input warning icon
@@ -970,114 +1023,155 @@ function checkWord() {
 		if (window.vl_timeInit === null)
 			// Store the start time
 			window.vl_timeInit = Math.floor(Date.now() / 1000);
+			
+		// Flush the user input text
+		inputUser.value = '';
+			
+		/*
+		** WORD ALREADY TRIED
+		*/
+		// The user already tried this word
+		if (window.vl_tried[foundStatusOrID] !== undefined) {
+			// Assign the "already tried" animation to this word in the DOM
+			const alreadyTriedWordNode = document.querySelector(`.word[word-uid="${foundStatusOrID}"]`);
+			if (alreadyTriedWordNode !== null) {
+				// Add the highlight animation class to the word HTML node.
+				// When the game is resumed, this class is not applied to any bulk pushed word.
+				if (!alreadyTriedWordNode.classList.contains('highlight'))
+					alreadyTriedWordNode.classList.add('highlight');
+				alreadyTriedWordNode.style.animation = 'none';
+				alreadyTriedWordNode.offsetHeight;
+				alreadyTriedWordNode.style.animation = null;
+			}
+			
+			// Revert the "Essayer" button, and update the word processing status
+			checkWord_End();
+			
+			return;
+		}
+		// The user did not try this existing word yet
+		else {
+			// Store information that this given word has been tried
+			if (foundStatusOrID !== -1)
+				window.vl_tried[foundStatusOrID] = true;
+		}
 		
+		/*
+		** WORD PROCESSING
+		*/
 		// Increment the number of tries
 		document.getElementById('nav-try').innerHTML = (++window.vl_tryCount).toString();
 		
-		// Flush the user input text
-		inputUser.value = '';
-	
 		// The word given matches the picked one
-		if (window.vl_nswr[0] === branchCurr['\x06'])
+		if (foundStatusOrID === -1)
 			// End the game
-			gameEnd(true);
+			gameEnd('w');
 		// The given word does not match the picked one
-		else {
-			// Deobfuscate the picked word
-			const strDeobf = deobf(window.vl_nswr[1]);
-			// Remove any diacritic from the given word (necessary to compare words alphabetically)
-			const ag_nswrLoc = wordUser.vl_normalize();
-			// Does the given word is alphabetically placed before or after the picked one
-			const givenIsBeforePicked = (ag_nswrLoc.vl_compare(strDeobf) < 0);
-			// Get the corresponding tried words list in the DOM
-			let wordListNode = document.getElementById((givenIsBeforePicked ? 'ag-words-before' : 'ag-words-after'));
-			
-			// Create a Html fragment for the given word
-			let frag = document.createElement('div');
-			frag.classList.add('word');
-			frag.classList.add('highlight');
-			frag.setAttribute('word-uid', branchCurr['\x06']);
-			frag.innerHTML = wordUser;
-			// Add the clue according to the number of identical letters at the beginning and end
-			const countSameBeg = countEquality(strDeobf, ag_nswrLoc, false);
-			const countSameEnd = countEquality(strDeobf, ag_nswrLoc, true);
-			
-			if (countSameBeg === 0 && countSameEnd === 0)
-				frag.setAttribute('data-nfo', '\u25c7');
-			else if (countSameBeg !== 0 && countSameEnd !== 0)
-				frag.setAttribute('data-nfo', `${countSameBeg} \u25c6 ${countSameEnd}`);
-			else if (countSameBeg !== 0)
-				frag.setAttribute('data-nfo', `${countSameBeg} \u2b16`);
-			else if (countSameEnd !== 0)
-				frag.setAttribute('data-nfo', `\u2b17 ${countSameEnd}`);
-			
-			// Try to insert the given word alphabetically into its place in the list
-			let insertDone = false;
-			// The list has children
-			if (wordListNode.childElementCount > 0) {
-				// Iterate over all children IDs
-				for (let i = 0; i < wordListNode.childElementCount; ++i) {
-					// Get the children corresponding to this ID
-					const div = wordListNode.childNodes[i];
-				
-					// If the given word is placed before the current one
-					if (ag_nswrLoc.vl_compare(div.innerText.vl_normalize()) <= 0) {
-						// Insert the Html fragment of the given word before the current word
-						wordListNode.insertBefore(frag, div);
-						// Store the information that the given word already has been added to the list
-						insertDone = true;
-						// Stop iterating over the list
-						i = wordListNode.childElementCount;
-					}	
-				}
-			}
-			
-			// The list has no children,
-			// or the given word did not fit before any already tried word
-			if (!insertDone)
-				// Append the Html fragment to the end of the list
-				wordListNode.appendChild(frag);
-			
-			// Store information that this given word has been tried
-			window.vl_tried[branchCurr['\x06']] = true;
-			
-			/*
-			** REMOVE OVERFLOWING WORDS
-			*/
-			// If the current list is the "before" one
-			if (givenIsBeforePicked) {
-				wordListNode.childNodes.forEach(div => {
-					// Check if the iterated word is placed above the top of the window
-					if (div.getBoundingClientRect().y < 0)
-						// Remove the currently iterated word
-						div.remove();
-					// The farer word from the center of the screen is not above the top of the window
-					else
-						// Stop iterating over the list
-						return;
-				});
-			}
-			// If the current list is the "after" one
-			else {
-				Array.from(wordListNode.childNodes).slice().reverse().forEach(div => {
-					// Check if the iterated word is placed below the bottom of the window
-					if (div.getBoundingClientRect().y > window.innerHeight)
-						// Remove the currently iterated word
-						div.remove();
-					// The farer word from the center of the screen is not below the bottom of the window
-					else
-						// Stop iterating over the list
-						return;
-				});
-			}
-			
-			// Apply the corresponding style to word::after
-			applyWordAfterStyle();
-		}
+		else
+			insertWord(nswr.o, foundStatusOrID);
 	}
+	
+	// Save the game progress
+	gameSaveState();
 	
 	// Revert the "Essayer" button, and update the word processing status
 	checkWord_End();
+}
+
+/**
+* Insert a word in the before or after html node
+* @param {string} _nswr - Expected answer
+* @param {number} _wuid - Given word uid
+*/
+function insertWord(_nswr, _wuid, _anim = true) {
+	// Convert any diacritic from the official writing given word (necessary to compare words alphabetically)
+	const nswrCleaned = _nswr.replaceAll(' ', '').toLowerCase().vl_normalize();
+	// Convert any diacritic from the expected word (necessary to compare words alphabetically)
+	const userCleaned = window.vl_verblist[_wuid].o.replaceAll(' ', '').toLowerCase().vl_normalize();
+	// Does the given word is alphabetically placed before or after the picked one
+	const givenIsBeforePicked = (userCleaned.vl_compare(nswrCleaned) < 0);
+	// Get the corresponding tried words list in the DOM
+	let wordListNode = document.getElementById(givenIsBeforePicked ? 'ag-words-before' : 'ag-words-after');
+	
+	// Create a Html fragment for the given word
+	let frag = document.createElement('div');
+	frag.classList.add('word');
+	if (_anim)
+		frag.classList.add('highlight');
+	frag.setAttribute('word-uid', _wuid);
+	frag.innerHTML = window.vl_verblist[_wuid].o;
+	// Add the clue according to the number of identical letters at the beginning and end
+	const countSameBeg = countEquality(nswrCleaned, userCleaned, false);
+	const countSameEnd = countEquality(nswrCleaned, userCleaned, true);
+	
+	if (countSameBeg === 0 && countSameEnd === 0)
+		frag.setAttribute('data-nfo', '\u25c7');
+	else if (countSameBeg !== 0 && countSameEnd !== 0)
+		frag.setAttribute('data-nfo', `${countSameBeg} \u25c6 ${countSameEnd}`);
+	else if (countSameBeg !== 0)
+		frag.setAttribute('data-nfo', `${countSameBeg} \u2b16`);
+	else if (countSameEnd !== 0)
+		frag.setAttribute('data-nfo', `\u2b17 ${countSameEnd}`);
+	
+	// Try to insert the given word alphabetically into its place in the list
+	let insertDone = false;
+	// The list has children
+	if (wordListNode.childElementCount > 0) {
+		// Iterate over all children IDs
+		for (let i = 0; i < wordListNode.childElementCount; ++i) {
+			// Get the children corresponding to this ID
+			const div = wordListNode.childNodes[i];
+		
+			// If the given word is placed before the current one
+			if (userCleaned.vl_compare(div.innerText.vl_normalize()) <= 0) {
+				// Insert the Html fragment of the given word before the current word
+				wordListNode.insertBefore(frag, div);
+				// Store the information that the given word already has been added to the list
+				insertDone = true;
+				// Stop iterating over the list
+				i = wordListNode.childElementCount;
+			}	
+		}
+	}
+	
+	// The list has no children,
+	// or the given word did not fit before any already tried word
+	if (!insertDone)
+		// Append the Html fragment to the end of the list
+		wordListNode.appendChild(frag);
+	
+	/*
+	** REMOVE OVERFLOWING WORDS
+	*/
+	// If the current list is the "before" one
+	if (givenIsBeforePicked) {
+		wordListNode.childNodes.forEach(div => {
+			// Check if the iterated word is placed above the top of the window
+			if (div.getBoundingClientRect().y < 0)
+				// Remove the currently iterated word
+				div.remove();
+			// The farer word from the center of the screen is not above the top of the window
+			else
+				// Stop iterating over the list
+				return;
+		});
+	}
+	// If the current list is the "after" one
+	else {
+		Array.from(wordListNode.childNodes).slice().reverse().forEach(div => {
+			// Check if the iterated word is placed below the bottom of the window
+			if (div.getBoundingClientRect().y > window.innerHeight)
+				// Remove the currently iterated word
+				div.remove();
+			// The farer word from the center of the screen is not below the bottom of the window
+			else
+				// Stop iterating over the list
+				return;
+		});
+	}
+	
+	// Apply the corresponding style to word::after
+	applyWordAfterStyle();
 }
 
 /**
@@ -1154,22 +1248,40 @@ function countEquality(_user, _picked, _reverse) {
 }
 
 /**
+* Save game progress
+*/
+function gameSaveState() {
+	localStorage.setItem(
+		`lf_${window.vl_dictName}`,
+		JSON.stringify({
+			day: getDailyIntWithTimezone(),
+			type: 'p',
+			tries: window.vl_tryCount.toString(),
+			time: window.vl_timeInit,
+			tried: JSON.stringify(window.vl_tried)
+		})
+	);
+}
+
+/**
 * End game processing
-* @param {bool} _success - Does the user won
+* @param {char} _state - 'w' for Win, 'a' for Abandoned, 'p' for InProgress
 * @param {bool} _save - Does the results needs to be saved in the local storage (it depends on if this function is called when the user win/abandon, or when the game loads the last game infos)
 */
-function gameEnd(_success, _save = true) {
+function gameEnd(_state, _save = true) {
 	// Save the result
-	if (_save === true)
+	if (_save === true) {
 		localStorage.setItem(
 			`lf_${window.vl_dictName}`,
 			JSON.stringify({
 				day: getDailyIntWithTimezone(),
-				type: _success,
+				type: _state,
 				tries: window.vl_tryCount.toString(),
-				time: document.getElementById('nav-tim').innerText
+				time: document.getElementById('nav-tim').innerText,
+				tried: JSON.stringify(window.vl_tried)
 			})
 		);
+	}
 	
 	// Forbid any word/game processing
 	window.vl_finished = true;
@@ -1178,16 +1290,9 @@ function gameEnd(_success, _save = true) {
 	document.getElementById('plzstahp').classList.add('has-text-danger-dark');
 	
 	// Determine the hero color
-	const clr = _success ? 'success' : 'danger';
-	// Deobfuscate the picked word
-	let strDeobf = deobf(window.vl_nswr[1]);
+	const clr = _state === 'w' ? 'success' : 'danger';
 	
-	// Depending on the type, change the text transform
-	switch (window.vl_dictNfos['type']) {
-		case 'name':
-			strDeobf = strDeobf.vl_capitalize();
-			break;
-	}
+	const nswr = window.vl_verblist[window.vl_nswr];
 	
 	// Set the quick search url if provided for this deck
 	let fragQuickSearch = null;
@@ -1195,7 +1300,7 @@ function gameEnd(_success, _save = true) {
 		const userLangISO2 = window.vl_options['langue'].substr(0, 2);
 		fragQuickSearch = 
 		`<p>
-			<a href="${(window.vl_dictNfos['urls'][userLangISO2] || window.vl_dictNfos['urls']['xx']).replace('~#:LV_INSERT:#~', encodeURIComponent(strDeobf))}" target="_blank" class="button is-${clr} is-inverted">
+			<a href="${(window.vl_dictNfos['urls'][userLangISO2] || window.vl_dictNfos['urls']['xx']).replace('~#:LV_INSERT:#~', encodeURIComponent(nswr.o))}" target="_blank" class="button is-${clr} is-inverted">
 				<span>${window.vl_i18n['js_search']}</span>
 				<span class="icon is-small">
 					<i class="fa-solid fa-up-right-from-square"></i>
@@ -1209,8 +1314,8 @@ function gameEnd(_success, _save = true) {
 	`<section class="hero is-small is-${clr}">
 		<div class="hero-body">
 			<div>
-				<p class="title">${_success ? window.vl_i18n['js_win'] : window.vl_i18n['js_abandon']}</p>
-				<p class="subtitle">${window.vl_i18n['js_verbwas'].replace('%VERBID%', getWordID())} : &#171; <word><b>${strDeobf}</b></word> &#187;</p>
+				<p class="title">${_state === 'w' ? window.vl_i18n['js_win'] : window.vl_i18n['js_abandon']}</p>
+				<p class="subtitle">${window.vl_i18n['js_verbwas'].replace('%VERBID%', getWordID())} : &#171; <word><b>${nswr.o}</b></word> &#187;</p>
 			</div>
 			${fragQuickSearch ?? ''}
 		</div>
@@ -1228,12 +1333,36 @@ function checkLastFinish() {
 	if (lastFinished.type !== 'none'
 	// and the stored game is the current one
 	&& lastFinished.day === getDailyIntWithTimezone()) {
-		// Stop the game and show the picked word
-		gameEnd(lastFinished.type, false);
-		// Display the number of tries
-		document.getElementById('nav-try').innerHTML = lastFinished.tries;
-		// Display the timer
-		document.getElementById('nav-tim').innerHTML = lastFinished.time;
+		// Load the tried words list
+		window.vl_tried = JSON.parse(lastFinished['tried']);
+		// Push the tried words in the HTML DOM
+		for (wordUid in window.vl_tried) {
+			const word = window.vl_verblist[wordUid];
+			// Push each tried words in the already tried list
+			window.vl_tried[wordUid] = true;
+			// Insert each word in the HTML DOM
+			insertWord(window.vl_verblist[window.vl_nswr].o, wordUid, false);
+		}
+		
+		// If the last game has been Won or Abandoned
+		if (lastFinished.type === 'w'
+		|| lastFinished.type === 'a') {
+			// Stop the game and show the picked word
+			gameEnd(lastFinished.type, false);
+			// Display the number of tries
+			document.getElementById('nav-try').innerHTML = lastFinished.tries;
+			// Display the timer
+			document.getElementById('nav-tim').innerHTML = lastFinished.time;
+		}
+		// Game is still running
+		else if (lastFinished.type === 'p') {
+			// Load the number of tries
+			window.vl_tryCount = parseInt(lastFinished['tries']);
+			document.getElementById('nav-try').innerHTML = lastFinished['tries'];
+			// Load the epoch time the game started
+			window.vl_timeInit = lastFinished['time'];
+		}
+		
 	}
 }
 
@@ -1370,7 +1499,17 @@ function initBulma() {
   // Functions to open and close a modal
   function openModal($el) {
 		if ($el.id === 'mdl-options')
+			// Load options
+			// Useful when the user changed options but cliked on "cancel"
 			optionsLoad();
+		else if ($el.id === 'mdl-link')
+			if (window.vl_dictName)
+				// Fill the copy link text input with the url of the deck
+				document.getElementById('inp-link').value = `${window.location.origin+window.location.pathname}?deck=${encodeURIComponent(window.vl_dictName)}`;
+			else
+				// Fill the copy link text input with the url of the current search
+				document.getElementById('inp-link').value = `${window.location.origin+window.location.pathname}?search=${encodeURIComponent(document.getElementById('selector').value)}`;
+	
     $el.classList.add('is-active');
   }
 

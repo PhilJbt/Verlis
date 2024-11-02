@@ -6,7 +6,7 @@
 		<meta name="robots" content="noindex,nofollow">
 		<link rel="icon" type="image/png" href="res/img/favicon.png" />
 		<link rel="stylesheet" href="res/dep/fontawesome-f6.6.0w/css/all.min.css" />
-		<link rel="stylesheet" href="res/dep/bulma/css/bulma.min.css">
+		<link rel="stylesheet" href="res/dep/bulma/bulma.min.css">
 		<link rel="stylesheet" href="res/dep/bulma-tooltip/bulma-tooltip.min.css">
 		<link rel="stylesheet" href="res/dep/bulma-checkradio/bulma-checkradio.min.css">
 		<link rel="stylesheet" href="res/css/styles.css">
@@ -279,6 +279,15 @@
 								</div>
 								<!-- Menu Dropdown Divider -->
 								<hr class="dropdown-divider" />
+								<!-- Menu Dropdown Modal Home -->
+								<button class="dropdown-item" id="plzhome">
+									<span class="icon-text">
+										<span class="icon">
+											<i class="fas fa-home"></i>
+										</span>
+										<span i18n="ih_home"></span>
+									</span>
+								</button>
 								<!-- Menu Dropdown Modal Help -->
 								<button class="dropdown-item has-text-info js-modal-trigger" data-target="mdl-infos">
 									<span class="icon-text">
@@ -326,15 +335,6 @@
 								</button>
 								<!-- Menu Dropdown Divider -->
 								<hr class="dropdown-divider" />
-								<!-- Menu Dropdown Version -->
-								<div class="dropdown-item item-next">
-									<span class="icon-text has-text-grey">
-										<span class="icon">
-											<i class="fas fa-code-commit"></i>
-										</span>
-										<span i18n="ih_version"></span><span>24.1023</span>
-									</span>
-								</div>
 								<!-- Menu Dropdown Contact -->
 								<a href="mailto:philjbt@ik.me" class="dropdown-item">
 									<span class="icon-text">
@@ -361,29 +361,28 @@
 							<p class="control patoush">
 								<span class="select">
 									<select id="slct-lang">
-										<option value="none" selected="selected" style="display:none" disabled="true" i18n="ih_slctlangsearch">...</option>
-										<option value="&#127760;" i18n="ah_slctlangglobal">&#127760; </option>
-										<option value="&#127465;&#127466;">&#127465;&#127466; Deutsch</option>
-										<option value="&#127465;&#127472;">&#127465;&#127472; Dänisch</option>
-										<option value="&#127482;&#127480;">&#127482;&#127480; English (USA)</option>
-										<option value="&#127468;&#127463;">&#127468;&#127463; English (United Kingdom)</option>
-										<option value="&#127466;&#127480;">&#127466;&#127480; Español</option>
-										<option value="&#127467;&#127479;">&#127467;&#127479; Français</option>
-										<option value="&#127470;&#127481;">&#127470;&#127481; Italiano</option>
-										<option value="&#127469;&#127482;">&#127469;&#127482; Magyar</option>
-										<option value="&#127475;&#127473;">&#127475;&#127473; Nederlands</option>
-										<option value="&#127475;&#127476;">&#127475;&#127476; Norsk</option>
-										<option value="&#127463;&#127479;">&#127463;&#127479; Português (Brasil)</option>
-										<option value="&#127477;&#127481;">&#127477;&#127481; Português (Portugal)</option>
-										<option value="&#127479;&#127476;">&#127479;&#127476; Română</option>
-										<option value="&#127467;&#127470;">&#127467;&#127470; Suomalainen</option>
-										<option value="&#127480;&#127466;">&#127480;&#127466; Svenska</option>
-										<option value="&#127483;&#127475;">&#127483;&#127475; Tiếng Việt</option>
-										<option value="&#127464;&#127487;">&#127464;&#127487; Čeština</option>
-										<option value="&#127468;&#127479;">&#127468;&#127479; Ελληνικά</option>
-										<option value="&#127479;&#127482;">&#127479;&#127482; Русский</option>
-										<option value="&#127482;&#127462;">&#127482;&#127462; Українська</option>
-										<option value="&#127481;&#127469;">&#127481;&#127469; แบบไทย</option>
+										<option value="de-DE">&#127465;&#127466; Deutsch</option>
+										<option value="da-DK">&#127465;&#127472; Dänisch</option>
+										<option value="en-US">&#127482;&#127480; English (USA)</option>
+										<option value="en-UK">&#127468;&#127463; English (United Kingdom)</option>
+										<option value="es-ES">&#127466;&#127480; Español</option>
+										<option value="fr-CA">&#127988;&#917603;&#917601;&#917617;&#917603;&#917631; Français (Québec)</option>
+										<option value="fr-FR">&#127467;&#127479; Français (France)</option>
+										<option value="it-IT">&#127470;&#127481; Italiano</option>
+										<option value="hu-HU">&#127469;&#127482; Magyar</option>
+										<option value="nl-NL">&#127475;&#127473; Nederlands</option>
+										<option value="nb-NO">&#127475;&#127476; Norsk</option>
+										<option value="pt-BR">&#127463;&#127479; Português (Brasil)</option>
+										<option value="pt-PT">&#127477;&#127481; Português (Portugal)</option>
+										<option value="ro-RO">&#127479;&#127476; Română</option>
+										<option value="fi-FI">&#127467;&#127470; Suomalainen</option>
+										<option value="sv-SE">&#127480;&#127466; Svenska</option>
+										<option value="vi-VN">&#127483;&#127475; Tiếng Việt</option>
+										<option value="cs-CZ">&#127464;&#127487; Čeština</option>
+										<option value="el-GR">&#127468;&#127479; Ελληνικά</option>
+										<option value="ru-RU">&#127479;&#127482; Русский</option>
+										<option value="uk-UA">&#127482;&#127462; Українська</option>
+										<option value="th-TH">&#127481;&#127469; แบบไทย</option>
 									</select>
 								</span>
 							</p>
@@ -438,6 +437,7 @@
 			<!-- Alphabet -->
 			<div class="alphabet patoush" i18n="ac_alphabet"></div>
 		</div>
+		<script src="res/dep/pako.js"></script>
 		<script src="res/dep/bulma-autocomplete/bulmahead.bundle.js"></script>
 		<script src="res/dep/randomizer.js"></script>
 		<script src="res/js/scripts.js"></script>
