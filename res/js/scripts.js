@@ -1072,7 +1072,8 @@ function checkWord() {
 	}
 	
 	// Save the game progress
-	gameSaveState();
+	if (foundStatusOrID !== -1)
+		gameSaveState();
 	
 	// Revert the "Essayer" button, and update the word processing status
 	checkWord_End();
