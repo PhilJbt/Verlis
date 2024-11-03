@@ -357,6 +357,10 @@ word, .word {
 /**
 * Navbar
 */
+#set-title {
+	text-transform: capitalize;
+}
+
 nav {
 	display: flex;
   width: 50vw;
@@ -386,7 +390,7 @@ a.dropdown-item, *.dropdown-item {
 }
 
 /**
-* menu
+* Menu
 */
 #plzstahp[disabled] {
 	cursor: no-drop;
