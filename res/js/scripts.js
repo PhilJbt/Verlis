@@ -1086,11 +1086,12 @@ function checkWord() {
 */
 function insertWord(_nswr, _wuid, _anim = true) {
 	// Convert any diacritic from the official writing given word (necessary to compare words alphabetically)
-	const nswrCleaned = _nswr.replaceAll(' ', '').toLowerCase().vl_normalize();
+	const nswrClnNoSp = _nswr.replaceAll(' ', '').toLowerCase().vl_normalize();
 	// Convert any diacritic from the expected word (necessary to compare words alphabetically)
-	const userCleaned = window.vl_verblist[_wuid].o.replaceAll(' ', '').toLowerCase().vl_normalize();
+	const userCleaned = window.vl_verblist[_wuid].o.toLowerCase().vl_normalize();
+	const userClnNoSp = userCleaned.replaceAll(' ', '');
 	// Does the given word is alphabetically placed before or after the picked one
-	const givenIsBeforePicked = (userCleaned.vl_compare(nswrCleaned) < 0);
+	const givenIsBeforePicked = (userClnNoSp.vl_compare(nswrClnNoSp) < 0);
 	// Get the corresponding tried words list in the DOM
 	let wordListNode = document.getElementById(givenIsBeforePicked ? 'ag-words-before' : 'ag-words-after');
 	
@@ -1102,8 +1103,8 @@ function insertWord(_nswr, _wuid, _anim = true) {
 	frag.setAttribute('word-uid', _wuid);
 	frag.innerHTML = window.vl_verblist[_wuid].o;
 	// Add the clue according to the number of identical letters at the beginning and end
-	const countSameBeg = countEquality(nswrCleaned, userCleaned, false);
-	const countSameEnd = countEquality(nswrCleaned, userCleaned, true);
+	const countSameBeg = countEquality(nswrClnNoSp, userClnNoSp, false);
+	const countSameEnd = countEquality(nswrClnNoSp, userClnNoSp, true);
 	
 	if (countSameBeg === 0 && countSameEnd === 0)
 		frag.setAttribute('data-nfo', '\u25c7');
