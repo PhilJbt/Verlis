@@ -8,7 +8,7 @@
 
 <br/>
 
-<a href="https://youtu.be/4C6_A_8q3dc" target="_blank"><img src="screencast.gif" alt="Screencast" /></a>
+<a href="https://youtu.be/cTWxSOpX5Lw" target="_blank"><img src="screencast.gif" alt="Screencast" /></a>
 
 <br/>
 
