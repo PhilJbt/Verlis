@@ -280,7 +280,7 @@ async function dictSelect_show(_blob) {
 				document.getElementById('selector').value = arrFound[0].name;
 			else {
 				const userLangISO2 = window.vl_options['langue'].substr(0, 2);
-				document.getElementById('selector').value = arrFound[0].name[userLangISO2];
+				document.getElementById('selector').value = arrFound[0].name[userLangISO2] || arrFound[0].name['xx'];
 			}
 		
 			loadDict();
