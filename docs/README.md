@@ -8,7 +8,7 @@
 
 <br/>
 
-<a href="https://youtu.be/cTWxSOpX5Lw" target="_blank"><img src="screencast.gif" alt="Screencast" /></a>
+<a href="https://youtu.be/elseVWbaJKM" target="_blank"><img src="screencast.gif" alt="Screencast" /></a>
 
 <br/>
 
@@ -57,3 +57,4 @@
 > Flags [&ulcorner;HatScripts&lrcorner;](https://github.com/HatScripts/circle-flags)\
 > Font [&ulcorner;NotoSand&lrcorner;](https://github.com/notofonts)\
 > Font (flags) [&ulcorner;Open Moji&lrcorner;](https://openmoji.org)
+> Font (logo) [&ulcorner;Dense&lrcorner;](https://www.dafontfree.io/dense-font-free/)
