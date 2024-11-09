@@ -245,8 +245,8 @@ async function dictSelect_init() {
 				const userLangISO2 = window.vl_options['langue'].substr(0, 2);
 				
 				let slctrValue =  {...elem['slct']};
-				if (slctrValue['note'] !== undefined)
-					slctrValue['note'] = (slctrValue['note'][userLangISO2] || slctrValue['note']['xx'] || Object.entries(slctrValue['note'])[0]);
+				if (elem['note'] !== undefined)
+					slctrValue['note'] = (elem['note'][userLangISO2] || elem['note']['xx'] || Object.entries(elem['note'])[0]);
 				
 				slctrValue['lang'] = elem['lang'];
 				
