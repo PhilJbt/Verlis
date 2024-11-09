@@ -87,9 +87,6 @@ async function init() {
 	
 	progressBar(65);
 	
-	// Show the welcome message
-	welcomeMessage();
-	
 	// Show the dictionnary selector modal
 	dictSelect_init();
 }
