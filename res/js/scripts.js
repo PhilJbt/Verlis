@@ -92,9 +92,6 @@ async function init() {
 	
 	// Show the dictionnary selector modal
 	dictSelect_init();
-	
-	// Show the welcome message
-	welcomeMessage();
 }
 
 /**
@@ -274,6 +271,9 @@ async function dictSelect_init() {
 	
 	// Init the selector text input
 	await bulmahead('selector', 'selector-menu', api, onSelect, 0, 0);
+	
+	// Show the welcome message
+	welcomeMessage();
 }
 
 /**
