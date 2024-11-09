@@ -87,8 +87,24 @@ async function init() {
 	
 	progressBar(65);
 	
+	// Show the welcome message
+	welcomeMessage();
+	
 	// Show the dictionnary selector modal
 	dictSelect_init();
+	
+	// Show the welcome message
+	welcomeMessage();
+}
+
+/**
+* Show help window on first visit
+*/
+function welcomeMessage() {
+	if (localStorage.getItem('wcm') !== 'true') {
+		document.getElementById('mdl-infos').classList.add('is-active');
+		localStorage.setItem('wcm', 'true');
+	}
 }
 
 /**

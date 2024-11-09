@@ -166,6 +166,19 @@ input::placeholder {
 #inp-set-dsc, #inp-usr-icn , #inp-usr-dsc {
 	visibility: hidden;
 }
+#inp-set-dsc {
+  width: 50%;
+  display: inline-block;
+}
+#inp-get-lst {
+  width: fit-content;
+  display: inline-block;
+  text-align: right;
+  float: right;
+}
+#inp-get-lst:hover {
+	text-decoration: underline;
+}
 .is-visible {
 	visibility: visible !important;
 }
