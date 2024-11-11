@@ -437,7 +437,8 @@ async function loadDict() {
 	window.vl_dictNfos = arrFound[0];
 	
 	// Set the set title to the nav
-	document.getElementById('set-title').innerHTML = userChoice.substr(userChoice.indexOf('\u2506') + 1);
+	const userLangISO2 = window.vl_options['langue'].substr(0, 2);
+	document.getElementById('set-title').innerHTML = arrFound[0].name[userLangISO2] || arrFound[0].name['xx'] || Object.entries(arrFound[0].name)[0][1];
 	
 	// Hide the selector modal
 	document.getElementById('selector-container').style.display = 'none';
@@ -1099,12 +1100,11 @@ function checkWord() {
 */
 function insertWord(_nswr, _wuid, _anim = true) {
 	// Convert any diacritic from the official writing given word (necessary to compare words alphabetically)
-	const nswrClnNoSp = _nswr.replaceAll(' ', '').toLowerCase().vl_normalize();
+	const nswrClnNoSp = _nswr.toLowerCase().vl_normalize();
 	// Convert any diacritic from the expected word (necessary to compare words alphabetically)
 	const userCleaned = window.vl_verblist[_wuid].o.toLowerCase().vl_normalize();
-	const userClnNoSp = userCleaned.replaceAll(' ', '');
 	// Does the given word is alphabetically placed before or after the picked one
-	const givenIsBeforePicked = (userClnNoSp.vl_compare(nswrClnNoSp) < 0);
+	const givenIsBeforePicked = (userCleaned.vl_compare(nswrClnNoSp) < 0);
 	// Get the corresponding tried words list in the DOM
 	let wordListNode = document.getElementById(givenIsBeforePicked ? 'ag-words-before' : 'ag-words-after');
 	
@@ -1116,8 +1116,8 @@ function insertWord(_nswr, _wuid, _anim = true) {
 	frag.setAttribute('word-uid', _wuid);
 	frag.innerHTML = window.vl_verblist[_wuid].o;
 	// Add the clue according to the number of identical letters at the beginning and end
-	const countSameBeg = countEquality(nswrClnNoSp, userClnNoSp, false);
-	const countSameEnd = countEquality(nswrClnNoSp, userClnNoSp, true);
+	const countSameBeg = countEquality(nswrClnNoSp, userCleaned, false);
+	const countSameEnd = countEquality(nswrClnNoSp, userCleaned, true);
 	
 	if (countSameBeg === 0 && countSameEnd === 0)
 		frag.setAttribute('data-nfo', '\u25c7');
@@ -1125,7 +1125,7 @@ function insertWord(_nswr, _wuid, _anim = true) {
 		frag.setAttribute('data-nfo', `${countSameBeg} \u25c6 ${countSameEnd}`);
 	else if (countSameBeg !== 0)
 		frag.setAttribute('data-nfo', `${countSameBeg} \u2b16`);
-	else if (countSameEnd !== 0)
+	else
 		frag.setAttribute('data-nfo', `\u2b17 ${countSameEnd}`);
 	
 	// Try to insert the given word alphabetically into its place in the list
@@ -1235,23 +1235,21 @@ function checkWord_End() {
 */
 function countEquality(_user, _picked, _reverse) {
 	// Determine the number of character to check
-	let user = _user.vl_normalize();
-	let pick = _picked.vl_normalize();
-	let len = Math.max(user.length, pick.length);
+	let len = Math.max(_user.length, _picked.length);
 	
 	// Reverse strings in case the first difference to found is from the end
 	if (_reverse) {
-		user = user.vl_reverse();
-		pick = pick.vl_reverse();
+		_user = _user.vl_reverse();
+		_picked = _picked.vl_reverse();
 	}
 	
-	pick = pick.padEnd(len, '\ufffd');
-	user = user.padEnd(len, '\ufffd');
+	_picked = _picked.padEnd(len, '\ufffd');
+	_user = _user.padEnd(len, '\ufffd');
 	
 	// Return the number of characters when the first difference occurs
 	let iSame = 0;
 	for (let i = 0; i < len; ++i) {
-		if (user[i] === pick[i])
+		if (_user[i].vl_compare(_picked[i]) === 0)
 			++iSame;
 		else
 			return iSame;
