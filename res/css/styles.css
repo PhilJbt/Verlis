@@ -374,10 +374,6 @@ word, .word {
 /**
 * Navbar
 */
-#set-title {
-	text-transform: capitalize;
-}
-
 nav {
 	display: flex;
   width: 50vw;
