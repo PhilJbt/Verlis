@@ -830,7 +830,7 @@ async function retrieveDict(_blob) {
 	
 	for (let i = 0; i < window.vl_verblist.length; ++i)
 		if (window.vl_verblist[i].r !== undefined)
-			window.vl_verblist[i].r = new RegExp(`^${window.vl_verblist[i].r}$`, 'i');
+			window.vl_verblist[i].r = new RegExp(`^(${window.vl_verblist[i].r})$`, 'i');
 
 	// Choose a word from the list
 	pickWord();
