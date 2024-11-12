@@ -402,6 +402,10 @@ a.dropdown-item, *.dropdown-item {
 	cursor: default;
 }
 
+#dropdown-menu {
+	width: max-content;
+}
+
 /**
 * Menu
 */
