@@ -495,3 +495,11 @@ button[i18n] i {
 #btn-copylink-icn {
 	padding-right: 5px;
 }
+
+#mdl-diff .content {
+	display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  justify-content: center;
+  align-items: flex-start;
+}

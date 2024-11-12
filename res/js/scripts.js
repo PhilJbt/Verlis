@@ -47,6 +47,7 @@ async function init() {
 	window.vl_dictName = null;
 	window.vl_dictNfos = null;
 	window.vl_alphabetProcessing = false;
+	window.vl_diff = null;
 	
 	// Remove any text from the user input text (some browser cache it)
 	document.getElementById('inp-usr').value = '';
@@ -113,30 +114,7 @@ function fromDropdownToInfos(_elem, _isString = true) {
 		data = JSON.parse(_elem.value);
 	else
 		data = _elem;
-		
-	difClr = '';
-	difNam = '';
-	difDsc = '';
-	
-	// Labels' colors
-	switch(data.diff) {
-		case 0:
-			difClr = 'success';
-			difNam = 'Easy';
-			difDsc = window.vl_i18n['js_setdiff0'];
-			break;
-		case 1:
-			difClr = 'warning';
-			difNam = 'Moderate';
-			difDsc = window.vl_i18n['js_setdiff1'];
-			break;
-		case 2:
-			difClr = 'danger';
-			difNam = 'Hard';
-			difDsc = window.vl_i18n['js_setdiff2'];
-			break;
-	}
-	
+
 	// Append all languages targeted by the deck
 	const arrLangCode = {
 		'xx-XX': ['&#127760;', 'Universal'],
@@ -172,12 +150,6 @@ function fromDropdownToInfos(_elem, _isString = true) {
 	selectLang.innerHTML =
 		`<div class="control">
 			<div class="tags has-addons are-medium">
-				<span class="tag is-dark">${window.vl_i18n['js_setdiff']}</span>
-				<span class="tag is-${difClr}">${difDsc}</span>
-			</div>
-		</div>
-		<div class="control">
-			<div class="tags has-addons are-medium">
 				<span class="tag is-dark">${window.vl_i18n['js_setnmbr']}</span>
 				<span class="tag is-info">${data.nmbr.toLocaleString(window.vl_options['langue'])}</span>
 			</div>
@@ -201,7 +173,7 @@ function fromDropdownToInfos(_elem, _isString = true) {
 	
 	// Populate the description div with the html fragment
 	selectLang.style.animation = 'none';
-	selectLang.offsetHeight;
+	//selectLang.offsetHeight;
 	selectLang.style.animation = null;
 }
 
@@ -520,6 +492,17 @@ function bindFuncs_pt1() {
 		window.location = window.location.origin + window.location.pathname;
 	});
 	
+	// Bind the difficulty selectors to their callbacks
+	document.getElementById('btn-diff0').addEventListener('click', function(e) {
+		askDiff_proc('\u0011');
+	});
+	document.getElementById('btn-diff1').addEventListener('click', function(e) {
+		askDiff_proc('\u0012');
+	});
+	document.getElementById('btn-diff2').addEventListener('click', function(e) {
+		askDiff_proc('\u0013');
+	});
+	
 	// Bind the "Abandon" button from the abandon modal to its callback
 	document.getElementById('btn-abandon').addEventListener('click', function(e) {
 		gameEnd('a');
@@ -832,12 +815,28 @@ async function retrieveDict(_blob) {
 		if (window.vl_verblist[i].r !== undefined)
 			window.vl_verblist[i].r = new RegExp(`^(${window.vl_verblist[i].r})$`, 'i');
 
-	// Choose a word from the list
-	pickWord();
+	askDiff();
+}
+
+/**
+* Modal window asking the user the level of difficulty
+*/
+function askDiff() {
+	// Show diff selection modal
+	document.getElementById('mdl-diff').classList.add('is-active');
+}
+
+/**
+* Pick the word corresponding to the level of difficulty selected by the user
+*/
+function askDiff_proc(_diffSlct) {
+	pickWord(_diffSlct);
 	
 	loadDict_end();
 	
 	checkLastFinish();
+	
+	document.getElementById('mdl-diff').classList.remove('is-active')
 }
 
 /**
@@ -922,15 +921,19 @@ function applyWordAfterStyle() {
 * This allows the picked word to be the same regardless of user time zone.
 * The dictionary has an n-ary tree shape, so the function randomly chooses a character and navigates under that branch.
 */
-function pickWord() {
-	// Set the current branch of the n-ary tree to its root
-	let currBranch = window.vl_verblist;
+function pickWord(_diffSlct) {
+	// Filter words IDs corresponding to the difficulty selected
+	const arrWords = [];
+	for (let i = 0; i < window.vl_verblist.length; ++i)
+		if (window.vl_verblist[i].d.charCodeAt(0) <= _diffSlct.charCodeAt(0))
+			arrWords.push(i);
+
 	// Pick a random number with the current day (independently of the time zone) as seed.
 	// Pay attention, the rand lib uses included min and max.
-	const randNbr = getRandom().randomInteger(1, Object.keys(currBranch).length) - 1;
+	const randNbr = arrWords[getRandom().randomInteger(1, Object.keys(arrWords).length) - 1];
 
 	// Get the random picked element
-	const elemPicked = currBranch[randNbr];
+	const elemPicked = window.vl_verblist[randNbr];
 	
 	// Populate the Clue modal
 	if (elemPicked.c !== undefined) {
@@ -944,12 +947,13 @@ function pickWord() {
 		document.getElementById('plzclue').removeAttribute('disabled');
 	}
 	
-	// Release memory of other useless clues
-	for (let i = 0; i < currBranch.length; ++i)
-		currBranch[i].c = null;
+	// Release memory now useless clues
+	for (let i = 0; i < window.vl_verblist.length; ++i)
+		window.vl_verblist[i].c = null;
 	
 	// Store the infos of the chosen word
 	window.vl_nswr = randNbr;
+	window.vl_diff = _diffSlct.charCodeAt(0);
 }
 
 /**
@@ -1265,7 +1269,7 @@ function countEquality(_user, _picked, _reverse) {
 */
 function gameSaveState() {
 	localStorage.setItem(
-		`lf_${window.vl_dictName}`,
+		`lf_${window.vl_dictName}_${window.vl_diff}`,
 		JSON.stringify({
 			day: getDailyIntWithTimezone(),
 			type: 'p',
@@ -1285,7 +1289,7 @@ function gameEnd(_state, _save = true) {
 	// Save the result
 	if (_save === true) {
 		localStorage.setItem(
-			`lf_${window.vl_dictName}`,
+			`lf_${window.vl_dictName}_${window.vl_diff}`,
 			JSON.stringify({
 				day: getDailyIntWithTimezone(),
 				type: _state,
@@ -1340,7 +1344,7 @@ function gameEnd(_state, _save = true) {
 */
 function checkLastFinish() {
 	// Retrieve the latest potentially stored game information
-	const lastFinished = JSON.parse(localStorage.getItem(`lf_${window.vl_dictName}`) || '{"day": -1, "type": "none"}');
+	const lastFinished = JSON.parse(localStorage.getItem(`lf_${window.vl_dictName}_${window.vl_diff}`) || '{"day": -1, "type": "none"}');
 	
 	// If the infos are valid,
 	if (lastFinished.type !== 'none'
@@ -1527,7 +1531,8 @@ function initBulma() {
   }
 
   function closeModal($el) {
-		if (($el).id !== 'mdl-selector')
+		if (($el).id !== 'mdl-selector'
+		&& ($el).id !== 'mdl-diff')
 			$el.classList.remove('is-active');
   }
 
