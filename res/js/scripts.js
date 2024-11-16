@@ -171,9 +171,9 @@ function fromDropdownToInfos(_elem, _isString = true) {
 	if (data['note'])
 		selectLang.innerHTML += `<div class="control content is-small multilines">${data['note']}</div>`;
 	
-	// Populate the description div with the html fragment
+	// Reset the animation
 	selectLang.style.animation = 'none';
-	//selectLang.offsetHeight;
+	selectLang.offsetHeight; // Not a mistake, this triggers reflow
 	selectLang.style.animation = null;
 }
 
