@@ -395,54 +395,50 @@
 				<!-- Loading bar -->
 				<progress class="progress is-small is-primary" max="100" value="5" id="loading" style="width:50vw;"></progress>
 				<!-- Selector -->
-				<div id="selector-container" class="width-full">
-					<div class="field width-full">
-						<label class="label patoush" i18n="ih_setselect"></label>
-						<div class="dropdown width-full">
-							<p class="control patoush">
-								<span class="select">
-									<select id="slct-lang">
-										<option value="xx-XX">&#128506; Universal</option>
-										<option value="de-DE">&#127465;&#127466; Deutsch</option>
-										<option value="da-DK">&#127465;&#127472; Dänisch</option>
-										<option value="en-US">&#127482;&#127480; English (USA)</option>
-										<option value="en-UK">&#127468;&#127463; English (United Kingdom)</option>
-										<option value="es-ES">&#127466;&#127480; Español</option>
-										<option value="fr-CA">&#127988;&#917603;&#917601;&#917617;&#917603;&#917631; Français (Québec)</option>
-										<option value="fr-FR">&#127467;&#127479; Français (France)</option>
-										<option value="it-IT">&#127470;&#127481; Italiano</option>
-										<option value="hu-HU">&#127469;&#127482; Magyar</option>
-										<option value="nl-NL">&#127475;&#127473; Nederlands</option>
-										<option value="nb-NO">&#127475;&#127476; Norsk</option>
-										<option value="pt-BR">&#127463;&#127479; Português (Brasil)</option>
-										<option value="pt-PT">&#127477;&#127481; Português (Portugal)</option>
-										<option value="ro-RO">&#127479;&#127476; Română</option>
-										<option value="fi-FI">&#127467;&#127470; Suomalainen</option>
-										<option value="sv-SE">&#127480;&#127466; Svenska</option>
-										<option value="vi-VN">&#127483;&#127475; Tiếng Việt</option>
-										<option value="cs-CZ">&#127464;&#127487; Čeština</option>
-										<option value="el-GR">&#127468;&#127479; Ελληνικά</option>
-										<option value="ru-RU">&#127479;&#127482; Русский</option>
-										<option value="uk-UA">&#127482;&#127462; Українська</option>
-										<option value="th-TH">&#127481;&#127469; แบบไทย</option>
-									</select>
-								</span>
-							</p>
-							<div class="dropdown-trigger width-full">
-								<input id="selector" class="input width-full" type="text" placeholder="" i18n="ph_setwrite" aria-haspopup="true" aria-controls="selector-menu" disabled>
-								<div class="dropdown-menu" id="selector-menu" role="menu"></div>
+				<div id="selector-container" class="patoush">
+					<button id="run-set" class="button is-info is-fullwidth" disabled>
+						<span i18n="ih_setload"></span>
+						<span class="icon is-small">
+							<i class="fa-solid fa-share"></i>
+						</span>
+					</button>
+					<div id="selector-langdeck">
+						<div>
+							<label class="label patoush" i18n="ih_slctlang"></label>
+							<div class="select is-multiple">
+								<select multiple size="4" id="slct-lang">
+									<option value="xx-XX">&#128506; Universal</option>
+									<option value="de-DE">&#127465;&#127466; Deutsch</option>
+									<option value="da-DK">&#127465;&#127472; Dänisch</option>
+									<option value="en-US">&#127482;&#127480; English (USA)</option>
+									<option value="en-UK">&#127468;&#127463; English (United Kingdom)</option>
+									<option value="es-ES">&#127466;&#127480; Español</option>
+									<option value="fr-CA">&#127988;&#917603;&#917601;&#917617;&#917603;&#917631; Français (Québec)</option>
+									<option value="fr-FR">&#127467;&#127479; Français (France)</option>
+									<option value="it-IT">&#127470;&#127481; Italiano</option>
+									<option value="hu-HU">&#127469;&#127482; Magyar</option>
+									<option value="nl-NL">&#127475;&#127473; Nederlands</option>
+									<option value="nb-NO">&#127475;&#127476; Norsk</option>
+									<option value="pt-BR">&#127463;&#127479; Português (Brasil)</option>
+									<option value="pt-PT">&#127477;&#127481; Português (Portugal)</option>
+									<option value="ro-RO">&#127479;&#127476; Română</option>
+									<option value="fi-FI">&#127467;&#127470; Suomalainen</option>
+									<option value="sv-SE">&#127480;&#127466; Svenska</option>
+									<option value="vi-VN">&#127483;&#127475; Tiếng Việt</option>
+									<option value="cs-CZ">&#127464;&#127487; Čeština</option>
+									<option value="el-GR">&#127468;&#127479; Ελληνικά</option>
+									<option value="ru-RU">&#127479;&#127482; Русский</option>
+									<option value="uk-UA">&#127482;&#127462; Українська</option>
+									<option value="th-TH">&#127481;&#127469; แบบไทย</option>
+								</select>
 							</div>
-							<button id="run-set" class="button is-info" disabled>
-								<span i18n="ih_setload"></span>
-								<span class="icon is-small">
-									<i class="fa-solid fa-share"></i>
-								</span>
-							</button>
 						</div>
-						<p id="inp-set-dsc" class="help is-danger patoush" i18n="ih_setwrong"></p>
-						<a id="inp-get-lst" class="help is-link patoush" i18n="ih_decklist" href="https://github.com/PhilJbt/Verlis/wiki" target="_blank"></a>
-						<div id="selector-infos" class="field is-grouped is-grouped-multiline patoush"></div>
+						<div class="width-full">
+							<label class="label width-full" i18n="ih_slctdeck"></label>
+							<div id="slctDeckList" class="control"></div>
+						</div>
 					</div>
+					<div id="selector-infos" class="field is-grouped is-grouped-multiline"></div>
 				</div>
 				<!-- Words -->
 				<div class="ag-input-container">
@@ -481,7 +477,6 @@
 			<div class="alphabet patoush" i18n="ac_alphabet"></div>
 		</div>
 		<script src="res/dep/pako.js"></script>
-		<script src="res/dep/bulma-autocomplete/bulmahead.bundle.js"></script>
 		<script src="res/dep/randomizer.js"></script>
 		<script src="res/js/scripts.js?v=241112"></script>
   </body>

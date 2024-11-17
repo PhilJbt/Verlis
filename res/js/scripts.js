@@ -70,12 +70,6 @@ async function init() {
 	// Bind listeners to their callbacks (part 1)
 	bindFuncs_pt1();
 	
-	// Lang (deck selector)
-	let lang = window.vl_options['langue'];
-	if (lang.length === 2)
-		lang = `${lang.toLowerCase()}-${lang.toUpperCase()}`;
-	document.getElementById('slct-lang').value = lang;
-	
 	progressBar(55);
 	
 	// Init css framework
@@ -88,8 +82,8 @@ async function init() {
 	
 	progressBar(65);
 	
-	// Show the dictionnary selector modal
-	dictSelect_init();
+	// Retrieve and show the list of dictionaries
+	await fetchWithProgress('res/cmpr/deck/_index.cmpr', dictSelect_show, [65, 100]);
 }
 
 /**
@@ -103,18 +97,72 @@ function welcomeMessage() {
 }
 
 /**
+* Auto select the language of the user and xx-XX
+*/
+function slctLang_auto() {
+	const optLangGlobal = document.querySelector('option[value="xx-XX"]');
+	
+	let lang = window.vl_options['langue'];
+	if (lang.length === 2)
+		lang = `${lang.toLowerCase()}-${lang.toUpperCase()}`;
+	if (document.querySelector(`option[value="${lang}"]`)) {
+		// Select user language
+		const optLangCurrent = document.querySelector(`option[value="${lang}"]`);
+		optLangCurrent.selected = true;
+		// Put user language at the bottom of the list
+		optLangCurrent.parentNode.insertBefore(optLangCurrent, optLangGlobal.nextSibling);
+	}
+	optLangGlobal.selected = true;
+}
+
+/**
+* Populate the list of the decks corresponding to the selected languages
+*/
+function slctLang_change() {
+	const selectedLang = Array.from(document.getElementById('slct-lang').options).filter(function (option) {
+		return option.selected;
+	}).map(function (option) {
+		return option.value;
+	});
+
+	document.getElementById('selector-infos').innerHTML = '';
+
+	const currLandIso2 = window.vl_options['langue'].substr(0, 2);
+	document.getElementById('run-set').setAttribute('disabled', '');
+	document.getElementById('slctDeckList').innerHTML = '';
+	window.vl_listSelection.forEach(e => {
+		if (e.lang.some(lang => selectedLang.includes(lang)))
+			document.getElementById('slctDeckList').innerHTML += `
+				<input id="${e.dict}" type="radio" name="slctDeck" onclick="deckNfo()" />
+				<label for="${e.dict}" class="radio radSlcDck">
+				<div class="button is-secondary is-small">
+					${ e.name[Object.keys(e.name).filter(e => e !== 'xx').filter(e => e.includes(currLandIso2))] || e.name['xx'] || (Object.entries(e.name)[0])[1] }
+				</div>
+				</label>`;
+	});
+}
+
+/**
+* Show the info of a deck when clicking on a deck button
+*/
+function deckNfo() {
+	const slctNode = document.querySelector('input[type="radio"][name="slctDeck"]:checked');
+	if (slctNode) {
+		const slctDeck = window.vl_listSelection.filter(e => e.dict.includes(slctNode.id));
+		if (slctDeck.length > 0) {
+			fromDropdownToInfos(slctDeck[0], false);
+			document.getElementById('run-set').removeAttribute('disabled', '');
+		}
+	}
+}
+
+/**
 * Used by the deck selector on the selection deck page to transformed
 * an item of the dropdown list to the selector-infos
 * @param {html node|string} _elem - The html dropdown element of a deck, or the information of a deck
 * @param {bool} _isString - Does the elem comes from bulma (true) or is manually given when the search url arg is provided (false)
 */
-function fromDropdownToInfos(_elem, _isString = true) {
-	let data = null;
-	if (_isString)
-		data = JSON.parse(_elem.value);
-	else
-		data = _elem;
-
+function fromDropdownToInfos(_elem) {
 	// Append all languages targeted by the deck
 	const arrLangCode = {
 		'xx-XX': ['&#127760;', 'Universal'],
@@ -142,7 +190,7 @@ function fromDropdownToInfos(_elem, _isString = true) {
 		'th-TH': ['&#127481;&#127469;', 'แบบไทย']
 	};
 	let frag_lang = '';
-	for (let lang of data.lang)
+	for (let lang of _elem.lang)
 		frag_lang += `<div class="has-tooltip-arrow has-tooltip-info" data-tooltip="${arrLangCode[lang][1]}">${arrLangCode[lang][0]}</div>`;
 	
 	// Forging html the frag
@@ -151,13 +199,13 @@ function fromDropdownToInfos(_elem, _isString = true) {
 		`<div class="control">
 			<div class="tags has-addons are-medium">
 				<span class="tag is-dark">${window.vl_i18n['js_setnmbr']}</span>
-				<span class="tag is-info">${data.nmbr.toLocaleString(window.vl_options['langue'])}</span>
+				<span class="tag is-info">${_elem.slct.nmbr.toLocaleString(window.vl_options['langue'])}</span>
 			</div>
 		</div>
 		<div class="control">
 			<div class="tags has-addons are-medium">
 				<span class="tag is-dark">${window.vl_i18n['js_clue']}</span>
-				<span class="tag is-${data.clue ? 'white' : 'black'}">${data.clue ? window.vl_i18n['js_clueyes'] : window.vl_i18n['js_clueno']}</span>
+				<span class="tag is-${_elem.slct.clue ? 'white' : 'black'}">${_elem.slct.clue ? window.vl_i18n['js_clueyes'] : window.vl_i18n['js_clueno']}</span>
 			</div>
 		</div>
 		<div class="control">
@@ -168,8 +216,14 @@ function fromDropdownToInfos(_elem, _isString = true) {
 		</div>`;
 		
 	// Append the note to the html fragment
-	if (data['note'])
-		selectLang.innerHTML += `<div class="control content is-small multilines">${data['note']}</div>`;
+	if (_elem.slct.note) {
+		const currLandIso2 = window.vl_options['langue'].substr(0, 2);
+		selectLang.innerHTML += `<div class="control content is-small multilines">${
+			_elem.slct.note[Object.keys(_elem.slct.note).filter(e => e !== 'xx').filter(e => e.includes(currLandIso2))]
+			|| _elem.slct.note['xx']
+			|| Object.entries(_elem.slct.note)[0]
+		}</div>`;
+	}
 	
 	// Reset the animation
 	selectLang.style.animation = 'none';
@@ -179,75 +233,11 @@ function fromDropdownToInfos(_elem, _isString = true) {
 
 /**
 * Initialize the dictionary selector
-*/
-async function dictSelect_init() {
-	// Retrieve the list of dictionaries
-	await fetchWithProgress('res/cmpr/deck/_index.cmpr', dictSelect_show, [65, 100]);
-	
-	// Load the list of dictionaries
-	var api = function(inputValue) {
-		const arrWordsUser = inputValue.toLowerCase().replaceAll('\u2506', '').trim().replace(/[ ]{2,}/gi, ' ').split(' ');
-		
-		return new Promise(function(resolve) {
-			document.getElementById('selector').classList.remove('is-danger');
-			document.getElementById('inp-set-dsc').style.visibility = 'hidden';
-			resolve(window.vl_listSelection);
-		})
-		// Filter decks whose name matches with user text input
-		.then(function(decks) {
-			const decksLangFilter = decks.filter(function(deck) {
-				return Object.entries(deck.lang).filter(function(elem) {
-					return (elem.includes(document.getElementById('slct-lang').value)
-					|| elem.includes('xx-XX'));
-				}).length > 0;
-			});
-
-			return decksLangFilter.filter(function(deck) {
-				return Object.entries(deck.name).filter(function(elem) {
-					if (document.getElementById('slct-lang').value.substr(0, 2) !== elem[0]
-					&& elem[0] !== 'xx')
-						return false;
-					return arrWordsUser.filter(word => elem[1].toLowerCase().includes(word)).length == arrWordsUser.length;
-				}).length > 0;
-			});
-		})
-		// Return best name match, prioritize user language
-		.then(function(filtered) {
-			return filtered.map(function(elem) {
-				const userLangISO2 = window.vl_options['langue'].substr(0, 2);
-				
-				let slctrValue =  {...elem['slct']};
-				if (slctrValue.note !== undefined)
-					slctrValue.note = (slctrValue.note[userLangISO2] || slctrValue.note['xx'] || Object.entries(slctrValue.note)[0]);
-				
-				slctrValue['lang'] = elem['lang'];
-				
-				return {
-					label: (elem['name'][userLangISO2] || elem['name']['xx'] || Object.entries(elem['name'])[0][1]),
-					value: JSON.stringify(slctrValue)
-				}
-			})
-		})
-		// Return the 15 first items
-		.then(function(transformed) {
-			return transformed.slice(0, 15)
-		})
-	};
-
-	var onSelect = function(elem) {
-		fromDropdownToInfos(elem);
-	};
-	
-	// Init the selector text input
-	await bulmahead('selector', 'selector-menu', api, onSelect, 0, 0);
-}
-
-/**
-* Initialize the dictionary selector
 * @param {blob} _blob - The data retrieved
 */
 async function dictSelect_show(_blob) {
 	window.vl_listSelection = await _blob;
+	let bLoaded = false;
 	
 	// If the dict is given, populate the dict selector, then empty it (cache)
 	let dictName = (new URLSearchParams(window.location.search)).get('deck') || '';
@@ -258,57 +248,22 @@ async function dictSelect_show(_blob) {
 		
 		// The given dict exists
 		if (arrFound.length > 0) {
-			if (typeof(arrFound[0].name) === 'string')
-				document.getElementById('selector').value = arrFound[0].name;
-			else {
-				const userLangISO2 = window.vl_options['langue'].substr(0, 2);
-				document.getElementById('selector').value = arrFound[0].name[userLangISO2] || arrFound[0].name['xx'];
-			}
-		
-			loadDict();
+			bLoaded = true;
+			loadDict(arrFound[0].dict);
 		}
-		else
-			dictName = '';
 	}
-	else
-		document.getElementById('selector').value = '';
-	
-	document.getElementById('run-set').removeAttribute('disabled');
-	document.getElementById('selector').removeAttribute('disabled');
 	
 	progressBar(false);
 	
+	if (!bLoaded) {
+		slctLang_auto();
+		slctLang_change();
+	}
+
 	document.querySelector('.level.minimal .level-item[type="menu"]').style.visibility = 'visible';
 	
 	// Show the selector modal
 	document.getElementById('selector-container').style.display = 'flex';
-	
-	// If a prefill param is provided
-	const prefill = (new URLSearchParams(window.location.search)).get('search') || '';
-	if (dictName === ''
-	&& prefill !== '') {
-		document.getElementById('selector').value = prefill;
-		
-		const langUser = window.vl_options['langue'].substr(0, 2);
-		const arrFound = window.vl_listSelection.filter(function(elem) {
-			const dictName = elem.name[langUser] || elem.name['xx'] || Object.entries(elem.name)[0];
-			return dictName === decodeURIComponent(prefill);
-		});
-		
-		if (arrFound.length === 0)
-			document.getElementById('selector').focus();
-		else {
-			const deckNote = arrFound[0].slct.note ? (arrFound[0].slct.note[langUser] || arrFound[0].slct.note['xx'] || Object.entries(arrFound[0].slct.note)[0]) : '';
-			const deckInfos = {
-				'lang': arrFound[0].lang,
-				'diff': arrFound[0].slct.diff,
-				'nmbr': arrFound[0].slct.nmbr,
-				'clue': arrFound[0].slct.clue,
-				'note': deckNote
-			};
-			fromDropdownToInfos(deckInfos, false);
-		}
-	}
 	
 	// Show the welcome message
 	welcomeMessage();
@@ -377,56 +332,54 @@ async function fetchWithProgress_(_url, _onProgress) {
 /**
 * Load a dictionary
 */
-async function loadDict() {
-	// Retrieve the user dict choice
-	const userChoice = document.getElementById('selector').value.toLowerCase();
-	// Check if this name exists in the index.cmpr
-	const arrFound = window.vl_listSelection.filter(function(dict) {
-		if (typeof(dict.name) === 'string') {
-			const dictName = dict.name.toLowerCase();
-			return dict.name === userChoice
-		}
-		else {
-			return Object.entries(dict.name).filter(function(elem) {
-				const dictName = elem[1].toLowerCase();
-				return dictName === userChoice
-			}).length > 0
-		}
-	});
+async function loadDict(_urlSelected = null) {
+	let slctDeck = null;
 	
-	// No dict has been found, force exit
-	if (arrFound.length !== 1) {
-		// Indicate the user no dict eixst with this name
-		document.getElementById('selector').classList.add('is-danger');
-		document.getElementById('inp-set-dsc').style.visibility = 'visible';
-		return;
+	if (_urlSelected === null) {
+		// Retrieve the user dict choice
+		const slctNode = document.querySelector('input[type="radio"][name="slctDeck"]:checked');
+		if (!slctNode)
+			return;
+		else
+			slctDeck = slctNode.id;
+
 	}
+	else
+		slctDeck = _urlSelected;
 	
+	slctDeck = window.vl_listSelection.filter(e => e.dict.includes(slctDeck));
+	if (slctDeck.length === 0)
+		return;
+	else
+		slctDeck = slctDeck[0];
+
 	// Store the name of the selected set (load/save func)
-	window.vl_dictName = arrFound[0].dict;
+	window.vl_dictName = slctDeck.dict;
 	
 	// Store the Urls for quick search
-	window.vl_dictNfos = arrFound[0];
+	window.vl_dictNfos = slctDeck;
 	
 	// Set the set title to the nav
 	const userLangISO2 = window.vl_options['langue'].substr(0, 2);
-	document.getElementById('set-title').innerHTML = arrFound[0].name[userLangISO2] || arrFound[0].name['xx'] || Object.entries(arrFound[0].name)[0][1];
+	document.getElementById('set-title').innerHTML = slctDeck.name[userLangISO2] || slctDeck.name['xx'] || Object.entries(slctDeck.name)[0][1];
 	
 	// Hide the selector modal
 	document.getElementById('selector-container').style.display = 'none';
 	
 	// Show the progress bar
-	progressBar(0);
-	progressBar(true);
+	loadDict_end();
 	
 	// Retrieve the dict
-	await fetchWithProgress(`res/cmpr/deck/${arrFound[0].dict}.cmpr`, retrieveDict, [0, 100]);
+	await fetchWithProgress(`res/cmpr/deck/${slctDeck.dict}.cmpr`, retrieveDict, [0, 100]);
 }
 
 /**
 * Show the UI after loading the dictionary
 */
 function loadDict_end() {
+	// Hide progress bar
+	progressBar(false);
+	
 	// Show the menu button and the alphabet
 	document.getElementsByTagName('nav')[0].style.visibility = 'visible';
 	document.getElementsByClassName('alphabet')[0].style.visibility = 'visible';
@@ -442,9 +395,6 @@ function loadDict_end() {
 	
 	// Hide the dict selection inputs
 	document.getElementById('selector-container').style.display = 'none';
-	
-	// Hide progress bar
-	progressBar(false);
 	
 	// Set the inputs visibile
 	if (document.getElementsByClassName('ag-input-container')[0])
@@ -490,6 +440,11 @@ function bindFuncs_pt1() {
 	// Bind the "Home page" button to its callback
 	document.getElementById('plzhome').addEventListener('click', function(e) {
 		window.location = window.location.origin + window.location.pathname;
+	});
+	
+	// Bind the language selector to its callback
+	document.getElementById('slct-lang').addEventListener('change', function(e) {
+		slctLang_change();
 	});
 	
 	// Bind the difficulty selectors to their callbacks
@@ -560,13 +515,6 @@ function bindFuncs_pt1() {
 				// Erase the value of the user text input
 				document.getElementById('inp-usr').value = '';
 		}
-		// If the user text input has focus (set selector)
-		else if (document.activeElement === document.getElementById('selector')) {
-			// Return key is pressed
-			if (keynum == 13)
-				// Load the selected dict
-				loadDict();
-		}
 	});
 	
 	// Add function to decompress distant cmpr
@@ -625,18 +573,21 @@ function bindFuncs_pt1() {
 		}
 	};
 	
+	const arrLangDiacriticOsef = [
+		'fr-BE', 'fr-BF', 'fr-BI', 'fr-BJ', 'fr-BL', 'fr-CA', 'fr-CD', 'fr-CF', 'fr-CG', 'fr-CH', 'fr-CI', 'fr-CM', 'fr-DJ', 'fr-DZ', 'fr-FR', 'fr-GA', 'fr-GF', 'fr-GN', 'fr-GP', 'fr-GQ', 'fr-HT', 'fr-KM', 'fr-LU', 'fr-MA', 'fr-MC', 'fr-MF', 'fr-MG', 'fr-ML', 'fr-MQ', 'fr-MR', 'fr-MU', 'fr-NC', 'fr-NE', 'fr-PF', 'fr-PM', 'fr-RE', 'fr-RW', 'fr-SC', 'fr-SN', 'fr-SY', 'fr-TD', 'fr-TG', 'fr-TN', 'fr-VU', 'fr-WF', 'fr-YT'
+	];
+	
 	// Normalize special characters encoding
 	String.prototype.vl_normalize = function (char) {
-		//return this.toLowerCase().normalize("NFKC");
-		return this.toLowerCase().normalize("NFC");
+		return (
+			arrLangDiacriticOsef.includes(window.vl_options['langue'])
+			? this.normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+			: this
+		).normalize('NFC').toLowerCase();
 	};
 	
 	// Compare strings, take into account language specificities
 	String.prototype.vl_compare = function (_str) {
-		const arrLangDiacriticOsef = [
-			'fr-FR', 'fr-CA'
-		];
-		
 		return (
 			this.localeCompare(
 				_str,
@@ -831,8 +782,6 @@ function askDiff() {
 */
 function askDiff_proc(_diffSlct) {
 	pickWord(_diffSlct);
-	
-	loadDict_end();
 	
 	checkLastFinish();
 	
@@ -1104,11 +1053,11 @@ function checkWord() {
 */
 function insertWord(_nswr, _wuid, _anim = true) {
 	// Convert any diacritic from the official writing given word (necessary to compare words alphabetically)
-	const nswrClnNoSp = _nswr.toLowerCase().vl_normalize();
+	const user = _nswr.toLowerCase().vl_normalize();
 	// Convert any diacritic from the expected word (necessary to compare words alphabetically)
-	const userCleaned = window.vl_verblist[_wuid].o.toLowerCase().vl_normalize();
+	const pick = window.vl_verblist[_wuid].o.toLowerCase().vl_normalize();
 	// Does the given word is alphabetically placed before or after the picked one
-	const givenIsBeforePicked = (userCleaned.vl_compare(nswrClnNoSp) < 0);
+	const givenIsBeforePicked = (pick.vl_compare(user) < 0);
 	// Get the corresponding tried words list in the DOM
 	let wordListNode = document.getElementById(givenIsBeforePicked ? 'ag-words-before' : 'ag-words-after');
 	
@@ -1120,8 +1069,8 @@ function insertWord(_nswr, _wuid, _anim = true) {
 	frag.setAttribute('word-uid', _wuid);
 	frag.innerHTML = window.vl_verblist[_wuid].o;
 	// Add the clue according to the number of identical letters at the beginning and end
-	const countSameBeg = countEquality(nswrClnNoSp, userCleaned, false);
-	const countSameEnd = countEquality(nswrClnNoSp, userCleaned, true);
+	const countSameBeg = countEquality(user, pick, false);
+	const countSameEnd = countEquality(user, pick, true);
 	
 	if (countSameBeg === 0 && countSameEnd === 0)
 		frag.setAttribute('data-nfo', '\u25c7');
@@ -1142,7 +1091,7 @@ function insertWord(_nswr, _wuid, _anim = true) {
 			const div = wordListNode.childNodes[i];
 		
 			// If the given word is placed before the current one
-			if (userCleaned.vl_compare(div.innerText.vl_normalize()) <= 0) {
+			if (pick.vl_compare(div.innerText.vl_normalize()) <= 0) {
 				// Insert the Html fragment of the given word before the current word
 				wordListNode.insertBefore(frag, div);
 				// Store the information that the given word already has been added to the list
