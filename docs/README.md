@@ -48,13 +48,13 @@
 <br/>
 
 > [!NOTE]
+> Made with &#10084; by [Phil](https://github.com/PhilJbt)\
 > __THIRD PARTY CREDITS__\
-> Made with &#10084; by [&ulcorner;Phil&lrcorner;](https://github.com/PhilJbt)\
-> Framework [&ulcorner;Bulma&lrcorner;](https://bulma.io)\
-> Framework extension (tooltips) [&ulcorner;CreativeBulma&lrcorner;](https://bulma-tooltip.netlify.app/get-started/)\
-> Framework extension (colored radios) [&ulcorner;Wikiki&lrcorner;](https://wikiki.github.io/form/checkradio/)\
-> Javascript randomizer [&ulcorner;Brian Ramsay&lrcorner;](https://github.com/BrianRamsay/Randomizer)\
-> Flags [&ulcorner;HatScripts&lrcorner;](https://github.com/HatScripts/circle-flags)\
-> Font [&ulcorner;NotoSand&lrcorner;](https://github.com/notofonts)\
-> Font (flags) [&ulcorner;Open Moji&lrcorner;](https://openmoji.org)\
-> Font (logo) [&ulcorner;Dense&lrcorner;](https://www.dafontfree.io/dense-font-free/)
+> Framework [Bulma](https://bulma.io)\
+> Framework extension (tooltips) [CreativeBulma](https://bulma-tooltip.netlify.app/get-started/)\
+> Framework extension (colored radios) [Wikiki](https://wikiki.github.io/form/checkradio/)\
+> Javascript randomizer [Brian Ramsay](https://github.com/BrianRamsay/Randomizer)\
+> Flags [HatScripts](https://github.com/HatScripts/circle-flags)\
+> Font [NotoSand](https://github.com/notofonts)\
+> Font (flags) [Open Moji](https://openmoji.org)\
+> Font (logo) [Dense](https://www.dafontfree.io/dense-font-free/)
