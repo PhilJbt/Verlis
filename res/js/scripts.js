@@ -414,6 +414,8 @@ function loadDict_end() {
 	
 	// Show the 'getlink' menu button
 	document.querySelector('button[data-target="mdl-link"]').style.display = 'flex';
+	document.querySelector('.container.gui').style.marginTop = 'unset';
+	document.querySelector('.inputs').style.height = '100vh';
 }
 
 /**
@@ -550,13 +552,6 @@ function bindFuncs_pt1() {
 		return arrJoined;
 	};
 	
-	// Add function to capitalize a string
-	String.prototype.vl_capitalize = function (char) {
-		return this.split(' ').map(e => {
-			return e.charAt(0).toUpperCase() + e.substr(1);
-		}).join(' ');
-	};
-
 	// Encode string
 	String.prototype.vl_encode = function (char) {
 		const bytes = new TextEncoder().encode(this);
@@ -1387,23 +1382,6 @@ function displayTime() {
 		// Update the "Next verb" timer
 		document.getElementById('timer-next').innerHTML = `${window.vl_i18n['js_next']} : ${formatTime(Math.floor(getNextVerbTime() / 1000))}`;
 	}
-}
-
-/**
-* Obfuscate a given string to an array of integers
-* @param {string} _str - The given string to obfuscate
-* @return {Object Array} The obfuscated string
-*/
-function obfus(_str) {
-	return _str.split('').map(c => c.charCodeAt(0));
-}
-/**
-* Deobfuscate a given array of integers to a string
-* @param {Object Array} _arr - The given array to deobfuscate
-* @return {string} The deobfuscated array
-*/
-function deobf(_arr) {
-	return _arr.map(i => String.fromCharCode(i)).join('');
 }
 
 /**
