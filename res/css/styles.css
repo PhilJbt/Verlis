@@ -455,7 +455,7 @@ button[i18n] i {
   padding-right: 5px;
 }
 
-#plzhome {
+#plzhome, button[data-target="mdl-link"] {
 	display: none;
 }
 

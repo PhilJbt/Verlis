@@ -411,6 +411,9 @@ function loadDict_end() {
 	
 	// Bind listeners to their callbacks (part 2)
 	bindFuncs_pt2();
+	
+	// Show the 'getlink' menu button
+	document.querySelector('button[data-target="mdl-link"]').style.display = 'flex';
 }
 
 /**
@@ -1469,12 +1472,8 @@ function initBulma() {
 			// Useful when the user changed options but cliked on "cancel"
 			optionsLoad();
 		else if ($el.id === 'mdl-link')
-			if (window.vl_dictName)
-				// Fill the copy link text input with the url of the deck
-				document.getElementById('inp-link').value = `${window.location.origin+window.location.pathname}?deck=${encodeURIComponent(window.vl_dictName)}`;
-			else
-				// Fill the copy link text input with the url of the current search
-				document.getElementById('inp-link').value = `${window.location.origin+window.location.pathname}?search=${encodeURIComponent(document.getElementById('selector').value)}`;
+			// Fill the copy link text input with the url of the deck
+			document.getElementById('inp-link').value = `${window.location.origin+window.location.pathname}?deck=${encodeURIComponent(window.vl_dictName)}`;
 	
     $el.classList.add('is-active');
   }
