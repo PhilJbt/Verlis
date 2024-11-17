@@ -12,11 +12,6 @@
 
 <br/>
 
-> [!IMPORTANT]
-> You can view the **LIST OF DECKS** by language by [CLICKING HERE](https://github.com/PhilJbt/Verlis/wiki)
-
-<br/>
-
 ## Rules
 
 - Once a day (the countdown is visible in the menu), a new verb to guess is chosen at random from a list of <strong>12,164</strong>;
