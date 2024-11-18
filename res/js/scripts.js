@@ -258,12 +258,14 @@ async function dictSelect_show(_blob) {
 	if (!bLoaded) {
 		slctLang_auto();
 		slctLang_change();
+		
+		// Show the selector modal
+		document.getElementById('selector-container').style.display = 'flex';
 	}
-
-	document.querySelector('.level.minimal .level-item[type="menu"]').style.visibility = 'visible';
 	
-	// Show the selector modal
-	document.getElementById('selector-container').style.display = 'flex';
+	// Show the menu
+	document.querySelector('.level.minimal .level-item[type="menu"]').style.visibility = 'visible';
+
 	
 	// Show the welcome message
 	welcomeMessage();
