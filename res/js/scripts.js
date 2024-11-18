@@ -342,7 +342,6 @@ async function loadDict(_urlSelected = null) {
 			return;
 		else
 			slctDeck = slctNode.id;
-
 	}
 	else
 		slctDeck = _urlSelected;
@@ -352,7 +351,7 @@ async function loadDict(_urlSelected = null) {
 		return;
 	else
 		slctDeck = slctDeck[0];
-
+	
 	// Store the name of the selected set (load/save func)
 	window.vl_dictName = slctDeck.dict;
 	
@@ -363,21 +362,29 @@ async function loadDict(_urlSelected = null) {
 	const userLangISO2 = window.vl_options['langue'].substr(0, 2);
 	document.getElementById('set-title').innerHTML = slctDeck.name[userLangISO2] || slctDeck.name['xx'] || Object.entries(slctDeck.name)[0][1];
 	
-	// Hide the selector modal
-	document.getElementById('selector-container').style.display = 'none';
-	
 	// Show the progress bar
-	loadDict_end();
+	loadDict_beg();
 	
 	// Retrieve the dict
 	await fetchWithProgress(`res/cmpr/deck/${slctDeck.dict}.cmpr`, retrieveDict, [0, 100]);
 }
 
 /**
+* Show the progress bar when the dict is loading
+*/
+function loadDict_beg() {
+	// Hide the dict selection inputs
+	document.getElementById('selector-container').style.display = 'none';
+	
+	// Hide progress bar
+	progressBar(0);
+	progressBar(true);
+}
+
+/**
 * Show the UI after loading the dictionary
 */
 function loadDict_end() {
-	// Hide progress bar
 	progressBar(false);
 	
 	// Show the menu button and the alphabet
@@ -392,9 +399,6 @@ function loadDict_end() {
 	
 	// Enable the abandon button
 	document.getElementById('plzstahp').removeAttribute('disabled');
-	
-	// Hide the dict selection inputs
-	document.getElementById('selector-container').style.display = 'none';
 	
 	// Set the inputs visibile
 	if (document.getElementsByClassName('ag-input-container')[0])
@@ -782,8 +786,9 @@ function askDiff_proc(_diffSlct) {
 	pickWord(_diffSlct);
 	
 	checkLastFinish();
+	loadDict_end();
 	
-	document.getElementById('mdl-diff').classList.remove('is-active')
+	document.getElementById('mdl-diff').classList.remove('is-active');
 }
 
 /**
